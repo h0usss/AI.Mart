@@ -9,3 +9,19 @@ val Pink80 = Color(0xFFEFB8C8)
 val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
+
+val White = Color(0xffffffff)
+
+val Black5 = Color(0xfff2f2f2)
+val Black10 = Color(0xffe6e6e6)
+val Black45 = Color(0xff828282)
+val Black50 = Color(0xff808080)
+val Black80 = Color(0xff333333)
+val Black100 = Color(0xff000000)
+
+val ErrorText = Color(0xffdc2626)
+val ErrorBG = Color(0xfffef2f2)
+
+val Teal = Color(0xff2dd4bf)
+
+val Blue = Color(0xff2d6eff)
