@@ -81,23 +81,6 @@ fun SignUp(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .padding(top = 10.dp)
             ,
-            text = "User name",
-            color = Black80,
-            fontSize = 14.sp,
-            style = semiboldStyle,
-        )
-        TextField(
-            modifier = Modifier
-                .padding(top = 6.dp)
-            ,
-            placeHolder = "nickName"
-        )
-
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp)
-            ,
             text = "E-mail",
             color = Black80,
             fontSize = 14.sp,
@@ -108,6 +91,25 @@ fun SignUp(modifier: Modifier = Modifier) {
                 .padding(top = 6.dp)
             ,
             placeHolder = "example@gmail.com"
+        )
+
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+            ,
+            text = "Дата рождения",
+            color = Black80,
+            fontSize = 14.sp,
+            style = semiboldStyle,
+        )
+        TextField(
+            modifier = Modifier
+                .padding(top = 6.dp)
+            ,
+            placeHolder = "DD/MM/YYYY",
+            rightImageId = R.drawable.calendar,
+            onClickRightImage = {}
         )
 
         Text(

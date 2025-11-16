@@ -3,7 +3,6 @@ package com.h0uss.aimart.ui.assets
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,27 +35,22 @@ import com.h0uss.aimart.R
 import com.h0uss.aimart.ui.theme.Black10
 import com.h0uss.aimart.ui.theme.Black50
 import com.h0uss.aimart.ui.theme.Black80
-import com.h0uss.aimart.ui.theme.ErrorBG
-import com.h0uss.aimart.ui.theme.ErrorText
 import com.h0uss.aimart.ui.theme.Inter
 import com.h0uss.aimart.ui.theme.White
 import com.h0uss.aimart.ui.theme.regularStyle
 
 @Composable
-fun TextField(
+fun Search(
     modifier: Modifier = Modifier,
-    errorMessage: String = "",
     isFocus: Boolean = false,
-    placeHolder: String,
     inputTransformation: InputTransformation = InputTransformation{},
     outputTransformation: OutputTransformation = OutputTransformation{},
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     state: TextFieldState = remember { TextFieldState("") },
-    rightImageId: Int = -1,
-    onClickRightImage: () -> Unit = {}
-){
-    Column(
-
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth(),
     ){
         BasicTextField(
             modifier = Modifier
@@ -75,24 +69,21 @@ fun TextField(
             cursorBrush = SolidColor(Black80),
             decorator = { innerTextField ->
                 Box(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxWidth()
                         .height(40.dp)
                         .clip(RoundedCornerShape(20))
                         .border(
                             color =
-                                if (!errorMessage.isEmpty()) ErrorText
-                                else if (isFocus) Black80
+                                if (isFocus) Black80
                                 else Black10,
                             width = 1.dp,
                             shape = RoundedCornerShape(20)
                         )
                         .background(
-                            color =
-                                if (!errorMessage.isEmpty()) ErrorBG
-                                else White
+                            color = White
                         )
-                        .padding(vertical = 8.dp, horizontal = 16.dp),
+                        .padding(vertical = 8.dp, horizontal = 8.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Row(
@@ -100,66 +91,52 @@ fun TextField(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ){
-                        Box{
-                            if (state.text.isEmpty())
-                                Text(
-                                    text = placeHolder,
-                                    fontSize = 14.sp,
-                                    style = regularStyle,
-                                    color = Black50,
-                                )
-                            innerTextField()
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Image(
+                                painter = painterResource(R.drawable.loupe),
+                                contentDescription = "Loupe"
+                            )
+
+                            Box(
+                                modifier = Modifier.padding(start = 8.dp)
+                            ){
+                                if (state.text.isEmpty())
+                                    Text(
+                                        text = "Поиск",
+                                        fontSize = 14.sp,
+                                        style = regularStyle,
+                                        color = Black50,
+                                    )
+                                innerTextField()
+                            }
+
                         }
 
-                        if (rightImageId != -1)
+                        if (isFocus)
                             Image(
-                                modifier = Modifier.clickable{
-                                    onClickRightImage()
-                                },
-                                painter = painterResource(rightImageId),
-                                contentDescription = "RightImage"
+                                painter = painterResource(R.drawable.close),
+                                contentDescription = "Close"
                             )
                     }
                 }
             }
         )
-
-        if (!errorMessage.isEmpty()) {
-            Row(
-                modifier = Modifier.padding(top = 6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Image(
-                    painter = painterResource( R.drawable.error_status ),
-                    contentDescription = "Error"
-                )
-                Text(
-                    text = " $errorMessage",
-                    fontSize = 12.sp,
-                    style = regularStyle,
-                    color = ErrorText,
-                )
-            }
-        }
     }
 }
 
 @Preview
 @Composable
-fun PreviewNecessarily() {
-    Column(){
-        TextField(
-            placeHolder = "Пароль",
-            errorMessage = "aAlax"
-        )
-        TextField(
-            placeHolder = "Пароль",
+private fun Preview() {
+    Column {
+        Search()
+        Search(
             isFocus = true
         )
-        TextField(
-            placeHolder = "Пароль",
-            rightImageId = R.drawable.calendar
+        Search(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            isFocus = true
         )
-
     }
 }

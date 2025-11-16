@@ -8,7 +8,8 @@ import com.h0uss.aimart.R
 
 val Inter = FontFamily(
     Font( resId = R.font.inter_regular, weight = FontWeight.Normal ),
-    Font( resId = R.font.inter_semibold, weight = FontWeight.SemiBold )
+    Font( resId = R.font.inter_semibold, weight = FontWeight.SemiBold ),
+    Font( resId = R.font.inter_medium, weight = FontWeight.Medium ),
 )
 
 val regularStyle = TextStyle(
@@ -18,4 +19,8 @@ val regularStyle = TextStyle(
 val semiboldStyle = TextStyle(
     fontFamily = Inter,
     fontWeight = FontWeight.SemiBold
+)
+val mediumStyle = TextStyle(
+    fontFamily = Inter,
+    fontWeight = FontWeight.Medium
 )
