@@ -2,6 +2,7 @@ package com.h0uss.aimart.ui.assets
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.h0uss.aimart.R
-import com.h0uss.aimart.data.model.SellerRowData
+import com.h0uss.aimart.data.model.UserHomeData
 import com.h0uss.aimart.ui.theme.Black100
 import com.h0uss.aimart.ui.theme.BlackSellerName
 import com.h0uss.aimart.ui.theme.White
@@ -32,12 +33,12 @@ import com.h0uss.aimart.ui.theme.semiboldStyle
 @Composable
 fun Sellers(
     modifier: Modifier = Modifier,
-    sellers: List<SellerRowData>
+    sellers: List<UserHomeData>,
+    onSellerClick: (Long) -> Unit = {}
 ) {
     Column(
         modifier = modifier
             .background(White)
-            .padding(top = 14.dp)
     ){
         Row(
             modifier = Modifier.padding(start = 16.dp)
@@ -62,6 +63,9 @@ fun Sellers(
         ){
             items(sellers){ item ->
                 Column(
+                    modifier = Modifier.clickable{
+                        onSellerClick(item.id)
+                    },
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
                     Image(
@@ -90,35 +94,35 @@ fun Sellers(
 private fun Preview() {
     Sellers(
         sellers = listOf(
-            SellerRowData(
+            UserHomeData(
                 id = 0,
                 name = "Пипка",
-                imageId = R.drawable.nigseller
+                imageId = R.drawable.seller
             ),
-            SellerRowData(
+            UserHomeData(
                 id = 0,
                 name = "Пипка",
-                imageId = R.drawable.nigseller
+                imageId = R.drawable.seller
             ),
-            SellerRowData(
+            UserHomeData(
                 id = 0,
                 name = "Пипка",
-                imageId = R.drawable.nigseller
+                imageId = R.drawable.seller
             ),
-            SellerRowData(
+            UserHomeData(
                 id = 0,
                 name = "Пипка",
-                imageId = R.drawable.nigseller
+                imageId = R.drawable.seller
             ),
-            SellerRowData(
+            UserHomeData(
                 id = 0,
                 name = "Пипка",
-                imageId = R.drawable.nigseller
+                imageId = R.drawable.seller
             ),
-            SellerRowData(
+            UserHomeData(
                 id = 0,
                 name = "Пипка",
-                imageId = R.drawable.nigseller
+                imageId = R.drawable.seller
             ),
         )
     )

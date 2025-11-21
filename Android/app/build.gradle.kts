@@ -51,9 +51,15 @@ dependencies {
 
     implementation(libs.android.room.runtime)
     implementation(libs.android.room.ktx)
+    implementation(libs.android.room.paging)
     ksp(libs.android.room.compiler)
 
     implementation(libs.android.jbcrupt)
+
+    implementation(libs.android.datastore.core)
+    implementation(libs.android.datastore)
+    
+    implementation(libs.android.paging)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

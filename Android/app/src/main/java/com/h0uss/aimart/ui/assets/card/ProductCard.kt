@@ -20,10 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.h0uss.aimart.R
-import com.h0uss.aimart.data.emun.OrderStatus
 import com.h0uss.aimart.data.model.ProductCardData
-import com.h0uss.aimart.data.model.StatusData
-import com.h0uss.aimart.ui.assets.Status
 import com.h0uss.aimart.ui.theme.Black100
 import com.h0uss.aimart.ui.theme.Black50
 import com.h0uss.aimart.ui.theme.White
@@ -34,13 +31,13 @@ import com.h0uss.aimart.ui.theme.semiboldStyle
 fun ProductCard(
     modifier: Modifier = Modifier,
     product: ProductCardData,
-    onClick: () -> Unit = {},
+    onClick: (Long) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
             .background(White)
             .clickable {
-                onClick()
+                onClick(product.id)
             }
     ) {
         Box(
@@ -56,19 +53,10 @@ fun ProductCard(
                 contentDescription = "Product image",
                 contentScale = ContentScale.Crop
             )
-
-            if (product.status != null)
-                Status(
-                    modifier = Modifier.padding(top = 6.dp, end = 3.dp),
-                    statusData = StatusData(
-                        status = product.status,
-                        isTag = false
-                    )
-                )
         }
         Text(
             modifier = Modifier.padding(top = 14.dp),
-            text = product.author,
+            text = product.authorName,
             style = regularStyle,
             fontSize = 12.sp,
             color = Black50
@@ -97,20 +85,12 @@ private fun Preview() {
         ProductCard(
             modifier = Modifier.padding(end = 5.dp),
             product = ProductCardData(
-                author = "Чуча",
+                id = 1L,
+                authorName = "Чуча",
                 name = "ProductName",
                 price = 10.99f,
                 imageId = R.drawable.background,
-                status = null
-            )
-        )
-        ProductCard(
-            product = ProductCardData(
-                author = "Чуча",
-                name = "ProductName",
-                price = 10.99f,
-                imageId = R.drawable.background,
-                status = OrderStatus.COMPLETE
+                description = "a"
             )
         )
     }

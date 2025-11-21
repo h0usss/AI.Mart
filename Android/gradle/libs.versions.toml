@@ -7,16 +7,18 @@ junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
-composeBom = "2025.10.01"
+composeBom = "2025.11.00"
 
-splashScreen = "1.0.1"
-navigation = "2.9.5"
+splashScreen = "1.2.0"
+navigation = "2.9.6"
 serialization = "1.9.0"
 foundation = "1.9.4"
 room = "2.8.3"
 ksp = "2.2.20-2.0.3"
 lifecycle = "2.9.4"
 jbcrypt = "0.4"
+datastore = "1.1.7"
+paging = "3.3.6"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,8 +45,15 @@ android-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-
 android-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room"}
 android-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room"}
 android-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room"}
+android-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room"}
 
 android-jbcrupt = { group = "org.mindrot", name = "jbcrypt", version.ref = "jbcrypt"}
+
+android-datastore-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastore"}
+android-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore"}
+
+android-paging = { group = "androidx.paging", name = "paging-compose", version.ref = "paging"}
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

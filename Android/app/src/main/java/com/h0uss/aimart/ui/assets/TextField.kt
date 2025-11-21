@@ -8,32 +8,36 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.h0uss.aimart.R
 import com.h0uss.aimart.ui.theme.Black10
+import com.h0uss.aimart.ui.theme.Black5
 import com.h0uss.aimart.ui.theme.Black50
 import com.h0uss.aimart.ui.theme.Black80
 import com.h0uss.aimart.ui.theme.ErrorBG
@@ -47,24 +51,59 @@ fun TextField(
     modifier: Modifier = Modifier,
     errorMessage: String = "",
     isFocus: Boolean = false,
+    isFill: Boolean = false,
+    isBigTextField: Boolean = false,
     placeHolder: String,
+    radiusPercent: Int = 20,
     inputTransformation: InputTransformation = InputTransformation{},
     outputTransformation: OutputTransformation = OutputTransformation{},
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    state: TextFieldState = remember { TextFieldState("") },
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Default),
+    value: String = "",
+    onValueChange: (String) -> Unit = {},
     rightImageId: Int = -1,
-    onClickRightImage: () -> Unit = {}
+    leftImageId: Int = -1,
+    onClickRightImage: () -> Unit = {},
+    onClickLeftImage: () -> Unit = {},
+    onClickEnter: () -> Unit = {},
 ){
-    Column(
 
+    val state = remember { TextFieldState(value) }
+    val focusManager = LocalFocusManager.current
+    val keyboardActions = remember(onClickEnter) {
+        KeyboardActionHandler({
+                onClickEnter()
+                focusManager.clearFocus()
+            }
+        )
+    }
+
+    LaunchedEffect(state.text.toString()) {
+        if (state.text.toString() != value) {
+            onValueChange(state.text.toString())
+        }
+    }
+
+    LaunchedEffect(value) {
+        val currentStateString = state.text.toString()
+        if (value != currentStateString) {
+            state.edit {
+                replace(0, length, value)
+            }
+        }
+    }
+
+    Column(
+        modifier = modifier
     ){
         BasicTextField(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier,
             state = state,
             keyboardOptions = keyboardOptions,
+            onKeyboardAction = keyboardActions,
             outputTransformation = outputTransformation,
-            lineLimits = TextFieldLineLimits.SingleLine,
+            lineLimits =
+                if (isBigTextField) TextFieldLineLimits.Default
+                else TextFieldLineLimits.SingleLine,
             inputTransformation = inputTransformation,
             textStyle = TextStyle(
                 fontSize = 14.sp,
@@ -75,32 +114,54 @@ fun TextField(
             cursorBrush = SolidColor(Black80),
             decorator = { innerTextField ->
                 Box(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxWidth()
-                        .height(40.dp)
-                        .clip(RoundedCornerShape(20))
+                        .heightIn(min = 40.dp)
+                        .clip(RoundedCornerShape(radiusPercent))
                         .border(
                             color =
                                 if (!errorMessage.isEmpty()) ErrorText
                                 else if (isFocus) Black80
                                 else Black10,
                             width = 1.dp,
-                            shape = RoundedCornerShape(20)
+                            shape = RoundedCornerShape(radiusPercent)
                         )
                         .background(
                             color =
                                 if (!errorMessage.isEmpty()) ErrorBG
+                                else if (isFill) Black5
                                 else White
                         )
-                        .padding(vertical = 8.dp, horizontal = 16.dp),
+                        .padding(
+                            start =
+                                if (leftImageId == -1) 16.dp
+                                else 8.dp,
+                            top = 8.dp,
+                            end = 16.dp,
+                            bottom = 8.dp
+                        ),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Row(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ){
-                        Box{
+                        if (leftImageId != -1)
+                            Image(
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                                    .clickable {
+                                        onClickLeftImage()
+                                    },
+                                painter = painterResource(leftImageId),
+                                contentDescription = "Left image"
+                            )
+
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                        ){
                             if (state.text.isEmpty())
                                 Text(
                                     text = placeHolder,
@@ -150,7 +211,7 @@ fun PreviewNecessarily() {
     Column(){
         TextField(
             placeHolder = "Пароль",
-            errorMessage = "aAlax"
+            errorMessage = "aAlax",
         )
         TextField(
             placeHolder = "Пароль",
@@ -160,6 +221,14 @@ fun PreviewNecessarily() {
             placeHolder = "Пароль",
             rightImageId = R.drawable.calendar
         )
-
+        TextField(
+            placeHolder = "Пароль",
+            leftImageId = R.drawable.loupe
+        )
+        TextField(
+            placeHolder = "Пароль",
+            isBigTextField = true,
+            value = "dfasjhdlhas jd sj fdkjlshd flksdfs dsdh sdjk lasldk jhfaslkdjfhlskahj dhfk jsdhakjshdf slkjh fkjsd hlsdkjhf lskjdh fljksda hldjhf ljks dhahf ljkash fdasjhkl f"
+        )
     }
 }

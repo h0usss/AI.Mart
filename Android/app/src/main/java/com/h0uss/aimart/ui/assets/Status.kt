@@ -35,7 +35,6 @@ import com.h0uss.aimart.ui.theme.regularStyle
 fun Status(
     modifier: Modifier = Modifier,
     statusData: StatusData,
-    isActive: Boolean = false
 ) {
     var name: String
     var color: Color
@@ -62,11 +61,11 @@ fun Status(
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(50))
-            .background(if (isActive) TealTagBg else White)
+            .background(if (statusData.isActive) TealTagBg else White)
             .border(
                 width = 1.dp,
                 shape = RoundedCornerShape(50),
-                color = if (isActive) TealTagBorder else Black10,
+                color = if (statusData.isActive) TealTagBorder else Black10,
             )
             .padding(
                 horizontal = if (statusData.isTag) 12.dp else 8.dp,
@@ -126,8 +125,8 @@ private fun Preview() {
                         statusData = StatusData(
                             status = item,
                             isTag = true,
+                            isActive = true
                         ),
-                        isActive = true
                     )
                 }
             }
@@ -140,9 +139,9 @@ private fun Preview() {
                         statusData = StatusData(
                             status = item,
                             isTag = true,
-                            count = 100
+                            count = 100,
+                            isActive = true
                         ),
-                        isActive = true,
                     )
                 }
             }

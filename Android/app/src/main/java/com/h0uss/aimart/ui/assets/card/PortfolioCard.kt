@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.h0uss.aimart.R
+import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.ui.theme.Black100
 import com.h0uss.aimart.ui.theme.White
 import com.h0uss.aimart.ui.theme.regularStyle
@@ -26,8 +27,8 @@ import com.h0uss.aimart.ui.theme.regularStyle
 @Composable
 fun PortfolioCard(
     modifier: Modifier = Modifier,
-    productName: String,
-    productImageId: Int,
+    portfolioData: PortfolioItemData,
+    isExistTrash: Boolean = true,
     onClick: () -> Unit = {},
     onTrashClick: () -> Unit = {}
 ) {
@@ -44,27 +45,28 @@ fun PortfolioCard(
         ){
             Image(
                 modifier = Modifier
-                    .size(164.dp)
+                    .size(150.dp)
                     .clip(RoundedCornerShape(5))
                 ,
-                painter = painterResource(productImageId),
+                painter = painterResource(portfolioData.imageId),
                 contentDescription = "Product image",
                 contentScale = ContentScale.Crop
             )
-            Image(
-                modifier = Modifier
-                    .padding(top = 8.dp, end = 12.dp)
-                    .clickable{
-                        onTrashClick()
-                    }
-                ,
-                painter = painterResource(R.drawable.trash),
-                contentDescription = "Trash"
-            )
+            if (isExistTrash)
+                Image(
+                    modifier = Modifier
+                        .padding(top = 8.dp, end = 12.dp)
+                        .clickable{
+                            onTrashClick()
+                        }
+                    ,
+                    painter = painterResource(R.drawable.trash),
+                    contentDescription = "Trash"
+                )
         }
         Text(
             modifier = Modifier.padding(top = 14.dp),
-            text = productName,
+            text = portfolioData.name,
             style = regularStyle,
             fontSize = 14.sp,
             color = Black100
@@ -77,7 +79,11 @@ fun PortfolioCard(
 @Composable
 private fun Preview() {
     PortfolioCard(
-        productName = "ProductName",
-        productImageId = R.drawable.background
+        portfolioData = PortfolioItemData(
+            id = 1L,
+            name = "ProductName",
+            imageId = R.drawable.background,
+            tags = listOf()
+        ),
     )
 }

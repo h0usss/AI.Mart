@@ -2,6 +2,7 @@ package com.h0uss.aimart.ui.assets
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.h0uss.aimart.R
 import com.h0uss.aimart.ui.theme.Black5
 import com.h0uss.aimart.ui.theme.Black80
+import com.h0uss.aimart.ui.theme.Debate
 import com.h0uss.aimart.ui.theme.Teal
 import com.h0uss.aimart.ui.theme.White
 import com.h0uss.aimart.ui.theme.semiboldStyle
@@ -31,6 +33,8 @@ fun Button(
     modifier: Modifier = Modifier,
     text: String,
     isGray: Boolean = false,
+    isRedBorder: Boolean = false,
+    isRedFill: Boolean = false,
     onClick: () -> Unit,
     leftImageId: Int = -1,
     rightImageId: Int = -1,
@@ -41,9 +45,18 @@ fun Button(
             .height(40.dp)
             .clip(RoundedCornerShape(20))
             .background(
+                if (isGray) Black5
+                else if (isRedBorder) White
+                else if (isRedFill) Debate
+                else Teal
+            )
+            .border(
+                width = 1.dp,
                 color =
                     if (isGray) Black5
-                    else Teal
+                    else if (isRedBorder || isRedFill) Debate
+                    else Teal,
+                shape = RoundedCornerShape(20)
             )
             .clickable{
                 onClick()
@@ -66,6 +79,7 @@ fun Button(
                 fontSize = 14.sp,
                 color =
                     if (isGray) Black80
+                    else if (isRedBorder) Debate
                     else White
                 ,
                 style = semiboldStyle,
@@ -97,6 +111,18 @@ private fun Preview() {
         Button(
             text = "Войти",
             onClick = {},
+            rightImageId = R.drawable.arrow
+        )
+        Button(
+            text = "Войти",
+            onClick = {},
+            isRedBorder = true,
+            rightImageId = R.drawable.arrow
+        )
+        Button(
+            text = "Войти",
+            onClick = {},
+            isRedFill = true,
             rightImageId = R.drawable.arrow
         )
     }
