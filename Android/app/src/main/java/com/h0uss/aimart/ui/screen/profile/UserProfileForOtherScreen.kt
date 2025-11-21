@@ -144,9 +144,9 @@ private fun Preview() {
     UserProfileForOtherScreen(
         state = UserProfileForOtherState(
             user = UserData(
-                name = "Би'о",
-                nick = "@bibo",
-                imageId = R.drawable.seller,
+                name = "Алиса",
+                nick = "@al1s",
+                imageId = R.drawable.avatar_0,
                 rate = 5.0f,
             )
         )

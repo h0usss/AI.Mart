@@ -129,7 +129,7 @@ private fun Preview() {
     SearchScreen(
         state = SearchState(
             lastSearchList = listOf(
-                "Биба", "Боба", "вдладывладладыв"
+                "Подсказка", "Подарок", "Фотография"
             )
         )
     )

@@ -21,7 +21,7 @@ class PortfolioRepository(
         }
     }
 
-    fun deletePortfolioItem(portfolioItemId: Long) {
+    suspend fun deletePortfolioItem(portfolioItemId: Long) {
         portfolioDao.deletePortfolioItem(portfolioItemId)
     }
 }

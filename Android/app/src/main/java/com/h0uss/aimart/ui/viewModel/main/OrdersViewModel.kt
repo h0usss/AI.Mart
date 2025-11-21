@@ -31,6 +31,7 @@ class OrdersViewModel : ViewModel(){
 
                 state.update { currentState ->
                     currentState.copy(
+                        originalOrders = newOrders,
                         orders = newOrders,
                         countDebate     = ordersByStatus[OrderStatus.DEBATE]?.size ?: 0,
                         countWaiting    = ordersByStatus[OrderStatus.WAITING]?.size ?: 0,
@@ -50,30 +51,77 @@ class OrdersViewModel : ViewModel(){
                 }
             }
             is OrdersEvent.DebateClick -> {
-                state.update{
-                    it.copy(isDebate = !it.isDebate)
+                val wasActive = state.value.isDebate
+                state.update {
+                    it.copy(
+                        isDebate = !wasActive,
+                        isWaiting = false,
+                        isInWork = false,
+                        isComplete = false
+                    )
                 }
+                applyFilters()
             }
             is OrdersEvent.WaitingClick -> {
-                state.update{
-                    it.copy(isWaiting = !it.isWaiting)
+                val wasActive = state.value.isWaiting
+                state.update {
+                    it.copy(
+                        isDebate = false,
+                        isWaiting = !wasActive,
+                        isInWork = false,
+                        isComplete = false
+                    )
                 }
+                applyFilters()
             }
             is OrdersEvent.InWorkClick -> {
-                state.update{
-                    it.copy(isInWork = !it.isInWork)
+                val wasActive = state.value.isInWork
+                state.update {
+                    it.copy(
+                        isDebate = false,
+                        isWaiting = false,
+                        isInWork = !wasActive,
+                        isComplete = false
+                    )
                 }
+                applyFilters()
             }
             is OrdersEvent.CompleteClick -> {
-                state.update{
-                    it.copy(isComplete = !it.isComplete)
+                val wasActive = state.value.isComplete
+                state.update {
+                    it.copy(
+                        isDebate = false,
+                        isWaiting = false,
+                        isInWork = false,
+                        isComplete = !wasActive
+                    )
                 }
+                applyFilters()
             }
         }
+    }
+
+    private fun applyFilters() {
+        val currentState = state.value
+        val activeFilters = buildSet {
+            if (currentState.isDebate) add(OrderStatus.DEBATE)
+            if (currentState.isWaiting) add(OrderStatus.WAITING)
+            if (currentState.isInWork) add(OrderStatus.IN_WORK)
+            if (currentState.isComplete) add(OrderStatus.COMPLETE)
+        }
+
+        val filteredList = if (activeFilters.isEmpty()) {
+            currentState.originalOrders
+        } else {
+            currentState.originalOrders.filter { it.status in activeFilters }
+        }
+
+        state.update { it.copy(orders = filteredList) }
     }
 }
 
 data class OrdersState(
+    val originalOrders: List<OrderCardData> = listOf(),
     val orders: List<OrderCardData> = listOf(),
 
     val isDebate: Boolean = false,

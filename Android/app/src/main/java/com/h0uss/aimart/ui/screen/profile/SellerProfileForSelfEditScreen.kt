@@ -342,14 +342,14 @@ fun SellerProfileForSelfEditScreen(
 private fun Preview() {
     SellerProfileForSelfEditScreen(
         state = SellerProfileForSelfEditState(
-            isVisibleSettings = true,
+            isVisibleSettings = false,
             user = SellerData(
-                name = "Би'о",
+                name = "Артур",
                 nick = "@bibo",
                 imageId = R.drawable.seller,
                 rate = 5.0f,
-                profession = "Лентяй",
-                about = "Привет, меня зовут Антон. Я Саша. Сейчас Антон просто мастерская. *шшшшшшшшшш*. Мой совершенный анал звучит иначе",
+                profession = "Художник",
+                about = "Описание описание описание описание описание описание описание описание ",
                 skills = List(7) {item -> "Подсказка"},
             ),
             portfolio = List(11){

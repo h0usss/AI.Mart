@@ -2,6 +2,7 @@ package com.h0uss.aimart.ui.assets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -71,6 +72,9 @@ fun Status(
                 horizontal = if (statusData.isTag) 12.dp else 8.dp,
                 vertical = if (statusData.isTag) 6.dp else 2.dp
             )
+            .clickable{
+                statusData.onClick()
+            }
         ,
         verticalAlignment = Alignment.CenterVertically
     ){

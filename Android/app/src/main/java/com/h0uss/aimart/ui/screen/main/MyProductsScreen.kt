@@ -313,99 +313,99 @@ private fun Preview() {
             products = listOf(
                 UserProductCardData(
                     id = 1L,
-                    name = "Бугагага",
+                    name = "Товар",
                     price = 100.01f,
                     imageId = R.drawable.background,
                     status = ProductStatus.MODERATING_FAILED,
-                    description = "asd[as[d[asd[sa[da[sd[ad[a[sd[sa asdas dojasd ijsd"
+                    description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
                 UserProductCardData(
                     id = 1L,
-                    name = "Бугагага",
+                    name = "Товар",
                     price = 100.01f,
                     imageId = R.drawable.background,
                     status = ProductStatus.MODERATING_FAILED,
-                    description = "asd[as[d[asd[sa[da[sd[ad[a[sd[sa asdas dojasd ijsd"
+                    description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
                 UserProductCardData(
                     id = 1L,
-                    name = "Бугагага",
+                    name = "Товар",
                     price = 100.01f,
                     imageId = R.drawable.background,
                     status = ProductStatus.IN_MODERATING_PROCESS,
-                    description = "asd[as[d[asd[sa[da[sd[ad[a[sd[sa asdas dojasd ijsd"
+                    description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
                 UserProductCardData(
                     id = 1L,
-                    name = "Бугагага",
+                    name = "Товар",
                     price = 100.01f,
                     imageId = R.drawable.background,
                     status = ProductStatus.ACTIVE,
-                    description = "asd[as[d[asd[sa[da[sd[ad[a[sd[sa asdas dojasd ijsd"
+                    description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
                 UserProductCardData(
                     id = 1L,
-                    name = "Бугагага",
+                    name = "Товар",
                     price = 100.01f,
                     imageId = R.drawable.background,
                     status = ProductStatus.ACTIVE,
-                    description = "asd[as[d[asd[sa[da[sd[ad[a[sd[sa asdas dojasd ijsd"
+                    description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
                 UserProductCardData(
                     id = 1L,
-                    name = "Бугагага",
+                    name = "Товар",
                     price = 100.01f,
                     imageId = R.drawable.background,
                     status = ProductStatus.ACTIVE,
-                    description = "asd[as[d[asd[sa[da[sd[ad[a[sd[sa asdas dojasd ijsd"
+                    description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
                 UserProductCardData(
                     id = 1L,
-                    name = "Бугагага",
+                    name = "Товар",
                     price = 100.01f,
                     imageId = R.drawable.background,
                     status = ProductStatus.ACTIVE,
-                    description = "asd[as[d[asd[sa[da[sd[ad[a[sd[sa asdas dojasd ijsd"
+                    description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
                 UserProductCardData(
                     id = 1L,
-                    name = "Бугагага",
+                    name = "Товар",
                     price = 100.01f,
                     imageId = R.drawable.background,
                     status = ProductStatus.ACTIVE,
-                    description = "asd[as[d[asd[sa[da[sd[ad[a[sd[sa asdas dojasd ijsd"
+                    description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
                 UserProductCardData(
                     id = 1L,
-                    name = "Бугагага",
+                    name = "Товар",
                     price = 100.01f,
                     imageId = R.drawable.background,
                     status = ProductStatus.ACTIVE,
-                    description = "asd[as[d[asd[sa[da[sd[ad[a[sd[sa asdas dojasd ijsd"
+                    description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
                 UserProductCardData(
                     id = 1L,
-                    name = "Бугагага",
+                    name = "Товар",
                     price = 100.01f,
                     imageId = R.drawable.background,
                     status = ProductStatus.ACTIVE,
-                    description = "asd[as[d[asd[sa[da[sd[ad[a[sd[sa asdas dojasd ijsd"
+                    description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
                 UserProductCardData(
                     id = 1L,
-                    name = "Бугагага",
+                    name = "Товар",
                     price = 100.01f,
                     imageId = R.drawable.background,
                     status = ProductStatus.ACTIVE,
-                    description = "asd[as[d[asd[sa[da[sd[ad[a[sd[sa asdas dojasd ijsd"
+                    description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
                 UserProductCardData(
                     id = 1L,
-                    name = "Бугагага",
+                    name = "Товар",
                     price = 100.01f,
                     imageId = R.drawable.background,
                     status = ProductStatus.MODERATING_FAILED,
-                    description = "asd[as[d[asd[sa[da[sd[ad[a[sd[sa asdas dojasd ijsd"
+                    description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
             )
         )

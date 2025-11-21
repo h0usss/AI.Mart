@@ -27,5 +27,5 @@ interface PortfolioDao {
         DELETE FROM portfolio_item
         WHERE id = :portfolioItemId
     """)
-    fun deletePortfolioItem(portfolioItemId: Long)
+    suspend fun deletePortfolioItem(portfolioItemId: Long)
 }

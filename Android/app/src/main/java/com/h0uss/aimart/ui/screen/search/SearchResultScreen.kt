@@ -197,11 +197,11 @@ fun SearchResultScreen(
 private fun Preview_fill() {
     SearchResultScreen(
         state = SearchState(
-            searchValue = "asdsadasssssssssssssssssssssssssssssssdasdadsssssssssssssssss",
+            searchValue = "Кольцо",
             sellers = List(10) { item ->
                 UserHomeData(
                     id = 0,
-                    name = "Пипка",
+                    name = "Артур",
                     imageId = R.drawable.seller
                 )
             },

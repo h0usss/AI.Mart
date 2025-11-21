@@ -392,14 +392,14 @@ fun SellerProfileForSelfScreen(
 private fun Preview() {
     SellerProfileForSelfScreen(
         state = SellerProfileForSelfState(
-            isVisibleSettings = true,
+            isVisibleSettings = false,
             user = SellerData(
-                name = "Би'о",
+                name = "Артур",
                 nick = "@bibo",
                 imageId = R.drawable.seller,
                 rate = 5.0f,
-                profession = "Лентяй",
-                about = "Привет, меня зовут Антон. Я Саша. Сейчас Антон просто мастерская. *шшшшшшшшшш*. Мой совершенный анал звучит иначе",
+                profession = "Художник",
+                about = "Описание описание описание описание описание описание описание описание ",
                 skills = List(7) {item -> "Подсказка"},
             ),
             portfolio = List(11){
@@ -415,13 +415,13 @@ private fun Preview() {
             filteredFeedback = List(10){ item ->
                 FeedbackData(
                     user = UserData(
-                        name = "Пип",
+                        name = "Гена",
                         nick = "@df",
                         imageId = R.drawable.seller,
                         rate = 5.0f,
                     ),
-                    text = "Гавна гавной",
-                    starCount = 1,
+                    text = "Отзыв отзыв",
+                    starCount = 5,
                     date = LocalDateTime.of(2022, 12, 11, 11, 11)
                 )
             },

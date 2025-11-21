@@ -72,9 +72,7 @@ fun UserProfileForSelfScreen(
                         .padding(top = 16.dp)
                         .size(96.dp)
                         .clip(CircleShape),
-                    painter =
-                        if (state.user.imageId == -1) painterResource(state.user.imageId)
-                        else painterResource(R.drawable.base_avatar),
+                    painter = painterResource(state.user.imageId),
                     contentDescription = state.user.nick,
                 )
                 Text(
@@ -164,9 +162,9 @@ private fun Preview() {
     UserProfileForSelfScreen(
         state = UserProfileForSelfState(
             user = UserData(
-                name = "Би'о",
-                nick = "@bibo",
-                imageId = R.drawable.seller,
+                name = "Алиса",
+                nick = "@al1s",
+                imageId = R.drawable.avatar_0,
                 rate = 5.0f,
             )
         )

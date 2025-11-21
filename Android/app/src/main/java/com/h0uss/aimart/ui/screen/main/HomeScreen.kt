@@ -155,7 +155,7 @@ private fun Preview() {
             sellers = List(10) { item ->
                 UserHomeData(
                     id = 0,
-                    name = "Пипка",
+                    name = "Артур",
                     imageId = R.drawable.seller
                 )
             },
