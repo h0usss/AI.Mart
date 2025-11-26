@@ -35,7 +35,15 @@ class ProductRepository(
         }
     }
 
-    fun getProductByStringInside(string: String): Flow<List<ProductCardData>> {
-        return productDao.getProductByStringInside(string)
+    fun getProductByStringInside(string: String): Flow<PagingData<ProductCardData>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                productDao.getProductByStringInside(string)
+            }
+        ).flow
     }
 }

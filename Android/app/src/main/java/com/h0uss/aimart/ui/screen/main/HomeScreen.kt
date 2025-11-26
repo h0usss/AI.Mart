@@ -87,7 +87,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, top = 18.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Box(modifier = Modifier.weight(1f)) {
                     val product1 = products[rowIndex * 2]
@@ -128,10 +128,21 @@ fun HomeScreen(
     }
 }
 
-
-@Preview
+@Preview(widthDp = 360, heightDp = 1000)
 @Composable
-private fun Preview() {
+private fun Preview_v2() {
+    Preview_data()
+}
+
+@Preview(heightDp = 1000)
+@Composable
+private fun Preview_v1() {
+    Preview_data()
+}
+
+
+@Composable
+private fun Preview_data() {
     val productsFlow = flowOf(PagingData.from(List(21){ item ->
         ProductCardData(
             id = item.toLong(),

@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.model.ProductCardData
 import com.h0uss.aimart.data.model.UserHomeData
@@ -37,10 +41,12 @@ import com.h0uss.aimart.ui.theme.regularStyle
 import com.h0uss.aimart.ui.theme.semiboldStyle
 import com.h0uss.aimart.ui.viewModel.search.SearchEvent
 import com.h0uss.aimart.ui.viewModel.search.SearchState
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun SearchResultScreen(
     modifier: Modifier = Modifier,
+    products: LazyPagingItems<ProductCardData>,
     state: SearchState = SearchState(),
     onEvent: (SearchEvent) -> Unit = {},
 ) {
@@ -93,7 +99,7 @@ fun SearchResultScreen(
             }
         }
 
-        if (state.products.isEmpty() && state.sellers.isEmpty()){
+        if (products.itemCount == 0 && state.sellers.isEmpty()){
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -139,7 +145,7 @@ fun SearchResultScreen(
                                 onEvent(SearchEvent.SellerClick(sellerId))
                             }
                         )
-                    if (state.products.isNotEmpty())
+                    if (products.itemCount > 0)
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -159,26 +165,46 @@ fun SearchResultScreen(
                             )
                         }
                 }
-                if (state.products.isNotEmpty()) {
-                    val chunkedProducts = state.products.chunked(2)
-
-                    items(chunkedProducts) { rowItems ->
+                if (products.itemCount > 0) {
+                    val rowCount = (products.itemCount + 1) / 2
+                    items(
+                        count = rowCount,
+                    ) { rowIndex ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 16.dp, top = 18.dp, end = 16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            rowItems.forEach { product ->
-                                ProductCard(
-                                    product = product,
-                                    onClick = {
-                                        onEvent(SearchEvent.ProductClick(product.id))
-                                    }
-                                )
+                            Box(modifier = Modifier.weight(1f)) {
+                                val product1 = products[rowIndex * 2]
+                                if (product1 != null) {
+                                    ProductCard(
+                                        product = product1,
+                                        onClick = { productId ->
+                                            onEvent(SearchEvent.ProductClick(productId))
+                                        }
+                                    )
+                                }
                             }
-                            if (rowItems.size < 2) {
-                                Spacer(modifier = Modifier.weight(1f))
+                            Box(
+                                modifier = Modifier.weight(1f),
+                                contentAlignment = Alignment.TopEnd
+                            ) {
+                                val product2Index = rowIndex * 2 + 1
+                                if (product2Index < products.itemCount) {
+                                    val product2 = products[product2Index]
+                                    if (product2 != null) {
+                                        ProductCard(
+                                            product = product2,
+                                            onClick = { productId ->
+                                                onEvent(SearchEvent.ProductClick(productId))
+                                            }
+                                        )
+                                    }
+                                } else {
+                                    Spacer(Modifier.fillMaxWidth())
+                                }
                             }
                         }
                     }
@@ -192,10 +218,43 @@ fun SearchResultScreen(
     }
 }
 
-@Preview
+@Preview(widthDp = 360, heightDp = 1000)
+@Composable
+private fun Preview_fill_min_width() {
+    Preview_fill()
+}
+@Preview( heightDp = 1000)
+@Composable
+private fun Preview_fill_norm_width() {
+    Preview_fill()
+}
+
+@Preview(widthDp = 360, heightDp = 1000)
+@Composable
+private fun Preview_empty_min_width() {
+    Preview_empty()
+}
+@Preview( heightDp = 1000)
+@Composable
+private fun Preview_empty_norm_width() {
+    Preview_empty()
+}
+
 @Composable
 private fun Preview_fill() {
+    val productsFlow = flowOf(PagingData.from(List(21){ item ->
+        ProductCardData(
+            id = item.toLong(),
+            authorName = "Бильбо",
+            name = "AI Кольцо всевластия",
+            price = 0.09f,
+            imageId = R.drawable.background,
+            description = "Ты не пройдёшь"
+        )
+    }))
+
     SearchResultScreen(
+        products = productsFlow.collectAsLazyPagingItems(),
         state = SearchState(
             searchValue = "Кольцо",
             sellers = List(10) { item ->
@@ -205,25 +264,17 @@ private fun Preview_fill() {
                     imageId = R.drawable.seller
                 )
             },
-            products = List(21) { item ->
-                ProductCardData(
-                    id = 1L,
-                    authorName = "Бильбо",
-                    name = "AI Кольцо всевластия",
-                    price = 0.99f,
-                    imageId = R.drawable.background,
-                    description = "Ты не пройдёшь"
-                )
-            },
             hints = List(10) { item -> "Подсказка" }
         )
     )
 }
 
-@Preview
 @Composable
 private fun Preview_empty() {
+    val productsFlow = flowOf(PagingData.from(listOf<ProductCardData>()))
+
     SearchResultScreen(
+        products = productsFlow.collectAsLazyPagingItems(),
         state = SearchState(
             sellers = List(10) { item ->
                 UserHomeData(
@@ -232,7 +283,6 @@ private fun Preview_empty() {
                     imageId = R.drawable.seller
                 )
             },
-            products = listOf(),
             hints = List(10) { item -> "Подсказка" }
 
         )

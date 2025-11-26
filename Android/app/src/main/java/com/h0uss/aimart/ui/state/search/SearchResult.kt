@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.h0uss.aimart.ui.screen.search.SearchResultScreen
 import com.h0uss.aimart.ui.viewModel.search.SearchNavigationEvent
 import com.h0uss.aimart.ui.viewModel.search.SearchViewModel
@@ -22,6 +23,7 @@ fun SearchResult(
     navToHome: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val products = viewModel.products.collectAsLazyPagingItems()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.receiveAsFlow().collect { event ->
@@ -41,6 +43,7 @@ fun SearchResult(
     }
 
     SearchResultScreen(
+        products = products,
         state = state,
         onEvent = viewModel::onEvent
     )

@@ -4,6 +4,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.Graph.productRepository
 import com.h0uss.aimart.Graph.searchHintRepository
@@ -12,9 +14,8 @@ import com.h0uss.aimart.data.model.ProductCardData
 import com.h0uss.aimart.data.model.UserHomeData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
-class SearchViewModel : ViewModel(){
+class SearchViewModel : ViewModel() {
 
     var state = MutableStateFlow(SearchState())
         private set
@@ -32,7 +33,16 @@ class SearchViewModel : ViewModel(){
     var navigationEvents = Channel<SearchNavigationEvent>()
         private set
 
-    private val searchTrigger = MutableStateFlow<String?>(null)
+    private val searchTrigger = MutableStateFlow("")
+
+    val products: Flow<PagingData<ProductCardData>> = searchTrigger
+        .flatMapLatest { query ->
+            if (query.isBlank())
+                flowOf(PagingData.empty())
+            else
+                productRepository.getProductByStringInside(query)
+        }
+        .cachedIn(viewModelScope)
 
     init {
         searchHintRepository.getHints(authUserIdLong)
@@ -43,21 +53,15 @@ class SearchViewModel : ViewModel(){
             .launchIn(viewModelScope)
 
         searchTrigger
-            .filter { it != null }
             .flatMapLatest { query ->
-                if (query.isNullOrBlank()) {
-                    flowOf(Pair(emptyList<UserHomeData>(), emptyList<ProductCardData>()))
+                if (query.isBlank()) {
+                    flowOf(emptyList<UserHomeData>())
                 } else {
-                    combine(
-                        userRepository.getUsersByStringInside(query),
-                        productRepository.getProductByStringInside(query)
-                    ) { sellers, products ->
-                        Pair(sellers, products)
-                    }
+                    userRepository.getUsersByStringInside(query)
                 }
             }
-            .onEach { (sellers, products) ->
-                state.update { it.copy(sellers = sellers, products = products) }
+            .onEach { sellers ->
+                state.update { it.copy(sellers = sellers) }
             }
             .launchIn(viewModelScope)
     }
@@ -80,8 +84,10 @@ class SearchViewModel : ViewModel(){
                         userId = authUserIdLong,
                         hintText = event.value
                     )
-
                     state.update { it.copy(searchValue = event.value) }
+                    
+                    // ★★★ Запускаем поиск по клику на подсказку
+                    searchTrigger.value = event.value
 
                     navigationEvents.send(SearchNavigationEvent.SearchEnter(state.value.searchValue))
                 }
@@ -131,25 +137,25 @@ class SearchViewModel : ViewModel(){
             }
             is SearchEvent.SearchRequest -> {
                 val query = event.value
-                if (query.isBlank()) return
-
                 state.update {
                     it.copy(searchValue = query)
                 }
-
-                viewModelScope.launch {
-                    searchHintRepository.addHintIfNotExist(
-                        userId = authUserIdLong,
-                        hintText = query
-                    )
-                }
-
+                
+                // ★★★ 4. SearchRequest просто обновляет триггер.
                 searchTrigger.value = query
+
+                if (query.isNotBlank()) {
+                    viewModelScope.launch {
+                        searchHintRepository.addHintIfNotExist(
+                            userId = authUserIdLong,
+                            hintText = query
+                        )
+                    }
+                }
 
                 viewModelScope.launch {
                     navigationEvents.send(SearchNavigationEvent.SearchEnter(query))
                 }
-
             }
         }
     }
@@ -158,7 +164,6 @@ class SearchViewModel : ViewModel(){
 
 data class SearchState(
     val sellers: List<UserHomeData> = listOf(),
-    val products: List<ProductCardData> = listOf(),
     val hints: List<String> = listOf(),
     val lastSearchList: List<String> = listOf(),
     val searchValue: String = ""

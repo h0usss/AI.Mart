@@ -54,5 +54,5 @@ interface ProductDao {
         OR p.description LIKE '%' || :string || '%'
         ORDER BY p.create_date DESC
     """)
-    fun getProductByStringInside(string: String): Flow<List<ProductCardData>>
+    fun getProductByStringInside(string: String):  PagingSource<Int, ProductCardData>
 }
