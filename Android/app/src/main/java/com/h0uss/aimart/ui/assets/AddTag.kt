@@ -19,8 +19,6 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,27 +44,9 @@ fun AddTag(
     inputTransformation: InputTransformation = InputTransformation{},
     outputTransformation: OutputTransformation = OutputTransformation{},
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    value: String = "",
-    onValueChange: (String) -> Unit = {},
+    state: TextFieldState = TextFieldState(""),
     onClickAdd: () -> Unit = {}
 ) {
-    val state = remember { TextFieldState(value) }
-
-    LaunchedEffect(state.text.toString()) {
-        if (state.text.toString() != value) {
-            onValueChange(state.text.toString())
-        }
-    }
-
-    LaunchedEffect(value) {
-        val currentStateString = state.text.toString()
-        if (value != currentStateString) {
-            state.edit {
-                replace(0, length, value)
-            }
-        }
-    }
-
     Column(
         modifier = modifier
     ){

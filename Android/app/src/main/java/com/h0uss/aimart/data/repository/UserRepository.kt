@@ -42,7 +42,7 @@ class UserRepository(
         return userDao.getUserCountSellFlow(userId)
     }
 
-    fun getSellerByIdFlow(userId: Long): Flow<SellerData>{
+    fun getSellerByIdFlow(userId: Long): Flow<SellerData?>{
         return userDao.getSellerByIdFlow(userId)
     }
 

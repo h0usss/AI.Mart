@@ -85,11 +85,8 @@ fun SignInScreen(
                 .padding(top = 4.dp)
             ,
             placeHolder = "example@gmail.com",
-            value = state.emailValue,
+            state = state.emailState,
             inputTransformation = emailInputTransformation(),
-            onValueChange = { newValue ->
-                onEvent(SignInEvent.EmailChanged(newValue))
-            },
         )
         Text(
             modifier = Modifier
@@ -105,13 +102,10 @@ fun SignInScreen(
             modifier = Modifier
                 .padding(top = 4.dp)
             ,
-            value = state.passwordValue,
+            state = state.passwordState,
             placeHolder = "Введите пароль",
             inputTransformation = passwordInputTransformation(),
             outputTransformation = passwordOutputTransformation(),
-            onValueChange = { newValue ->
-                onEvent(SignInEvent.PasswordChanged(newValue))
-            }
         )
         if (state.authError != null)
             Row(

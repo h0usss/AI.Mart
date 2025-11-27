@@ -2,6 +2,7 @@ package com.h0uss.aimart.ui.viewModel.authorize
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.h0uss.aimart.Graph.saveUserId
@@ -24,20 +25,10 @@ class SignInViewModel : ViewModel(){
     @RequiresApi(Build.VERSION_CODES.O)
     fun onEvent(event: SignInEvent) {
         when(event){
-            is SignInEvent.EmailChanged -> {
-                state.update{
-                    it.copy(emailValue = event.value, authError = null)
-                }
-            }
-            is SignInEvent.PasswordChanged -> {
-                state.update{
-                    it.copy(passwordValue = event.value, authError = null)
-                }
-            }
             is SignInEvent.SignInClicked -> {
                 val currentState = state.value
-                val identifier = currentState.emailValue
-                val password = currentState.passwordValue
+                val identifier = currentState.emailState.text.toString()
+                val password = currentState.passwordState.text.toString()
 
                 if (identifier.isBlank() || password.isBlank()) {
                     state.update { it.copy(authError = "Поля не должны быть пустыми") }
@@ -70,14 +61,12 @@ class SignInViewModel : ViewModel(){
 }
 
 data class SignInState(
-    val emailValue: String = "",
-    val passwordValue: String = "",
+    val emailState: TextFieldState = TextFieldState(""),
+    val passwordState: TextFieldState = TextFieldState(""),
     val authError: String? = null,
 )
 
 sealed class SignInEvent {
-    data class EmailChanged(val value: String) : SignInEvent()
-    data class PasswordChanged(val value: String) : SignInEvent()
     object SignInClicked : SignInEvent()
     object GoogleSignInClicked : SignInEvent()
     object RegisterClicked : SignInEvent()

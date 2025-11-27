@@ -204,11 +204,8 @@ fun SellerProfileForSelfEditScreen(
                         isFocus = false,
                         isBigTextField = true,
                         placeHolder = "Напишите тут информацию о себе ..",
-                        value = state.user.about,
+                        state = state.newAboutState,
                         radiusPercent = 10,
-                        onValueChange = { newValue ->
-                            onEvent(SellerProfileForSelfEditEvent.AboutChange(newValue))
-                        },
                     )
                     Text(
                         modifier = Modifier.padding(top = 18.dp, bottom = 18.dp),
@@ -228,14 +225,13 @@ fun SellerProfileForSelfEditScreen(
                     AddTag(
                         modifier = Modifier.padding(top = 16.dp),
                         placeHolder = "7 - максимально",
-                        value = state.newSkillValue,
+                        state = state.newSkillState,
                         onClickAdd = {
                             if (state.user.skills.size < 7)
-                                onEvent(SellerProfileForSelfEditEvent.AddSkillClick(state.newSkillValue))
+                                onEvent(SellerProfileForSelfEditEvent.AddSkillClick(
+                                    state.newSkillState.text.toString()
+                                ))
                         },
-                        onValueChange = { newValue ->
-                            onEvent(SellerProfileForSelfEditEvent.SkillChange(newValue))
-                        }
                     )
                 }
             }

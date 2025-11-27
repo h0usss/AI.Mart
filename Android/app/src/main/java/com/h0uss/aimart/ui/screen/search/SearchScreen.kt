@@ -49,17 +49,14 @@ fun SearchScreen(
                 isFocus = true,
                 isFill = true,
                 placeHolder = "Поиск",
-                value = state.searchValue,
+                state = state.searchState,
                 rightImageId = R.drawable.close,
                 leftImageId = R.drawable.loupe,
                 onClickRightImage = {
                     onEvent(SearchEvent.ClearSearchClick)
                 },
-                onValueChange = { newValue ->
-                    onEvent(SearchEvent.SearchValueChange(newValue))
-                },
                 onClickEnter = {
-                    onEvent(SearchEvent.SearchRequest(state.searchValue))
+                    onEvent(SearchEvent.SearchRequest(state.searchState.text.toString()))
                 }
             )
             Text(

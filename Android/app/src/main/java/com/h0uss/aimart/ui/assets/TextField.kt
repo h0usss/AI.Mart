@@ -21,7 +21,6 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,8 +57,7 @@ fun TextField(
     inputTransformation: InputTransformation = InputTransformation{},
     outputTransformation: OutputTransformation = OutputTransformation{},
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Default),
-    value: String = "",
-    onValueChange: (String) -> Unit = {},
+    state: TextFieldState = remember { TextFieldState("") },
     rightImageId: Int = -1,
     leftImageId: Int = -1,
     onClickRightImage: () -> Unit = {},
@@ -67,7 +65,6 @@ fun TextField(
     onClickEnter: () -> Unit = {},
 ){
 
-    val state = remember { TextFieldState(value) }
     val focusManager = LocalFocusManager.current
     val keyboardActions = remember(onClickEnter) {
         KeyboardActionHandler({
@@ -75,21 +72,6 @@ fun TextField(
                 focusManager.clearFocus()
             }
         )
-    }
-
-    LaunchedEffect(state.text.toString()) {
-        if (state.text.toString() != value) {
-            onValueChange(state.text.toString())
-        }
-    }
-
-    LaunchedEffect(value) {
-        val currentStateString = state.text.toString()
-        if (value != currentStateString) {
-            state.edit {
-                replace(0, length, value)
-            }
-        }
     }
 
     Column(
@@ -228,7 +210,7 @@ fun PreviewNecessarily() {
         TextField(
             placeHolder = "Пароль",
             isBigTextField = true,
-            value = "dfasjhdlhas jd sj fdkjlshd flksdfs dsdh sdjk lasldk jhfaslkdjfhlskahj dhfk jsdhakjshdf slkjh fkjsd hlsdkjhf lskjdh fljksda hldjhf ljks dhahf ljkash fdasjhkl f"
+            state = remember{ TextFieldState("dfasjhdlhas jd sj fdkjlshd flksdfs dsdh sdjk lasldk jhfaslkdjfhlskahj dhfk jsdhakjshdf slkjh fkjsd hlsdkjhf lskjdh fljksda hldjhf ljks dhahf ljkash fdasjhkl f") }
         )
     }
 }

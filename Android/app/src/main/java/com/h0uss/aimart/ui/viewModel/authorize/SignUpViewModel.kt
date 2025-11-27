@@ -2,10 +2,12 @@ package com.h0uss.aimart.ui.viewModel.authorize
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.h0uss.aimart.Graph.saveUserId
 import com.h0uss.aimart.Graph.userRepository
+import com.h0uss.aimart.data.emun.FormField
 import com.h0uss.aimart.data.model.UserRegistrationData
 import com.h0uss.aimart.util.toLocalDateTime
 import com.h0uss.aimart.util.validate.validateDate
@@ -29,59 +31,51 @@ class SignUpViewModel : ViewModel(){
     @RequiresApi(Build.VERSION_CODES.O)
     fun onEvent(event: SignUpEvent) {
         when(event){
-            is SignUpEvent.NameChanged -> {
-                state.update{
-                    it.copy(nameValue = event.value, nameError = null)
-                }
-            }
-            is SignUpEvent.EmailChanged -> {
-                state.update{
-                    it.copy(emailValue = event.value, emailError = null)
-                }
-            }
-            is SignUpEvent.PasswordChanged -> {
-                state.update{
-                    it.copy(passwordValue = event.value, passwordError = null)
-                }
-            }
-            is SignUpEvent.DateChanged -> {
-                state.update{
-                    it.copy(dateValue = event.value, dateError = null)
-                }
-
-            }
 
             is SignUpEvent.SignUpClicked -> {
-                val currentState = state.value
+                viewModelScope.launch {
+                    val currentState = state.value
 
-                val nameError = currentState.nameValue.validateName().takeIf { it.isNotEmpty() }
-                val emailError = currentState.emailValue.validateMail().takeIf { it.isNotEmpty() }
-                val dateError = currentState.dateValue.validateDate().takeIf { it.isNotEmpty() }
-                val passwordError = currentState.passwordValue.validatePassword().takeIf { it.isNotEmpty() }
+                    val nameError =
+                        currentState.nameState.text.toString().validateName().takeIf { it.isNotEmpty() }
+                    val emailError =
+                        currentState.emailState.text.toString().validateMail().takeIf { it.isNotEmpty() }
+                    val dateError =
+                        currentState.dateState.text.toString().validateDate().takeIf { it.isNotEmpty() }
+                    val passwordError =
+                        currentState.passwordState.text.toString().validatePassword().takeIf { it.isNotEmpty() }
 
-                val hasError = listOfNotNull(nameError, emailError, dateError, passwordError).any()
+                    val hasError =
+                        listOfNotNull(nameError, emailError, dateError, passwordError).any()
+                    val isRegister =
+                        userRepository.getUserByEmailOrNick(currentState.emailState.text.toString())
 
-                if (hasError) {
-                    state.update {
-                        it.copy(
-                            nameError = nameError,
-                            emailError = emailError,
-                            dateError = dateError,
-                            passwordError = passwordError
-                        )
-                    }
-                } else {
-                    viewModelScope.launch {
+                    if (hasError) {
+                        state.update {
+                            it.copy(
+                                nameError = nameError,
+                                emailError = emailError,
+                                dateError = dateError,
+                                passwordError = passwordError
+                            )
+                        }
+                    } else if (isRegister != null) {
+                        state.update {
+                            it.copy(
+                                emailError = "Пользователь с такой почтой уже зарегистрирован",
+                            )
+                        }
+                    } else {
                         val id = userRepository.createUser(
                             UserRegistrationData(
-                                name = currentState.nameValue,
-                                email = currentState.emailValue,
-                                password = currentState.passwordValue,
-                                dateOfBirth = currentState.dateValue.toLocalDateTime()
+                                name = currentState.nameState.text.toString(),
+                                email = currentState.emailState.text.toString(),
+                                password = currentState.passwordState.text.toString(),
+                                dateOfBirth = currentState.dateState.text.toString().toLocalDateTime()
                             )
                         )
                         saveUserId(id)
-                        
+
                         navigationEvents.send(SignUpNavigationEvent.Success)
                     }
                 }
@@ -89,6 +83,24 @@ class SignUpViewModel : ViewModel(){
             is SignUpEvent.LoginClicked -> {
                 viewModelScope.launch {
                     navigationEvents.send(SignUpNavigationEvent.NavigateToLogin)
+                }
+            }
+            is SignUpEvent.DateSelected -> {
+                state.update {
+                    it.copy(
+                        dateState = TextFieldState(event.date),
+                        dateError = "",
+                    )
+                }
+            }
+            is SignUpEvent.ClearError -> {
+                state.update { currentState ->
+                    when (event.field) {
+                        FormField.NAME -> currentState.copy(nameError = "")
+                        FormField.EMAIL -> currentState.copy(emailError = "")
+                        FormField.PASSWORD -> currentState.copy(passwordError = "")
+                        FormField.DATE -> currentState.copy(dateError = "")
+                    }
                 }
             }
             is SignUpEvent.GoogleSignUpClicked -> {}
@@ -99,10 +111,10 @@ class SignUpViewModel : ViewModel(){
 }
 
 data class SignUpState(
-    val nameValue: String = "",
-    val emailValue: String = "",
-    val passwordValue: String = "",
-    val dateValue: String = "",
+    val nameState: TextFieldState = TextFieldState(""),
+    val emailState: TextFieldState = TextFieldState(""),
+    val passwordState: TextFieldState = TextFieldState(""),
+    val dateState: TextFieldState = TextFieldState(""),
 
     val nameError: String? = null,
     val emailError: String? = null,
@@ -111,10 +123,8 @@ data class SignUpState(
 )
 
 sealed class SignUpEvent {
-    data class NameChanged(val value: String) : SignUpEvent()
-    data class EmailChanged(val value: String) : SignUpEvent()
-    data class PasswordChanged(val value: String) : SignUpEvent()
-    data class DateChanged(val value: String) : SignUpEvent()
+    data class DateSelected(val date: String) : SignUpEvent()
+    data class ClearError(val field: FormField) : SignUpEvent()
     object SignUpClicked : SignUpEvent()
     object GoogleSignUpClicked : SignUpEvent()
     object LoginClicked : SignUpEvent()

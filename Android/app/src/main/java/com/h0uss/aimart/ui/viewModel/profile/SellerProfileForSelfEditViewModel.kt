@@ -2,6 +2,7 @@ package com.h0uss.aimart.ui.viewModel.profile
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.h0uss.aimart.Graph.authUserIdLong
@@ -35,6 +36,7 @@ class SellerProfileForSelfEditViewModel : ViewModel() {
                 state.update {
                     it.copy(
                         user = user,
+                        newAboutState = TextFieldState(user.about),
                         originalPortfolio = portfolio,
                         portfolio = portfolio,
                         allPortfolioTags = allTags,
@@ -49,6 +51,13 @@ class SellerProfileForSelfEditViewModel : ViewModel() {
         when (event) {
             is SellerProfileForSelfEditEvent.SaveClick -> {
                 viewModelScope.launch {
+                    state.update {
+                        it.copy(
+                            user = state.value.user.copy(
+                                about = state.value.newAboutState.text.toString()
+                            )
+                        )
+                    }
                     userRepository.updateSeller(state.value.user)
                     sendNavEvent(SellerProfileForSelfEditNavigationEvent.SaveClick)
                 }
@@ -61,26 +70,19 @@ class SellerProfileForSelfEditViewModel : ViewModel() {
             }
             is SellerProfileForSelfEditEvent.DeleteAccountClick -> {
                 viewModelScope.launch {
-                    userRepository.deleteUser(authUserIdLong)
+                    val userIdToDelete = authUserIdLong
                     deleteUserId()
                     sendNavEvent(SellerProfileForSelfEditNavigationEvent.DeleteAccountClick)
+                    userRepository.deleteUser(userIdToDelete)
                 }
-            }
-            is SellerProfileForSelfEditEvent.AboutChange -> {
-                state.update {
-                    it.copy(user = it.user.copy(about = event.about))
-                }
-            }
-            is SellerProfileForSelfEditEvent.SkillChange -> {
-                state.update { it.copy(newSkillValue = event.newSkill) }
             }
             is SellerProfileForSelfEditEvent.AddSkillClick -> {
-                if (state.value.newSkillValue.isNotBlank()) {
-                    val newSkills = state.value.user.skills + state.value.newSkillValue
+                if (state.value.newSkillState.text.toString().isNotBlank()) {
+                    val newSkills = state.value.user.skills + state.value.newSkillState.text.toString()
                     state.update {
                         it.copy(
                             user = it.user.copy(skills = newSkills),
-                            newSkillValue = ""
+                            newSkillState = TextFieldState("")
                         )
                     }
                 }
@@ -160,7 +162,8 @@ class SellerProfileForSelfEditViewModel : ViewModel() {
 
 data class SellerProfileForSelfEditState(
     val user: SellerData = SellerData(),
-    val newSkillValue: String = "",
+    val newSkillState: TextFieldState = TextFieldState(""),
+    val newAboutState: TextFieldState = TextFieldState(""),
     val isVisibleSettings: Boolean = false,
     val allPortfolioTags: List<String> = listOf("Все"),
     val portfolioFilter: List<Boolean> = listOf(true),
@@ -177,8 +180,6 @@ sealed class SellerProfileForSelfEditEvent {
     object DismissSettingsMenu : SellerProfileForSelfEditEvent()
     object AddCaseClick : SellerProfileForSelfEditEvent()
     data class AddSkillClick(val newSkill: String) : SellerProfileForSelfEditEvent()
-    data class AboutChange(val about: String) : SellerProfileForSelfEditEvent()
-    data class SkillChange(val newSkill: String) : SellerProfileForSelfEditEvent()
     data class DeleteCaseClick(val id: Long) : SellerProfileForSelfEditEvent()
     data class PortfolioTagClick(val name: String) : SellerProfileForSelfEditEvent()
     data class PortfolioItemClick(val id: Long) : SellerProfileForSelfEditEvent()

@@ -41,10 +41,6 @@ object ProfileEdit: ScreensRoutes
 @Serializable
 object Search: ScreensRoutes
 @Serializable
-data class SearchTextField(
-    val request: String = ""
-): ScreensRoutes
+object SearchTextField: ScreensRoutes
 @Serializable
-data class SearchResult(
-    val request: String
-): ScreensRoutes
+object SearchResult: ScreensRoutes

@@ -37,19 +37,19 @@ class SellerProfileForUserViewModel(
         ) { seller, countSell, portfolio, feedback ->
             val allTags = listOf("Все") + portfolio.flatMap { it.tags }.distinct()
             val initialFilteredFeedback = feedback.sortedBy { it.starCount }
-
-            state.update {
-                it.copy(
-                    user = seller,
-                    countSell = countSell,
-                    originalPortfolio = portfolio,
-                    portfolio = portfolio,
-                    originalFeedback = feedback,
-                    filteredFeedback = initialFilteredFeedback,
-                    allPortfolioTags = allTags,
-                    portfolioTagFilter = List(allTags.size) { index -> index == 0 }
-                )
-            }
+            if (seller != null)
+                state.update {
+                    it.copy(
+                        user = seller,
+                        countSell = countSell,
+                        originalPortfolio = portfolio,
+                        portfolio = portfolio,
+                        originalFeedback = feedback,
+                        filteredFeedback = initialFilteredFeedback,
+                        allPortfolioTags = allTags,
+                        portfolioTagFilter = List(allTags.size) { index -> index == 0 }
+                    )
+                }
         }.launchIn(viewModelScope)
     }
 

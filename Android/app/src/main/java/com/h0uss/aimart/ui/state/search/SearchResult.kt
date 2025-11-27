@@ -35,7 +35,7 @@ fun SearchResult(
                     navToProduct(event.value)
                 }
                 is SearchNavigationEvent.SearchEnter -> navToSearchResult()
-                is SearchNavigationEvent.Back -> navToHome()
+                is SearchNavigationEvent.Back -> navToSearch()
                 is SearchNavigationEvent.SearchTextField -> navToSearch()
                 is SearchNavigationEvent.CancelClick -> navToHome()
             }

@@ -68,13 +68,13 @@ fun Status(
                 shape = RoundedCornerShape(50),
                 color = if (statusData.isActive) TealTagBorder else Black10,
             )
+            .clickable{
+                statusData.onClick()
+            }
             .padding(
                 horizontal = if (statusData.isTag) 12.dp else 8.dp,
                 vertical = if (statusData.isTag) 6.dp else 2.dp
             )
-            .clickable{
-                statusData.onClick()
-            }
         ,
         verticalAlignment = Alignment.CenterVertically
     ){

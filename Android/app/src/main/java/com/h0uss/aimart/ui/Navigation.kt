@@ -50,12 +50,16 @@ fun Navigation(
     var isBottomNavBarShow by remember{ mutableStateOf(false) }
     var isSeller by rememberSaveable { mutableStateOf<Boolean?>(null) }
 
-    LaunchedEffect(Unit) {
-        isSeller = userRepository.getUserIsSeller(authUserIdLong)
+    LaunchedEffect(authUserIdLong) {
+        isSeller = if (authUserIdLong != 0L)
+            userRepository.getUserIsSeller(authUserIdLong)
+        else
+            null
     }
+
     Column{
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .background(White)
                 .systemBarsPadding()
                 .fillMaxWidth()
@@ -121,12 +125,12 @@ fun Navigation(
                                 //                        navController.navigate(Product(productId))
                             },
                             navToSearch = {
-                                navController.navigate(SearchTextField(""))
+                                navController.navigate(SearchTextField)
                             }
                         )
                     }
                     navigation<Search>(
-                        startDestination = SearchTextField() // ★★★ ИСПРАВЛЕНО
+                        startDestination = SearchTextField
                     ){
                         composable<SearchTextField> {
                             isBottomNavBarShow = true
@@ -142,10 +146,10 @@ fun Navigation(
 //                                navController.navigate(Home)
                                 },
                                 navToSearchResult = {
-                                    navController.navigate(SearchResult(searchViewModel.state.value.searchValue))
+                                    navController.navigate(SearchResult)
                                 },
                                 navToSearch = {
-                                    navController.navigate(SearchTextField(searchViewModel.state.value.searchValue))
+                                    navController.navigate(SearchTextField)
                                 },
                                 navToHome = {
                                     navController.navigate(Home)
@@ -167,10 +171,10 @@ fun Navigation(
 //                                navController.navigate(Home)
                                 },
                                 navToSearchResult = {
-                                    navController.navigate(SearchResult(searchViewModel.state.value.searchValue))
+                                    navController.navigate(SearchResult)
                                 },
                                 navToSearch = {
-                                    navController.navigate(SearchTextField(searchViewModel.state.value.searchValue))
+                                    navController.navigate(SearchTextField)
                                 },
                                 navToHome = {
                                     navController.navigate(Home)
@@ -247,21 +251,24 @@ fun Navigation(
                     composable<Profile> {
                         isBottomNavBarShow = true
 
-                        if (isSeller == true)
-                            SellerProfileForSelf(
+                        when (isSeller) {
+                            true -> SellerProfileForSelf(
                                 navToPortfolioItem = {
-                                    //                            navController.navigate()
+                                    // navController.navigate()
                                 },
                                 navToEdit = {
                                     navController.navigate(ProfileEdit)
                                 }
                             )
-                        if (isSeller == false)
-                            UserProfileForSelf(
+                            false -> UserProfileForSelf(
                                 navToEditProfile = {
-                                    //                            navController.navigate(ProfileEdit)
+                                    // navController.navigate(ProfileEdit)
                                 }
                             )
+                            null -> {
+
+                            }
+                        }
                     }
 
                     composable<ProfileEdit> {

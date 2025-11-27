@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -62,6 +63,10 @@ fun SearchResultScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
+                modifier = Modifier.clickable{
+                    onEvent(SearchEvent.BackClick)
+                }
+                ,
                 painter = painterResource(R.drawable.back),
                 contentDescription = "Back"
             )
@@ -73,7 +78,7 @@ fun SearchResultScreen(
                     }
                 ,
                 placeHolder = "Поиск",
-                value = state.searchValue,
+                value = state.searchState.text.toString(),
                 rightImageId = R.drawable.close,
                 onClickRightImage = {
                     onEvent(SearchEvent.DeleteSearchClick)
@@ -256,7 +261,7 @@ private fun Preview_fill() {
     SearchResultScreen(
         products = productsFlow.collectAsLazyPagingItems(),
         state = SearchState(
-            searchValue = "Кольцо",
+            searchState = TextFieldState("Кольцо"),
             sellers = List(10) { item ->
                 UserHomeData(
                     id = 0,

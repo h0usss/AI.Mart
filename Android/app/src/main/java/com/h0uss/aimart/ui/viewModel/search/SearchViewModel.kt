@@ -2,6 +2,7 @@ package com.h0uss.aimart.ui.viewModel.search
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -84,17 +85,22 @@ class SearchViewModel : ViewModel() {
                         userId = authUserIdLong,
                         hintText = event.value
                     )
-                    state.update { it.copy(searchValue = event.value) }
-                    
-                    // ★★★ Запускаем поиск по клику на подсказку
+                    state.update {
+                        it.copy(
+                            searchState = TextFieldState(event.value)
+                        )
+                    }
+
                     searchTrigger.value = event.value
 
-                    navigationEvents.send(SearchNavigationEvent.SearchEnter(state.value.searchValue))
+                    navigationEvents.send(SearchNavigationEvent.SearchEnter(
+                        state.value.searchState.text.toString()
+                    ))
                 }
             }
             is SearchEvent.SearchClick -> {
                 viewModelScope.launch {
-                    navigationEvents.send(SearchNavigationEvent.SearchTextField(state.value.searchValue))
+                    navigationEvents.send(SearchNavigationEvent.SearchTextField)
                 }
             }
             is SearchEvent.BackClick -> {
@@ -103,13 +109,11 @@ class SearchViewModel : ViewModel() {
                 }
             }
             is SearchEvent.DeleteSearchClick -> {
-                viewModelScope.launch {
-                    navigationEvents.send(SearchNavigationEvent.SearchTextField(value = ""))
-                }
-            }
-            is SearchEvent.SearchValueChange -> {
                 state.update {
-                    it.copy(searchValue = event.value)
+                    it.copy(searchState = TextFieldState(""))
+                }
+                viewModelScope.launch {
+                    navigationEvents.send(SearchNavigationEvent.SearchTextField)
                 }
             }
             is SearchEvent.DeleteHintClick -> {
@@ -127,7 +131,7 @@ class SearchViewModel : ViewModel() {
             }
             is SearchEvent.ClearSearchClick -> {
                 state.update {
-                    it.copy(searchValue = "")
+                    it.copy(searchState = TextFieldState(""))
                 }
             }
             is SearchEvent.CancelClick -> {
@@ -138,10 +142,9 @@ class SearchViewModel : ViewModel() {
             is SearchEvent.SearchRequest -> {
                 val query = event.value
                 state.update {
-                    it.copy(searchValue = query)
+                    it.copy(searchState = TextFieldState(query))
                 }
-                
-                // ★★★ 4. SearchRequest просто обновляет триггер.
+
                 searchTrigger.value = query
 
                 if (query.isNotBlank()) {
@@ -166,14 +169,13 @@ data class SearchState(
     val sellers: List<UserHomeData> = listOf(),
     val hints: List<String> = listOf(),
     val lastSearchList: List<String> = listOf(),
-    val searchValue: String = ""
+    val searchState: TextFieldState = TextFieldState("")
 )
 
 sealed class SearchEvent {
     data class SellerClick(val value: Long) : SearchEvent()
     data class ProductClick(val value: Long) : SearchEvent()
     data class HintClick(val value: String) : SearchEvent()
-    data class SearchValueChange(val value: String) : SearchEvent()
     data class DeleteHintClick(val value: String) : SearchEvent()
     data class SearchRequest(val value: String) : SearchEvent()
     object SearchClick : SearchEvent()
@@ -188,7 +190,7 @@ sealed class SearchNavigationEvent {
     data class Seller(val value: Long) : SearchNavigationEvent()
     data class Product(val value: Long) : SearchNavigationEvent()
     data class SearchEnter(val value: String): SearchNavigationEvent()
-    data class SearchTextField(val value: String): SearchNavigationEvent()
+    object SearchTextField: SearchNavigationEvent()
     object Back: SearchNavigationEvent()
     object CancelClick: SearchNavigationEvent()
 }

@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.h0uss.aimart.R
+import com.h0uss.aimart.data.emun.FormField
 import com.h0uss.aimart.ui.assets.Button
 import com.h0uss.aimart.ui.assets.TextField
 import com.h0uss.aimart.ui.theme.Black10
@@ -65,6 +67,19 @@ fun SignUpScreen(
         selectableDates = DateValidator
     )
     var showDatePicker by remember { mutableStateOf(false) }
+
+    LaunchedEffect(state.nameState.text) {
+        onEvent(SignUpEvent.ClearError(FormField.NAME))
+    }
+    LaunchedEffect(state.emailState.text) {
+        onEvent(SignUpEvent.ClearError(FormField.EMAIL))
+    }
+    LaunchedEffect(state.passwordState.text) {
+        onEvent(SignUpEvent.ClearError(FormField.PASSWORD))
+    }
+    LaunchedEffect(state.dateState.text) {
+        onEvent(SignUpEvent.ClearError(FormField.DATE))
+    }
 
     Column(
         modifier = modifier
@@ -107,11 +122,8 @@ fun SignUpScreen(
             ,
             placeHolder = "Ваше имя",
             inputTransformation = nameInputTransformation(),
-            value = state.nameValue,
+            state = state.nameState,
             errorMessage = state.nameError ?: "",
-            onValueChange = {
-                onEvent(SignUpEvent.NameChanged(it))
-            },
         )
 
         Text(
@@ -130,11 +142,8 @@ fun SignUpScreen(
             ,
             placeHolder = "example@gmail.com",
             inputTransformation = emailInputTransformation(),
-            value = state.emailValue,
+            state = state.emailState,
             errorMessage = state.emailError ?: "",
-            onValueChange = {
-                onEvent(SignUpEvent.EmailChanged(it))
-            }
         )
 
         Text(
@@ -152,12 +161,9 @@ fun SignUpScreen(
                 .padding(top = 6.dp)
             ,
             placeHolder = "DD.MM.YYYY",
-            value = state.dateValue,
+            state = state.dateState,
             inputTransformation = dateInputTransformation(),
             errorMessage = state.dateError ?: "",
-            onValueChange = {
-                onEvent(SignUpEvent.DateChanged(it))
-            },
             rightImageId = R.drawable.calendar,
             onClickRightImage = {
                 showDatePicker = true
@@ -181,11 +187,8 @@ fun SignUpScreen(
             placeHolder = "Пароль от 8 символов",
             inputTransformation = passwordInputTransformation(),
             outputTransformation = passwordOutputTransformation(),
-            value = state.passwordValue,
+            state = state.passwordState,
             errorMessage = state.passwordError ?: "",
-            onValueChange = {
-                onEvent(SignUpEvent.PasswordChanged(it))
-            },
         )
 
         Button(
@@ -278,7 +281,7 @@ fun SignUpScreen(
                             val localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate()
                             val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
                             val formattedDate = formatter.format(localDate)
-                            onEvent(SignUpEvent.DateChanged(formattedDate.toString()))
+                            onEvent(SignUpEvent.DateSelected(formattedDate.toString()))
                             Log.e("AIMARTR", formattedDate)
                         }
                         showDatePicker = false

@@ -107,7 +107,7 @@ interface UserDao {
         WHERE u.id = :userId
         GROUP BY u.id
     """)
-    fun getSellerByIdFlow(userId: Long): Flow<SellerData>
+    fun getSellerByIdFlow(userId: Long): Flow<SellerData?>
 
     @Query("""
         SELECT * 
