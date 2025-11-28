@@ -19,6 +19,7 @@ lifecycle = "2.10.0"
 jbcrypt = "0.4"
 datastore = "1.2.0"
 paging = "3.3.6"
+material = "1.13.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +54,8 @@ android-datastore-core = { group = "androidx.datastore", name = "datastore-prefe
 android-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore"}
 
 android-paging = { group = "androidx.paging", name = "paging-compose", version.ref = "paging"}
+
+android-material = { group = "com.google.android.material", name = "material", version.ref = "material"}
 
 
 [plugins]

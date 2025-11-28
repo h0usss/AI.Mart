@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -85,7 +84,6 @@ fun SignUpScreen(
         modifier = modifier
             .fillMaxSize()
             .background(White)
-            .systemBarsPadding()
             .padding(start = 24.dp, top = 72.dp, end = 24.dp )
         ,
         horizontalAlignment = Alignment.CenterHorizontally

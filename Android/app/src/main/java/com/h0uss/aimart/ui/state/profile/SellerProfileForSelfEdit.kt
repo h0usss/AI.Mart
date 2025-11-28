@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 fun SellerProfileForSelfEdit(
     viewModel: SellerProfileForSelfEditViewModel = viewModel<SellerProfileForSelfEditViewModel>(),
     navToProfile: () -> Unit,
-    navToLogin: () -> Unit,
+    navToCreateOrLogin: () -> Unit,
     navToPortfolioItem: (Long) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -29,10 +29,10 @@ fun SellerProfileForSelfEdit(
                     navToProfile()
                 }
                 is SellerProfileForSelfEditNavigationEvent.ExitClick -> {
-                    navToLogin()
+                    navToCreateOrLogin()
                 }
                 is SellerProfileForSelfEditNavigationEvent.DeleteAccountClick -> {
-                    navToLogin()
+                    navToCreateOrLogin()
                 }
                 is SellerProfileForSelfEditNavigationEvent.AddCaseClick -> {
 

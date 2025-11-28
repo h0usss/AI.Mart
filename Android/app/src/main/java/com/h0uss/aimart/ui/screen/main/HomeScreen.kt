@@ -6,9 +6,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,6 +49,8 @@ fun HomeScreen(
         modifier = modifier
             .background(White)
             .padding(top = 11.dp)
+        ,
+        contentPadding = WindowInsets.systemBars.asPaddingValues()
     ){
         item{
             SearchTextFieldButton(
@@ -53,8 +58,7 @@ fun HomeScreen(
                     .padding(horizontal = 16.dp)
                     .clickable {
                         onEvent(HomeEvent.SearchClick)
-                    }
-                ,
+                    },
                 placeHolder = "Поиск",
                 leftImageId = R.drawable.loupe,
             )
@@ -128,7 +132,7 @@ fun HomeScreen(
     }
 }
 
-@Preview(widthDp = 360, heightDp = 1000)
+@Preview(showSystemUi = true, widthDp = 360, heightDp = 1000)
 @Composable
 private fun Preview_v2() {
     Preview_data()

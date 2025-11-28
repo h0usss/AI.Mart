@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -50,7 +49,6 @@ fun SignInScreen(
         modifier = modifier
             .fillMaxSize()
             .background(White)
-            .systemBarsPadding()
             .padding(start = 24.dp, top = 150.dp, end = 24.dp )
         ,
         horizontalAlignment = Alignment.CenterHorizontally

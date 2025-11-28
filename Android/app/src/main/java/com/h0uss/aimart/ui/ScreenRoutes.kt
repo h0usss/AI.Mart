@@ -6,8 +6,10 @@ import kotlinx.serialization.Serializable
 sealed interface ScreensRoutes
 
 @Serializable
-object CheckLogin: ScreensRoutes
+object Splash: ScreensRoutes
 
+@Serializable
+object Authorise: ScreensRoutes
 @Serializable
 object CreateOrLogin: ScreensRoutes
 @Serializable

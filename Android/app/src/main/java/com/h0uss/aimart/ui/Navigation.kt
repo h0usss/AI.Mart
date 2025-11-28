@@ -8,7 +8,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,10 +43,11 @@ import com.h0uss.aimart.ui.viewModel.search.SearchViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val navController = rememberNavController()
     var isBottomNavBarShow by remember{ mutableStateOf(false) }
+    var isSplashSender by remember{ mutableStateOf(true) }
     var isSeller by rememberSaveable { mutableStateOf<Boolean?>(null) }
 
     LaunchedEffect(authUserIdLong) {
@@ -61,28 +61,48 @@ fun Navigation(
         Box(
             modifier = modifier
                 .background(White)
-                .systemBarsPadding()
                 .fillMaxWidth()
                 .weight(1f)
         ) {
             NavHost(
                 navController = navController,
-                startDestination = CheckLogin
+                startDestination = Splash
             ) {
-                composable<CheckLogin> {
-                    CheckLogin(
+                composable<Splash> {
+                    isBottomNavBarShow = false
+                    isSplashSender = true
+                    Splash(
                         navToHome = {
                             navController.navigate(Main)
                         },
-                        navToLogin = {
-                            navController.navigate(CreateOrLogin)
-                        },
+                        navToNext = {
+                            navController.navigate(Authorise)
+                        }
+//                        navToLogin = {
+//                            navController.navigate(Login)
+//                        },
+//                        navToRegister = {
+//                            navController.navigate(Register)
+//                        },
                     )
                 }
 
-                navigation<CreateOrLogin>(
-                    startDestination = Login
+                navigation<Authorise>(
+                    startDestination = CreateOrLogin
                 ) {
+                    composable<CreateOrLogin>{
+                        isBottomNavBarShow = false
+                        CreateOrLogin(
+                            isSplashSender = isSplashSender,
+                            navToLogin = {
+                                navController.navigate(Login)
+                            },
+                            navToRegister = {
+                                navController.navigate(Register)
+                            },
+                        )
+                        isSplashSender = false
+                    }
                     composable<Login> {
                         isBottomNavBarShow = false
 
@@ -279,8 +299,8 @@ fun Navigation(
                                 navToProfile = {
                                     navController.navigate(Profile)
                                 },
-                                navToLogin = {
-                                    navController.navigate(CreateOrLogin)
+                                navToCreateOrLogin = {
+                                    navController.navigate(Authorise)
                                 },
                                 navToPortfolioItem = {
                                     //                            navController.navigate()
