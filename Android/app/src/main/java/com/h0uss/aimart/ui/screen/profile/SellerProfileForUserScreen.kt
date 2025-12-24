@@ -159,7 +159,10 @@ fun SellerProfileForUserScreen(
                             color = Black90
                         )
                         Button(
-                            modifier = Modifier.padding(16.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                            ,
                             text = "Написать продавцу",
                             onClick = {
                                 onEvent(SellerProfileForUserEvent.WriteClick(state.user.id))
@@ -307,7 +310,10 @@ fun SellerProfileForUserScreen(
                     }
                     if (chunkedProducts.size > countPortfolioRowItem)
                         Button(
-                            modifier = Modifier.padding(start = 32.dp, top = 16.dp, end = 32.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 32.dp, top = 16.dp, end = 32.dp)
+                            ,
                             text = "Показать еще",
                             isGray = true,
                             onClick = {
@@ -365,7 +371,10 @@ fun SellerProfileForUserScreen(
                     }
                     if ( state.filteredFeedback.size > countFeedbackItem )
                         Button(
-                            modifier = Modifier.padding(top = 24.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 24.dp)
+                            ,
                             text = "Показать еще",
                             isGray = true,
                             onClick = {

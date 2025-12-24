@@ -52,7 +52,7 @@ fun Splash(
     val screenWidthPx = with(density) { configuration.screenWidthDp.dp.toPx() }
     val screenHeightPx = with(density) { configuration.screenHeightDp.dp.toPx() }
 
-    val revealTargetRadius = sqrt(screenWidthPx.pow(2) + screenHeightPx.pow(2)) / 2
+    val revealTargetRadius = sqrt(screenWidthPx.pow(2) + screenHeightPx.pow(2))
 
 
     val revealRadius by animateFloatAsState(

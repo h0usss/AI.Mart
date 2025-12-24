@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.h0uss.aimart.R
+import com.h0uss.aimart.data.model.AlertData
 import com.h0uss.aimart.data.model.FeedbackData
 import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.data.model.SellerData
@@ -148,7 +149,10 @@ fun SellerProfileForSelfScreen(
                             color = Black90
                         )
                         Button(
-                            modifier = Modifier.padding(16.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                            ,
                             text = "Редактировать профиль",
                             isGray = true,
                             onClick = {
@@ -290,32 +294,64 @@ fun SellerProfileForSelfScreen(
                         }
                     }
 
-                    for (i in 0..min(countPortfolioRowItem - 1, chunkedProducts.size - 1)){
+                    chunkedProducts.forEach { portfolio ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 32.dp, top = 16.dp, end = 32.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            chunkedProducts[i].forEach { portfolio ->
+                            Box(modifier = Modifier.weight(1f)) {
+                                val portfolio1 = portfolio[0]
                                 PortfolioCard(
-                                    portfolioData = portfolio,
+                                    portfolioData = portfolio1,
                                     onClick = {
-                                        onEvent(SellerProfileForSelfEvent.PortfolioItemClick(portfolio.id))
+                                        onEvent(SellerProfileForSelfEvent.PortfolioItemClick(portfolio1.id))
                                     },
                                     onTrashClick = {
-                                        onEvent(SellerProfileForSelfEvent.DeleteCaseClick(portfolio.id))
+                                        onEvent(SellerProfileForSelfEvent.ShowAlert(
+                                            AlertData(
+                                                title = "Вы уверены, что хотите удалить кейс?",
+                                                leftText = "Удалить",
+                                                rightText = "Отменить",
+                                                rightClick = { onEvent(SellerProfileForSelfEvent.DeleteAlert) },
+                                                leftClick = {
+                                                    onEvent(SellerProfileForSelfEvent.DeleteAlert)
+                                                    onEvent(SellerProfileForSelfEvent.DeleteCaseClick(portfolio1.id))
+                                                },
+                                            )
+                                        ))
                                     },
                                 )
                             }
-                            if (chunkedProducts[i].size < 2) {
-                                Spacer(modifier = Modifier.weight(1f))
+                            Box(
+                                modifier = Modifier.weight(1f),
+                                contentAlignment = Alignment.TopEnd
+                            ) {
+                                if (portfolio.size > 1) {
+                                    val portfolio2 = portfolio[1]
+                                    PortfolioCard(
+                                        portfolioData = portfolio2,
+                                        onClick = {
+                                            onEvent(SellerProfileForSelfEvent.PortfolioItemClick(portfolio2.id))
+                                        },
+                                        onTrashClick = {
+                                            onEvent(SellerProfileForSelfEvent.DeleteCaseClick(portfolio2.id))
+                                        },
+                                    )
+                                } else {
+                                    Spacer(Modifier.fillMaxWidth())
+                                }
                             }
                         }
                     }
+
                     if (chunkedProducts.size > countPortfolioRowItem)
                         Button(
-                            modifier = Modifier.padding(start = 32.dp, top = 16.dp, end = 32.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 32.dp, top = 16.dp, end = 32.dp)
+                            ,
                             text = "Показать еще",
                             isGray = true,
                             onClick = {
@@ -373,7 +409,10 @@ fun SellerProfileForSelfScreen(
                     }
                     if ( state.filteredFeedback.size > countFeedbackItem )
                         Button(
-                            modifier = Modifier.padding(top = 24.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 24.dp)
+                            ,
                             text = "Показать еще",
                             isGray = true,
                             onClick = {

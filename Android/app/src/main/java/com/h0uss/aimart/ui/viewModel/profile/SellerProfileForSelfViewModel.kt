@@ -8,6 +8,7 @@ import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.Graph.feedbackRepository
 import com.h0uss.aimart.Graph.portfolioRepository
 import com.h0uss.aimart.Graph.userRepository
+import com.h0uss.aimart.data.model.AlertData
 import com.h0uss.aimart.data.model.FeedbackData
 import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.data.model.SellerData
@@ -89,6 +90,12 @@ class SellerProfileForSelfViewModel : ViewModel(){
             }
             is SellerProfileForSelfEvent.FeedbackTagClick -> {
                 handleFeedbackTagClick(event.index)
+            }
+            is SellerProfileForSelfEvent.ShowAlert -> {
+                sendNavEvent(SellerProfileForSelfNavigationEvent.ShowAlert(event.alert))
+            }
+            is SellerProfileForSelfEvent.DeleteAlert -> {
+                sendNavEvent(SellerProfileForSelfNavigationEvent.DeleteAlert)
             }
         }
     }
@@ -187,7 +194,9 @@ sealed class SellerProfileForSelfEvent {
     object ReplenishAccountClick : SellerProfileForSelfEvent()
     object EmptiedAccountClick : SellerProfileForSelfEvent()
     object AddCaseClick : SellerProfileForSelfEvent()
+    object DeleteAlert : SellerProfileForSelfEvent()
     data class DeleteCaseClick(val id: Long) : SellerProfileForSelfEvent()
+    data class ShowAlert(val alert: AlertData) : SellerProfileForSelfEvent()
     data class PortfolioTagClick(val name: String) : SellerProfileForSelfEvent()
     data class PortfolioItemClick(val id: Long) : SellerProfileForSelfEvent()
     data class FeedbackTagClick(val index: Int) : SellerProfileForSelfEvent()
@@ -198,5 +207,7 @@ sealed class SellerProfileForSelfNavigationEvent {
     object ReplenishAccountClick : SellerProfileForSelfNavigationEvent()
     object EmptiedAccountClick : SellerProfileForSelfNavigationEvent()
     object AddCaseClick : SellerProfileForSelfNavigationEvent()
+    object DeleteAlert : SellerProfileForSelfNavigationEvent()
     data class PortfolioItemClick(val id: Long) : SellerProfileForSelfNavigationEvent()
+    data class ShowAlert(val alert: AlertData) : SellerProfileForSelfNavigationEvent()
 }

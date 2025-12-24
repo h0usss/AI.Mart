@@ -27,10 +27,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +36,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.h0uss.aimart.R
+import com.h0uss.aimart.data.model.AlertData
 import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.data.model.SellerData
 import com.h0uss.aimart.ui.assets.AddTag
@@ -59,7 +56,6 @@ import com.h0uss.aimart.ui.theme.regularStyle
 import com.h0uss.aimart.ui.theme.semiboldStyle
 import com.h0uss.aimart.ui.viewModel.profile.SellerProfileForSelfEditEvent
 import com.h0uss.aimart.ui.viewModel.profile.SellerProfileForSelfEditState
-import kotlin.math.min
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -69,7 +65,6 @@ fun SellerProfileForSelfEditScreen(
     onEvent: (SellerProfileForSelfEditEvent) -> Unit = {},
 ) {
     val chunkedProducts = state.portfolio.chunked(2)
-    var countPortfolioRowItem by remember{ mutableIntStateOf(2) }
 
     Column(
         modifier = modifier
@@ -143,7 +138,10 @@ fun SellerProfileForSelfEditScreen(
                             color = Black90
                         )
                         Button(
-                            modifier = Modifier.padding(18.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(18.dp)
+                            ,
                             text = "Сохранить",
                             onClick = {
                                 onEvent(SellerProfileForSelfEditEvent.SaveClick)
@@ -271,62 +269,133 @@ fun SellerProfileForSelfEditScreen(
                         }
                     }
 
-                    for (i in 0..min(countPortfolioRowItem - 1, chunkedProducts.size - 1)){
+                    chunkedProducts.forEach { portfolio ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 32.dp, top = 16.dp, end = 32.dp)
-                            ,
-                            horizontalArrangement = Arrangement.SpaceBetween
+                                .padding(start = 32.dp, top = 16.dp, end = 32.dp),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            chunkedProducts[i].forEach { portfolio ->
+                            Box(modifier = Modifier.weight(1f)) {
+                                val portfolio1 = portfolio[0]
                                 PortfolioCard(
-                                    portfolioData = portfolio,
+                                    portfolioData = portfolio1,
                                     onClick = {
-                                        onEvent(SellerProfileForSelfEditEvent.PortfolioItemClick(portfolio.id))
+                                        onEvent(
+                                            SellerProfileForSelfEditEvent.PortfolioItemClick(
+                                                portfolio1.id
+                                            )
+                                        )
                                     },
                                     onTrashClick = {
-                                        onEvent(SellerProfileForSelfEditEvent.DeleteCaseClick(portfolio.id))
+                                        onEvent(SellerProfileForSelfEditEvent.ShowAlert(
+                                            AlertData(
+                                                title = "Вы уверены, что хотите удалить кейс?",
+                                                leftText = "Удалить",
+                                                rightText = "Отменить",
+                                                rightClick = { onEvent(SellerProfileForSelfEditEvent.DeleteAlert) },
+                                                leftClick = {
+                                                    onEvent(SellerProfileForSelfEditEvent.DeleteAlert)
+                                                    onEvent(SellerProfileForSelfEditEvent.DeleteCaseClick(
+                                                        portfolio1.id
+                                                    ))
+                                                },
+                                            )
+                                        ))
                                     }
                                 )
                             }
-                            if (chunkedProducts[i].size < 2) {
-                                Spacer(modifier = Modifier.weight(1f))
+                            Box(
+                                modifier = Modifier.weight(1f),
+                                contentAlignment = Alignment.TopEnd
+                            ) {
+                                if (portfolio.size > 1) {
+                                    val portfolio2 = portfolio[1]
+                                    PortfolioCard(
+                                        portfolioData = portfolio2,
+                                        onClick = {
+                                            onEvent(
+                                                SellerProfileForSelfEditEvent.PortfolioItemClick(
+                                                    portfolio2.id
+                                                )
+                                            )
+                                        },
+                                        onTrashClick = {
+                                            onEvent(
+                                                SellerProfileForSelfEditEvent.DeleteCaseClick(
+                                                    portfolio2.id
+                                                )
+                                            )
+                                        }
+                                    )
+                                } else {
+                                    Spacer(Modifier.fillMaxWidth())
+                                }
                             }
                         }
                     }
-                    if (chunkedProducts.size > countPortfolioRowItem)
-                        Button(
-                            modifier = Modifier.padding(start = 32.dp, top = 16.dp, end = 32.dp),
-                            text = "Добавить кейс",
-                            isGray = true,
-                            rightImageId = R.drawable.plus,
-                            onClick = {
-                                onEvent(SellerProfileForSelfEditEvent.AddCaseClick)
-                            },
-                        )
+
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 32.dp, top = 16.dp, end = 32.dp)
+                        ,
+                        text = "Добавить кейс",
+                        isGray = true,
+                        rightImageId = R.drawable.plus,
+                        onClick = {
+                            onEvent(SellerProfileForSelfEditEvent.AddCaseClick)
+                        },
+                    )
                 }
             }
             item {
                 Button(
                     modifier = Modifier
-                        .padding( start = 32.dp, top = 18.dp, end = 32.dp )
+                        .fillMaxWidth()
+                        .padding(start = 32.dp, top = 18.dp, end = 32.dp)
                     ,
                     text = "Выйти",
                     isRedBorder = true,
                     onClick = {
-                        onEvent(SellerProfileForSelfEditEvent.ExitClick)
+                        onEvent(SellerProfileForSelfEditEvent.ShowAlert(
+                                AlertData(
+                                    title = "Вы уверены, что хотите выйти?",
+                                    leftText = "Выйти",
+                                    rightText = "Отменить",
+                                    rightClick = { onEvent(SellerProfileForSelfEditEvent.DeleteAlert) },
+                                    leftClick = {
+                                        onEvent(SellerProfileForSelfEditEvent.DeleteAlert)
+                                        onEvent(SellerProfileForSelfEditEvent.ExitClick)
+                                    },
+                                )
+                            )
+                        )
                     },
                     leftImageId = R.drawable.exit
                 )
                 Button(
                     modifier = Modifier
-                        .padding( start = 32.dp, top = 12.dp, end = 32.dp )
+                        .fillMaxWidth()
+                        .padding(start = 32.dp, top = 12.dp, end = 32.dp)
                     ,
                     text = "Удалить аккаунт",
                     isRedFill = true,
                     onClick = {
-                        onEvent(SellerProfileForSelfEditEvent.DeleteAccountClick)
+                        onEvent(SellerProfileForSelfEditEvent.ShowAlert(
+                                AlertData(
+                                    title = "Вы уверены, что хотите удалить аккаунт?",
+                                    description = "После удаления аккаунта ваши данные восстановить невозможно",
+                                    leftText = "Удалить",
+                                    rightText = "Отменить",
+                                    rightClick = { onEvent(SellerProfileForSelfEditEvent.DeleteAlert) },
+                                    leftClick = {
+                                        onEvent(SellerProfileForSelfEditEvent.DeleteAlert)
+                                        onEvent(SellerProfileForSelfEditEvent.DeleteAccountClick)
+                                    },
+                                )
+                            )
+                        )
                     },
                     leftImageId = R.drawable.white_trash
                 )

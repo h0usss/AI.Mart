@@ -9,6 +9,7 @@ import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.Graph.deleteUserId
 import com.h0uss.aimart.Graph.portfolioRepository
 import com.h0uss.aimart.Graph.userRepository
+import com.h0uss.aimart.data.model.AlertData
 import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.data.model.SellerData
 import kotlinx.coroutines.channels.Channel
@@ -116,6 +117,12 @@ class SellerProfileForSelfEditViewModel : ViewModel() {
             is SellerProfileForSelfEditEvent.PortfolioItemClick -> {
                 sendNavEvent(SellerProfileForSelfEditNavigationEvent.PortfolioItemClick(event.id))
             }
+            is SellerProfileForSelfEditEvent.ShowAlert -> {
+                sendNavEvent(SellerProfileForSelfEditNavigationEvent.ShowAlert(event.alert))
+            }
+            is SellerProfileForSelfEditEvent.DeleteAlert -> {
+                sendNavEvent(SellerProfileForSelfEditNavigationEvent.DeleteAlert)
+            }
         }
     }
 
@@ -179,7 +186,9 @@ sealed class SellerProfileForSelfEditEvent {
     object ShowSettingsMenu : SellerProfileForSelfEditEvent()
     object DismissSettingsMenu : SellerProfileForSelfEditEvent()
     object AddCaseClick : SellerProfileForSelfEditEvent()
+    object DeleteAlert : SellerProfileForSelfEditEvent()
     data class AddSkillClick(val newSkill: String) : SellerProfileForSelfEditEvent()
+    data class ShowAlert(val alert: AlertData) : SellerProfileForSelfEditEvent()
     data class DeleteCaseClick(val id: Long) : SellerProfileForSelfEditEvent()
     data class PortfolioTagClick(val name: String) : SellerProfileForSelfEditEvent()
     data class PortfolioItemClick(val id: Long) : SellerProfileForSelfEditEvent()
@@ -190,5 +199,7 @@ sealed class SellerProfileForSelfEditNavigationEvent {
     object ExitClick : SellerProfileForSelfEditNavigationEvent()
     object DeleteAccountClick : SellerProfileForSelfEditNavigationEvent()
     object AddCaseClick : SellerProfileForSelfEditNavigationEvent()
+    object DeleteAlert : SellerProfileForSelfEditNavigationEvent()
     data class PortfolioItemClick(val id: Long) : SellerProfileForSelfEditNavigationEvent()
+    data class ShowAlert(val alert: AlertData) : SellerProfileForSelfEditNavigationEvent()
 }

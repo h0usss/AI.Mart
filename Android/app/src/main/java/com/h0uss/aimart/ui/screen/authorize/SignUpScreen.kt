@@ -191,6 +191,7 @@ fun SignUpScreen(
 
         Button(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(top = 16.dp)
             ,
             text = "Продолжить",
@@ -229,6 +230,7 @@ fun SignUpScreen(
         }
         Button(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(top = 16.dp)
             ,
             text = "Использовать",

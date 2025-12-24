@@ -93,7 +93,10 @@ fun UserProfileForSelfScreen(
                     color = Black50
                 )
                 Button(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                    ,
                     text = "Редактировать профиль",
                     isGray = true,
                     onClick = {

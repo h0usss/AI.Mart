@@ -123,6 +123,7 @@ fun SignInScreen(
             }
         Button(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(top = 16.dp)
             ,
             text = "Войти",
@@ -159,6 +160,7 @@ fun SignInScreen(
         }
         Button(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(top = 24.dp)
             ,
             text = "Войти",

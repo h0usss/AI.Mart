@@ -109,11 +109,17 @@ fun CreateOrLogin(
                     .padding(start = 24.dp, end = 24.dp, bottom = 170.dp)
             ) {
                 Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                    ,
                     text = "Войти",
                     onClick = navToLogin,
                 )
                 Button(
-                    modifier = Modifier.padding(top = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                    ,
                     text = "Зарегистрироваться",
                     isGray = true,
                     onClick = navToRegister,

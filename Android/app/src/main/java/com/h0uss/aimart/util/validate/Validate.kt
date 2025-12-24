@@ -16,7 +16,7 @@ fun String.validateMail(): String{
 }
 
 fun String.validatePassword(): String{
-    return if (this.length > 8) return "" else "Пароль должен содержать больше 8 символов"
+    return if (this.length >= 8) return "" else "Пароль должен содержать больше 8 символов"
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

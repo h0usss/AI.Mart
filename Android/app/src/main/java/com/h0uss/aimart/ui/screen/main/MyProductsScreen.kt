@@ -291,7 +291,9 @@ fun MyProductsScreen(
                     .padding(bottom = 8.dp)
             ) {
                 Button(
-                    modifier = Modifier,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                    ,
                     text = "Разместить объявление",
                     onClick = {
                         onEvent(MyProductsEvent.NewProductClick)

@@ -20,6 +20,7 @@ val Black50 = Color(0xff808080)
 val Black80 = Color(0xff333333)
 val Black90 = Color(0xff1a1a1a)
 val Black100 = Color(0xff000000)
+val Black20Transparent = Color(0x2D000000)
 val BlackSellerName = Color(0xff161823)
 val BlackProfileAdd = Color(0xff888c93)
 

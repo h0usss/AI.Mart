@@ -67,7 +67,7 @@ fun Balance(
         ){
             Button(
                 modifier = Modifier
-                    .weight(.5f)
+                    .weight(1f)
                 ,
                 text = "Вывести",
                 isGray = true,
@@ -77,7 +77,7 @@ fun Balance(
             )
             Button(
                 modifier = Modifier
-                    .weight(.5f)
+                    .weight(1f)
                 ,
                 text = "Пополнить",
                 onClick = {
