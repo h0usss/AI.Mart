@@ -294,53 +294,77 @@ fun SellerProfileForSelfScreen(
                         }
                     }
 
-                    chunkedProducts.forEach { portfolio ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 32.dp, top = 16.dp, end = 32.dp),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            Box(modifier = Modifier.weight(1f)) {
-                                val portfolio1 = portfolio[0]
-                                PortfolioCard(
-                                    portfolioData = portfolio1,
-                                    onClick = {
-                                        onEvent(SellerProfileForSelfEvent.PortfolioItemClick(portfolio1.id))
-                                    },
-                                    onTrashClick = {
-                                        onEvent(SellerProfileForSelfEvent.ShowAlert(
-                                            AlertData(
-                                                title = "Вы уверены, что хотите удалить кейс?",
-                                                leftText = "Удалить",
-                                                rightText = "Отменить",
-                                                rightClick = { onEvent(SellerProfileForSelfEvent.DeleteAlert) },
-                                                leftClick = {
-                                                    onEvent(SellerProfileForSelfEvent.DeleteAlert)
-                                                    onEvent(SellerProfileForSelfEvent.DeleteCaseClick(portfolio1.id))
-                                                },
-                                            )
-                                        ))
-                                    },
-                                )
-                            }
-                            Box(
-                                modifier = Modifier.weight(1f),
-                                contentAlignment = Alignment.TopEnd
+                    chunkedProducts.forEachIndexed { index, portfolio ->
+                        if (index + 1 <= countPortfolioRowItem) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 32.dp, top = 16.dp, end = 32.dp),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
-                                if (portfolio.size > 1) {
-                                    val portfolio2 = portfolio[1]
+                                Box(modifier = Modifier.weight(1f)) {
+                                    val portfolio1 = portfolio[0]
                                     PortfolioCard(
-                                        portfolioData = portfolio2,
+                                        portfolioData = portfolio1,
                                         onClick = {
-                                            onEvent(SellerProfileForSelfEvent.PortfolioItemClick(portfolio2.id))
+                                            onEvent(
+                                                SellerProfileForSelfEvent.ShowPortfolioItem(
+                                                    portfolio1.id
+                                                )
+                                            )
                                         },
                                         onTrashClick = {
-                                            onEvent(SellerProfileForSelfEvent.DeleteCaseClick(portfolio2.id))
+                                            onEvent(
+                                                SellerProfileForSelfEvent.ShowAlert(
+                                                    AlertData(
+                                                        title = "Вы уверены, что хотите удалить кейс?",
+                                                        leftText = "Удалить",
+                                                        rightText = "Отменить",
+                                                        rightClick = {
+                                                            onEvent(
+                                                                SellerProfileForSelfEvent.DeleteAlert
+                                                            )
+                                                        },
+                                                        leftClick = {
+                                                            onEvent(SellerProfileForSelfEvent.DeleteAlert)
+                                                            onEvent(
+                                                                SellerProfileForSelfEvent.DeleteCaseClick(
+                                                                    portfolio1.id
+                                                                )
+                                                            )
+                                                        },
+                                                    )
+                                                )
+                                            )
                                         },
                                     )
-                                } else {
-                                    Spacer(Modifier.fillMaxWidth())
+                                }
+                                Box(
+                                    modifier = Modifier.weight(1f),
+                                    contentAlignment = Alignment.TopEnd
+                                ) {
+                                    if (portfolio.size > 1) {
+                                        val portfolio2 = portfolio[1]
+                                        PortfolioCard(
+                                            portfolioData = portfolio2,
+                                            onClick = {
+                                                onEvent(
+                                                    SellerProfileForSelfEvent.ShowPortfolioItem(
+                                                        portfolio2.id
+                                                    )
+                                                )
+                                            },
+                                            onTrashClick = {
+                                                onEvent(
+                                                    SellerProfileForSelfEvent.DeleteCaseClick(
+                                                        portfolio2.id
+                                                    )
+                                                )
+                                            },
+                                        )
+                                    } else {
+                                        Spacer(Modifier.fillMaxWidth())
+                                    }
                                 }
                             }
                         }
@@ -447,8 +471,9 @@ private fun Preview() {
             portfolio = List(11){
                 PortfolioItemData(
                     id = 1L,
-                    imageId = R.drawable.background,
-                    name = "Антон",
+                    media = listOf(R.drawable.background, R.drawable.background),
+                    title = "Антон",
+                    description = "",
                     tags = listOf(
                         "Видео", "Не видео"
                     )

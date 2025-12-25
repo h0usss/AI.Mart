@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.h0uss.aimart.data.model.AlertData
+import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.ui.screen.profile.SellerProfileForSelfScreen
 import com.h0uss.aimart.ui.viewModel.profile.SellerProfileForSelfNavigationEvent
 import com.h0uss.aimart.ui.viewModel.profile.SellerProfileForSelfViewModel
@@ -20,6 +21,7 @@ fun SellerProfileForSelf(
     navToPortfolioItem: (Long) -> Unit,
     navToEdit: () -> Unit,
     changeAlert: (AlertData?) -> Unit,
+    changePortfolio: (PortfolioItemData?) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -46,6 +48,9 @@ fun SellerProfileForSelf(
                 }
                 is SellerProfileForSelfNavigationEvent.DeleteAlert -> {
                     changeAlert(null)
+                }
+                is SellerProfileForSelfNavigationEvent.ShowPortfolioItem -> {
+                    changePortfolio(event.portfolioItem)
                 }
             }
         }

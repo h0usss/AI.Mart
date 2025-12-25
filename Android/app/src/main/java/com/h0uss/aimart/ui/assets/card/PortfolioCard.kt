@@ -48,7 +48,7 @@ fun PortfolioCard(
                     .size(150.dp)
                     .clip(RoundedCornerShape(5))
                 ,
-                painter = painterResource(portfolioData.imageId),
+                painter = painterResource(portfolioData.media[0]),
                 contentDescription = "Product image",
                 contentScale = ContentScale.Crop
             )
@@ -66,7 +66,7 @@ fun PortfolioCard(
         }
         Text(
             modifier = Modifier.padding(top = 14.dp),
-            text = portfolioData.name,
+            text = portfolioData.title,
             style = regularStyle,
             fontSize = 14.sp,
             color = Black100
@@ -81,8 +81,9 @@ private fun Preview() {
     PortfolioCard(
         portfolioData = PortfolioItemData(
             id = 1L,
-            name = "ProductName",
-            imageId = R.drawable.background,
+            title = "ProductName",
+            description = "",
+            media = listOf(R.drawable.background, R.drawable.background),
             tags = listOf()
         ),
     )

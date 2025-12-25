@@ -297,7 +297,11 @@ fun SellerProfileForUserScreen(
                             chunkedProducts[i].forEach { portfolio ->
                                 PortfolioCard(
                                     modifier = Modifier.clickable{
-                                        onEvent(SellerProfileForUserEvent.PortfolioItemClick(portfolio.id))
+                                        onEvent(
+                                            SellerProfileForUserEvent.ShowPortfolioItem(
+                                                portfolio.id
+                                            )
+                                        )
                                     },
                                     portfolioData = portfolio,
                                     isExistTrash = false
@@ -409,8 +413,9 @@ private fun Preview() {
             portfolio = List(11) {
                 PortfolioItemData(
                     id = 1L,
-                    imageId = R.drawable.background,
-                    name = "Антон",
+                    media = listOf(R.drawable.background, R.drawable.background),
+                    title = "Антон",
+                    description = "Антон",
                     tags = listOf(
                         "Видео", "Не видео"
                     )

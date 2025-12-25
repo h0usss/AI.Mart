@@ -33,7 +33,9 @@ import androidx.navigation.toRoute
 import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.Graph.userRepository
 import com.h0uss.aimart.data.model.AlertData
+import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.ui.assets.Alert
+import com.h0uss.aimart.ui.assets.ShowPortfolio
 import com.h0uss.aimart.ui.state.authorize.SignIn
 import com.h0uss.aimart.ui.state.authorize.SignUp
 import com.h0uss.aimart.ui.state.main.Home
@@ -60,6 +62,7 @@ fun Navigation(
     var isBottomNavBarShow by remember{ mutableStateOf(false) }
     var isSplashSender by remember{ mutableStateOf(true) }
     var alertData by remember { mutableStateOf<AlertData?>(null) }
+    var portfolioData by remember { mutableStateOf<PortfolioItemData?>(null) }
     var isSeller by rememberSaveable { mutableStateOf<Boolean?>(null) }
 
     LaunchedEffect(authUserIdLong) {
@@ -254,6 +257,9 @@ fun Navigation(
                                     changeAlert = { data ->
                                         alertData = data
                                     },
+                                    changePortfolio = { data ->
+                                        portfolioData = data
+                                    },
                                 )
                             else
                                 SellerProfileForUser(
@@ -266,7 +272,10 @@ fun Navigation(
                                     },
                                     navToPortfolioItem = {
                                         //                            navController.navigate()
-                                    }
+                                    },
+                                    changePortfolio = { data ->
+                                        portfolioData = data
+                                    },
                                 )
                         }
 
@@ -297,6 +306,9 @@ fun Navigation(
                                     changeAlert = { data ->
                                         alertData = data
                                     },
+                                    changePortfolio = { data ->
+                                        portfolioData = data
+                                    },
                                 )
 
                                 false -> UserProfileForSelf(
@@ -322,11 +334,11 @@ fun Navigation(
                                     navToCreateOrLogin = {
                                         navController.navigate(Authorise)
                                     },
-                                    navToPortfolioItem = {
-                                        //                            navController.navigate()
-                                    },
                                     changeAlert = { data ->
                                         alertData = data
+                                    },
+                                    changePortfolio = { data ->
+                                        portfolioData = data
                                     },
                                 )
                             //                else
@@ -347,7 +359,7 @@ fun Navigation(
 
 
         AnimatedVisibility(
-            visible = alertData != null,
+            visible = alertData != null || portfolioData != null,
             enter = fadeIn(animationSpec = tween(durationMillis = 300)),
             exit = fadeOut(animationSpec = tween(durationMillis = 300))
         ) {
@@ -367,6 +379,16 @@ fun Navigation(
                     Alert(
                         modifier = Modifier.clickable(enabled = false) {},
                         data = data
+                    )
+                }
+
+                portfolioData?.let { data ->
+                    ShowPortfolio(
+                        modifier = Modifier.clickable(enabled = false) {},
+                        data = data,
+                        onExit = {
+                            portfolioData = null
+                        }
                     )
                 }
             }

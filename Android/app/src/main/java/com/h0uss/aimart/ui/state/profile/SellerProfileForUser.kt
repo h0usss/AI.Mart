@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.h0uss.aimart.data.factory.SellerProfileForUserViewModelFactory
+import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.ui.screen.profile.SellerProfileForUserScreen
 import com.h0uss.aimart.ui.viewModel.profile.SellerProfileForUserNavigationEvent
 import com.h0uss.aimart.ui.viewModel.profile.SellerProfileForUserViewModel
@@ -20,6 +21,7 @@ fun SellerProfileForUser(
     navToBack: () -> Unit,
     navToChat: (Long) -> Unit,
     navToPortfolioItem: (Long) -> Unit,
+    changePortfolio: (PortfolioItemData?) -> Unit,
 ) {
 
     val viewModel: SellerProfileForUserViewModel = viewModel(
@@ -39,6 +41,9 @@ fun SellerProfileForUser(
                 }
                 is SellerProfileForUserNavigationEvent.PortfolioItemClick -> {
                     navToPortfolioItem(event.id)
+                }
+                is SellerProfileForUserNavigationEvent.ShowPortfolioItem -> {
+                    changePortfolio(event.portfolioItem)
                 }
             }
         }

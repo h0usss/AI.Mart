@@ -14,6 +14,7 @@ import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.data.model.SellerData
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -114,14 +115,20 @@ class SellerProfileForSelfEditViewModel : ViewModel() {
             is SellerProfileForSelfEditEvent.AddCaseClick -> {
                 sendNavEvent(SellerProfileForSelfEditNavigationEvent.AddCaseClick)
             }
-            is SellerProfileForSelfEditEvent.PortfolioItemClick -> {
-                sendNavEvent(SellerProfileForSelfEditNavigationEvent.PortfolioItemClick(event.id))
-            }
             is SellerProfileForSelfEditEvent.ShowAlert -> {
                 sendNavEvent(SellerProfileForSelfEditNavigationEvent.ShowAlert(event.alert))
             }
             is SellerProfileForSelfEditEvent.DeleteAlert -> {
                 sendNavEvent(SellerProfileForSelfEditNavigationEvent.DeleteAlert)
+            }
+            is SellerProfileForSelfEditEvent.ShowPortfolioItem -> {
+                viewModelScope.launch {
+                    val portfolioItem = portfolioRepository
+                        .getPortfolioByIdFlow(event.portfolioId)
+                        .first()
+
+                    sendNavEvent(SellerProfileForSelfEditNavigationEvent.ShowPortfolioItem(portfolioItem))
+                }
             }
         }
     }
@@ -189,9 +196,9 @@ sealed class SellerProfileForSelfEditEvent {
     object DeleteAlert : SellerProfileForSelfEditEvent()
     data class AddSkillClick(val newSkill: String) : SellerProfileForSelfEditEvent()
     data class ShowAlert(val alert: AlertData) : SellerProfileForSelfEditEvent()
+    data class ShowPortfolioItem(val portfolioId: Long) : SellerProfileForSelfEditEvent()
     data class DeleteCaseClick(val id: Long) : SellerProfileForSelfEditEvent()
     data class PortfolioTagClick(val name: String) : SellerProfileForSelfEditEvent()
-    data class PortfolioItemClick(val id: Long) : SellerProfileForSelfEditEvent()
 }
 
 sealed class SellerProfileForSelfEditNavigationEvent {
@@ -200,6 +207,6 @@ sealed class SellerProfileForSelfEditNavigationEvent {
     object DeleteAccountClick : SellerProfileForSelfEditNavigationEvent()
     object AddCaseClick : SellerProfileForSelfEditNavigationEvent()
     object DeleteAlert : SellerProfileForSelfEditNavigationEvent()
-    data class PortfolioItemClick(val id: Long) : SellerProfileForSelfEditNavigationEvent()
     data class ShowAlert(val alert: AlertData) : SellerProfileForSelfEditNavigationEvent()
+    data class ShowPortfolioItem(val portfolioItem: PortfolioItemData) : SellerProfileForSelfEditNavigationEvent()
 }

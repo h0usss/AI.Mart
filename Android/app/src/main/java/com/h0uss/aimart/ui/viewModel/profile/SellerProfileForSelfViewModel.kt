@@ -15,6 +15,7 @@ import com.h0uss.aimart.data.model.SellerData
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -96,6 +97,15 @@ class SellerProfileForSelfViewModel : ViewModel(){
             }
             is SellerProfileForSelfEvent.DeleteAlert -> {
                 sendNavEvent(SellerProfileForSelfNavigationEvent.DeleteAlert)
+            }
+            is SellerProfileForSelfEvent.ShowPortfolioItem -> {
+                viewModelScope.launch {
+                    val portfolioItem = portfolioRepository
+                        .getPortfolioByIdFlow(event.portfolioId)
+                        .first()
+
+                    sendNavEvent(SellerProfileForSelfNavigationEvent.ShowPortfolioItem(portfolioItem))
+                }
             }
         }
     }
@@ -197,6 +207,7 @@ sealed class SellerProfileForSelfEvent {
     object DeleteAlert : SellerProfileForSelfEvent()
     data class DeleteCaseClick(val id: Long) : SellerProfileForSelfEvent()
     data class ShowAlert(val alert: AlertData) : SellerProfileForSelfEvent()
+    data class ShowPortfolioItem(val portfolioId: Long) : SellerProfileForSelfEvent()
     data class PortfolioTagClick(val name: String) : SellerProfileForSelfEvent()
     data class PortfolioItemClick(val id: Long) : SellerProfileForSelfEvent()
     data class FeedbackTagClick(val index: Int) : SellerProfileForSelfEvent()
@@ -210,4 +221,5 @@ sealed class SellerProfileForSelfNavigationEvent {
     object DeleteAlert : SellerProfileForSelfNavigationEvent()
     data class PortfolioItemClick(val id: Long) : SellerProfileForSelfNavigationEvent()
     data class ShowAlert(val alert: AlertData) : SellerProfileForSelfNavigationEvent()
+    data class ShowPortfolioItem(val portfolioItem: PortfolioItemData) : SellerProfileForSelfNavigationEvent()
 }

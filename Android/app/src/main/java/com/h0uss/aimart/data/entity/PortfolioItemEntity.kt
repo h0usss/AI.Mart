@@ -16,8 +16,8 @@ data class PortfolioItemEntity(
     @ColumnInfo(name = "id")            val id: Long = 0L,
 
     @ColumnInfo(name = "price")         val price: Float,
-    @ColumnInfo(name = "media")         val media: Int,
-    @ColumnInfo(name = "name")          val name: String,
+    @ColumnInfo(name = "media")         val media: List<Int>,
+    @ColumnInfo(name = "title")          val title: String,
     @ColumnInfo(name = "description")   val description: String,
     @ColumnInfo(name = "create_time")   val createTime: LocalDateTime,
 

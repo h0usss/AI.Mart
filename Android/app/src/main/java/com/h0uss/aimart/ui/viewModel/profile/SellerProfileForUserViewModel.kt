@@ -13,6 +13,7 @@ import com.h0uss.aimart.data.model.SellerData
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -85,6 +86,15 @@ class SellerProfileForUserViewModel(
             }
             is SellerProfileForUserEvent.FeedbackTagClick -> {
                 handleFeedbackTagClick(event.index)
+            }
+            is SellerProfileForUserEvent.ShowPortfolioItem -> {
+                viewModelScope.launch {
+                    val portfolioItem = portfolioRepository
+                        .getPortfolioByIdFlow(event.portfolioId)
+                        .first()
+
+                    sendNavEvent(SellerProfileForUserNavigationEvent.ShowPortfolioItem(portfolioItem))
+                }
             }
         }
     }
@@ -189,10 +199,12 @@ sealed class SellerProfileForUserEvent {
     data class PortfolioTagClick(val name: String) : SellerProfileForUserEvent()
     data class PortfolioItemClick(val id: Long) : SellerProfileForUserEvent()
     data class FeedbackTagClick(val index: Int) : SellerProfileForUserEvent()
+    data class ShowPortfolioItem(val portfolioId: Long) : SellerProfileForUserEvent()
 }
 
 sealed class SellerProfileForUserNavigationEvent {
     object BackClick : SellerProfileForUserNavigationEvent()
     data class WriteClick(val id: Long) : SellerProfileForUserNavigationEvent()
     data class PortfolioItemClick(val id: Long) : SellerProfileForUserNavigationEvent()
+    data class ShowPortfolioItem(val portfolioItem: PortfolioItemData) : SellerProfileForUserNavigationEvent()
 }

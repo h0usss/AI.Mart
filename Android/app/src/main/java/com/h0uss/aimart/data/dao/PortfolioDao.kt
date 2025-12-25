@@ -23,6 +23,14 @@ interface PortfolioDao {
     """)
     fun getPortfolioBySellerIdFlow(sellerId: Long): Flow<List<PortfolioItemWithTags>>
 
+    @Transaction
+    @Query("""
+        SELECT * 
+        FROM portfolio_item
+        WHERE id = :portfolioId
+    """)
+    fun getPortfolioByIdFlow(portfolioId: Long): Flow<PortfolioItemWithTags>
+
     @Query("""
         DELETE FROM portfolio_item
         WHERE id = :portfolioItemId

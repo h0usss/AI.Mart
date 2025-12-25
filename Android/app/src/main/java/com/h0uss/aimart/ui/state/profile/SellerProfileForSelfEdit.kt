@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.h0uss.aimart.data.model.AlertData
+import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.ui.screen.profile.SellerProfileForSelfEditScreen
 import com.h0uss.aimart.ui.viewModel.profile.SellerProfileForSelfEditNavigationEvent
 import com.h0uss.aimart.ui.viewModel.profile.SellerProfileForSelfEditViewModel
@@ -19,8 +20,8 @@ fun SellerProfileForSelfEdit(
     viewModel: SellerProfileForSelfEditViewModel = viewModel<SellerProfileForSelfEditViewModel>(),
     navToProfile: () -> Unit,
     navToCreateOrLogin: () -> Unit,
-    navToPortfolioItem: (Long) -> Unit,
     changeAlert: (AlertData?) -> Unit,
+    changePortfolio: (PortfolioItemData?) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -39,14 +40,14 @@ fun SellerProfileForSelfEdit(
                 is SellerProfileForSelfEditNavigationEvent.AddCaseClick -> {
 
                 }
-                is SellerProfileForSelfEditNavigationEvent.PortfolioItemClick -> {
-                    navToPortfolioItem(event.id)
-                }
                 is SellerProfileForSelfEditNavigationEvent.ShowAlert -> {
                     changeAlert(event.alert)
                 }
                 is SellerProfileForSelfEditNavigationEvent.DeleteAlert -> {
                     changeAlert(null)
+                }
+                is SellerProfileForSelfEditNavigationEvent.ShowPortfolioItem -> {
+                    changePortfolio(event.portfolioItem)
                 }
             }
         }

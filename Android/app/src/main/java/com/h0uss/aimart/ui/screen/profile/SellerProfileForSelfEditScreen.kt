@@ -282,7 +282,7 @@ fun SellerProfileForSelfEditScreen(
                                     portfolioData = portfolio1,
                                     onClick = {
                                         onEvent(
-                                            SellerProfileForSelfEditEvent.PortfolioItemClick(
+                                            SellerProfileForSelfEditEvent.ShowPortfolioItem(
                                                 portfolio1.id
                                             )
                                         )
@@ -315,7 +315,7 @@ fun SellerProfileForSelfEditScreen(
                                         portfolioData = portfolio2,
                                         onClick = {
                                             onEvent(
-                                                SellerProfileForSelfEditEvent.PortfolioItemClick(
+                                                SellerProfileForSelfEditEvent.ShowPortfolioItem(
                                                     portfolio2.id
                                                 )
                                             )
@@ -423,8 +423,9 @@ private fun Preview() {
             portfolio = List(11){
                 PortfolioItemData(
                     id = 1L,
-                    imageId = R.drawable.background,
-                    name = "Антон",
+                    media = listOf(R.drawable.background, R.drawable.background),
+                    title = "Антон",
+                    description = "",
                     tags = listOf(
                         "Видео", "Не видео"
                     )

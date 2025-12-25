@@ -65,7 +65,7 @@ import kotlin.random.Random
     views = [
         FeedbackWithUserReferenceView::class,
     ],
-    version = 2,
+    version = 1,
     exportSchema = false
 )
 abstract class AppDataBase: RoomDatabase() {
@@ -282,8 +282,8 @@ suspend fun fillPortfolio(portfolioDao: PortfolioDao, userIds: List<Long>){
                 add(
                     PortfolioItemEntity(
                         price = Random.nextInt(50, 1000).toFloat(),
-                        media = portfolioImageIds.random(),
-                        name = "$style $type",
+                        media = listOf(portfolioImageIds.random(),portfolioImageIds.random(),portfolioImageIds.random()),
+                        title = "$style $type",
                         description = "A custom piece of art in the $style style, depicting a unique $type. Created using advanced AI generation techniques and manual refinement.",
                         createTime = LocalDateTime.now().minusDays(Random.nextLong(0, 730)),
                         userId = sellerId
