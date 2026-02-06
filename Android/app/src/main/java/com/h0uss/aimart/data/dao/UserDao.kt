@@ -136,13 +136,13 @@ interface UserDao {
     @Query("""
         SELECT u.* 
         FROM user AS u
-        JOIN user_sell_info AS usi ON u.id = usi.user_id
-        WHERE u.name LIKE '%' || :string || '%'
-           OR u.email LIKE '%' || :string || '%'
-           OR u.nick_name LIKE '%' || :string || '%'
-           OR usi.about LIKE '%' || :string || '%'
-           OR usi.skills LIKE '%' || :string || '%'
-           OR usi.profession LIKE '%' || :string || '%'
+        LEFT JOIN user_sell_info AS usi ON u.id = usi.user_id
+        WHERE COALESCE(u.name, '') LIKE '%' || :string || '%'
+           OR COALESCE(u.email, '') LIKE '%' || :string || '%'
+           OR COALESCE(u.nick_name, '') LIKE '%' || :string || '%'
+           OR COALESCE(usi.about, '') LIKE '%' || :string || '%'
+           OR COALESCE(usi.skills, '') LIKE '%' || :string || '%'
+           OR COALESCE(usi.profession, '') LIKE '%' || :string || '%'
     """)
     fun getUsersByStringInside(string: String): Flow<List<UserEntity>>
 }

@@ -1,5 +1,6 @@
 package com.h0uss.aimart.ui.screen.search
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,8 +14,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,12 +33,20 @@ import com.h0uss.aimart.ui.theme.regularStyle
 import com.h0uss.aimart.ui.viewModel.search.SearchEvent
 import com.h0uss.aimart.ui.viewModel.search.SearchState
 
+@SuppressLint("RememberInComposition")
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
     state: SearchState = SearchState(),
     onEvent: (SearchEvent) -> Unit = {},
 ) {
+    val focusRequester = FocusRequester()
+    val focusManager = LocalFocusManager.current
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -47,7 +60,10 @@ fun SearchScreen(
             verticalAlignment = Alignment.CenterVertically
         ){
             TextField(
-                modifier = Modifier.weight(.1f),
+                modifier = Modifier
+                    .weight(.1f)
+                    .focusRequester(focusRequester)
+                ,
                 isFocus = true,
                 isFill = true,
                 placeHolder = "Поиск",
@@ -56,6 +72,7 @@ fun SearchScreen(
                 leftImageId = R.drawable.loupe,
                 onClickRightImage = {
                     onEvent(SearchEvent.ClearSearchClick)
+                    focusManager.clearFocus()
                 },
                 onClickEnter = {
                     onEvent(SearchEvent.SearchRequest(state.searchState.text.toString()))

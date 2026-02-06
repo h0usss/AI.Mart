@@ -50,8 +50,7 @@ interface ProductDao {
             p.description AS description
         FROM product AS p
         LEFT JOIN user AS u ON p.user_id = u.id
-        WHERE p.name LIKE '%' || :string || '%'
-        OR p.description LIKE '%' || :string || '%'
+        WHERE COALESCE(p.name, '') LIKE '%' || :string || '%'
         ORDER BY p.create_date DESC
     """)
     fun getProductByStringInside(string: String):  PagingSource<Int, ProductCardData>
