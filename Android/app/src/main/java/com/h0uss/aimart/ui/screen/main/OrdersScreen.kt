@@ -3,15 +3,14 @@ package com.h0uss.aimart.ui.screen.main
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -83,17 +82,16 @@ fun OrdersScreen(
             .background(White)
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-        ){
-            item{
+        ) {
+            item {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 63.dp)
-                    ,
+                        .padding(top = 63.dp),
                     text = "Заказы",
                     style = semiboldStyle,
                     fontSize = 16.sp,
@@ -106,7 +104,7 @@ fun OrdersScreen(
                         .padding(top = 22.dp),
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
-                ){
+                ) {
                     tags.forEach { item ->
                         Status(
                             statusData = item,
@@ -115,38 +113,47 @@ fun OrdersScreen(
                 }
             }
 
-            val chunkedProducts = state.orders.chunked(2)
-
-            items(chunkedProducts) { rowItems ->
+            val rowCount = (state.orders.size + 1) / 2
+            items(
+                count = rowCount,
+            ) { rowIndex ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 18.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    rowItems.forEach { order ->
+                    Box(modifier = Modifier.weight(1f)) {
+                        val order1 = state.orders[rowIndex * 2]
                         OrderCard(
-                            order = order
+                            order = order1,
                         )
+
                     }
-                    if (rowItems.size < 2) {
-                        Spacer(modifier = Modifier.weight(1f))
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.TopEnd
+                    ) {
+                        val order2Index = rowIndex * 2 + 1
+                        if (order2Index < state.orders.size) {
+                            val order2 = state.orders[order2Index]
+                            OrderCard(
+                                order = order2,
+                            )
+
+                        } else {
+                            Spacer(Modifier.fillMaxWidth())
+                        }
                     }
                 }
             }
-
-            if (state.orders.isNotEmpty())
-                item {
-                    Spacer(modifier = Modifier.height(85.dp))
-                }
         }
-        if (state.orders.isEmpty()){
+        if (state.orders.isEmpty()) {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(top = 100.dp)
-                ,
-            ){
+                    .padding(top = 100.dp),
+            ) {
                 Image(
                     modifier = Modifier.fillMaxWidth(),
                     painter = painterResource(R.drawable.no_order),
@@ -155,8 +162,7 @@ fun OrdersScreen(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 20.dp)
-                    ,
+                        .padding(top = 20.dp),
                     text = "Здесь пока ничего нет",
                     style = semiboldStyle,
                     fontSize = 18.sp,
@@ -171,6 +177,26 @@ fun OrdersScreen(
 @Preview
 @Composable
 private fun Preview_Full() {
+    OrdersScreen(
+        state = OrdersState(
+            orders = List(21) { item ->
+                OrderCardData(
+                    id = 1L,
+                    name = "AI Кольцо всевластия",
+                    price = 0.99f,
+                    imageId = R.drawable.background,
+                    status = OrderStatus.COMPLETE,
+                )
+            },
+        )
+
+    )
+}
+
+
+@Preview(showSystemUi = true, widthDp = 360, heightDp = 1000)
+@Composable
+private fun Preview_Full_V2() {
     OrdersScreen(
         state = OrdersState(
             orders = List(21) { item ->
