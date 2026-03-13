@@ -14,7 +14,9 @@ import com.h0uss.aimart.data.converter.BigDecimalConverter
 import com.h0uss.aimart.data.converter.ListIntConverter
 import com.h0uss.aimart.data.converter.ListStringConverter
 import com.h0uss.aimart.data.converter.LocalDateTimeConverter
+import com.h0uss.aimart.data.dao.ChatDao
 import com.h0uss.aimart.data.dao.FeedbackDao
+import com.h0uss.aimart.data.dao.MessageDao
 import com.h0uss.aimart.data.dao.OrderDao
 import com.h0uss.aimart.data.dao.PortfolioDao
 import com.h0uss.aimart.data.dao.ProductDao
@@ -23,8 +25,10 @@ import com.h0uss.aimart.data.dao.UserDao
 import com.h0uss.aimart.data.dao.UserSellInfoDao
 import com.h0uss.aimart.data.emun.OrderStatus
 import com.h0uss.aimart.data.emun.ProductStatus
+import com.h0uss.aimart.data.entity.ChatEntity
 import com.h0uss.aimart.data.entity.FeedbackEntity
 import com.h0uss.aimart.data.entity.FeedbackWithUserReferenceView
+import com.h0uss.aimart.data.entity.MessageEntity
 import com.h0uss.aimart.data.entity.OrderEntity
 import com.h0uss.aimart.data.entity.PortfolioItemEntity
 import com.h0uss.aimart.data.entity.PortfolioTagEntity
@@ -57,9 +61,11 @@ import kotlin.random.Random
         ProductTagEntity::class,
         SearchHintEntity::class,
         FeedbackEntity::class,
+        MessageEntity::class,
         ProductEntity::class,
         OrderEntity::class,
         UserEntity::class,
+        ChatEntity::class,
         TagEntity::class,
     ],
     views = [
@@ -76,6 +82,8 @@ abstract class AppDataBase: RoomDatabase() {
     abstract fun portfolioDao(): PortfolioDao
     abstract fun feedbackDao(): FeedbackDao
     abstract fun userSellInfoDao(): UserSellInfoDao
+    abstract fun chatDao(): ChatDao
+    abstract fun messageDao(): MessageDao
 
     companion object{
         @Volatile

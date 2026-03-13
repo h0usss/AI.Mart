@@ -5,7 +5,9 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.h0uss.aimart.data.dataStore.SessionManager
 import com.h0uss.aimart.data.database.AppDataBase
+import com.h0uss.aimart.data.repository.ChatRepository
 import com.h0uss.aimart.data.repository.FeedbackRepository
+import com.h0uss.aimart.data.repository.MessageRepository
 import com.h0uss.aimart.data.repository.OrderRepository
 import com.h0uss.aimart.data.repository.PortfolioRepository
 import com.h0uss.aimart.data.repository.ProductRepository
@@ -61,6 +63,16 @@ object Graph {
     val feedbackRepository by lazy {
         FeedbackRepository(
             feedbackDao = db.feedbackDao(),
+        )
+    }
+    val chatRepository by lazy {
+        ChatRepository(
+            chatDao = db.chatDao(),
+        )
+    }
+    val messageRepository by lazy {
+        MessageRepository(
+            messageDao = db.messageDao(),
         )
     }
 
