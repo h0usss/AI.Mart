@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
-val customFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+val customFormatter: DateTimeFormatter? = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun String.toLocalDate(): LocalDate {

@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.h0uss.aimart.data.entity.UserEntity
+import com.h0uss.aimart.data.model.ChatUserData
 import com.h0uss.aimart.data.model.SellerData
 import com.h0uss.aimart.data.model.UserData
 import kotlinx.coroutines.flow.Flow
@@ -65,6 +66,19 @@ interface UserDao {
         GROUP BY u.id
     """)
     fun getUserByIdFlow(userId: Long): Flow<UserData>
+
+    @Query("""
+        SELECT
+            u.id AS id,
+            u.name AS userName,
+            p.image AS productImageId
+        FROM user AS u
+        LEFT JOIN chats AS c ON u.id = c.f_user_id OR u.id = c.s_user_id 
+        LEFT JOIN product AS p ON c.product_id = p.id
+        WHERE c.id = :chatId
+        GROUP BY u.id
+    """)
+    fun getUsersByChatId(chatId: Long): Flow<List<ChatUserData>>
 
     @Query("""
         SELECT u.is_seller

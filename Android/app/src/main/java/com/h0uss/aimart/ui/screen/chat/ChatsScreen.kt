@@ -1,8 +1,7 @@
-package com.h0uss.aimart.ui.screen.main
+package com.h0uss.aimart.ui.screen.chat
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,11 +22,12 @@ import androidx.compose.ui.unit.sp
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.model.ChatData
 import com.h0uss.aimart.ui.assets.card.ChatRowCard
+import com.h0uss.aimart.ui.theme.Black10
 import com.h0uss.aimart.ui.theme.Black100
 import com.h0uss.aimart.ui.theme.White
 import com.h0uss.aimart.ui.theme.semiboldStyle
-import com.h0uss.aimart.ui.viewModel.main.ChatsEvent
-import com.h0uss.aimart.ui.viewModel.main.ChatsState
+import com.h0uss.aimart.ui.viewModel.chat.ChatsEvent
+import com.h0uss.aimart.ui.viewModel.chat.ChatsState
 
 @Composable
 fun ChatsScreen(
@@ -41,23 +41,22 @@ fun ChatsScreen(
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 63.dp, bottom = 18.dp),
+            text = "Сообщения",
+            style = semiboldStyle,
+            fontSize = 16.sp,
+            color = Black100,
+            textAlign = TextAlign.Center,
+        )
+
         LazyColumn(
             modifier = Modifier
-                .padding(bottom = 14.dp)
                 .fillMaxWidth()
         ) {
-            item {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 63.dp),
-                    text = "Сообщения",
-                    style = semiboldStyle,
-                    fontSize = 16.sp,
-                    color = Black100,
-                    textAlign = TextAlign.Center,
-                )
-            }
 
             val chats = state.chats
             items(count=chats.size) { i ->
@@ -66,6 +65,7 @@ fun ChatsScreen(
                         modifier=Modifier
                             .padding(top=14.dp)
                         ,
+                        color = Black10
                     )
                 }
                 
@@ -77,11 +77,10 @@ fun ChatsScreen(
                 ) {
                     Box(modifier = Modifier.weight(1f)) {
                         ChatRowCard(
-                            modifier = Modifier
-                                .clickable{
-                                    onEvent(ChatsEvent.ChatClick(value = chats[i].id))
-                                },
-                            chat=chats[i],
+                            chat = chats[i],
+                            onClick = { id ->
+                                onEvent(ChatsEvent.ChatClick(value = id))
+                            }
                         )
                     }
                 }

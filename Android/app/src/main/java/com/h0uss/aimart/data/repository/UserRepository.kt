@@ -8,6 +8,7 @@ import com.h0uss.aimart.data.dao.UserDao
 import com.h0uss.aimart.data.mapper.toUserEntity
 import com.h0uss.aimart.data.mapper.toUserHomeData
 import com.h0uss.aimart.data.mapper.toUserLoginData
+import com.h0uss.aimart.data.model.ChatUserData
 import com.h0uss.aimart.data.model.SellerData
 import com.h0uss.aimart.data.model.UserData
 import com.h0uss.aimart.data.model.UserHomeData
@@ -32,6 +33,12 @@ class UserRepository(
 
     fun getUserByIdFlow(userId: Long): Flow<UserData>{
         return userDao.getUserByIdFlow(userId)
+    }
+
+    fun getOtherUserByChatId(chatId: Long, myUserId: Long): Flow<ChatUserData>{
+        return userDao.getUsersByChatId(chatId).map { list ->
+            list.firstOrNull { it.id != myUserId } ?: ChatUserData()
+        }
     }
 
     fun getUserCountBuyFlow(userId: Long): Flow<Int?>{

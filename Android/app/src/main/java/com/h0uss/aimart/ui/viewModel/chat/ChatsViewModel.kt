@@ -1,12 +1,16 @@
-package com.h0uss.aimart.ui.viewModel.main
+package com.h0uss.aimart.ui.viewModel.chat
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.h0uss.aimart.Graph.authUserIdLong
+import com.h0uss.aimart.Graph.chatRepository
 import com.h0uss.aimart.data.model.ChatData
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -17,6 +21,19 @@ class ChatsViewModel : ViewModel(){
 
     var navigationEvents = Channel<ChatsNavigationEvent>()
         private set
+
+    init {
+        viewModelScope.launch {
+            val chats = chatRepository.getAllUserChats(authUserIdLong)
+
+            state.update {
+                it.copy(
+                    chats = chats.firstOrNull() ?: listOf()
+                )
+            }
+
+        }
+    }
 
     fun onEvent(event: ChatsEvent) {
         when(event){

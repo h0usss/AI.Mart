@@ -94,14 +94,13 @@ fun BottomNavBar(
                 },
                 selected = isSelected,
                 onClick = {
-                    if (item.route != Chat)
-                        navController.navigate(item.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
+                    navController.navigate(item.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
                         }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
             )
         }

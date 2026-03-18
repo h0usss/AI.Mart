@@ -22,8 +22,6 @@ object Main: ScreensRoutes
 @Serializable
 object Home: ScreensRoutes
 @Serializable
-object Chat: ScreensRoutes
-@Serializable
 object MyProducts: ScreensRoutes
 @Serializable
 object Orders: ScreensRoutes
@@ -46,3 +44,12 @@ object Search: ScreensRoutes
 object SearchTextField: ScreensRoutes
 @Serializable
 object SearchResult: ScreensRoutes
+
+@Serializable
+object Chat: ScreensRoutes
+@Serializable
+object ChatList: ScreensRoutes
+@Serializable
+data class ChatWithUser(
+    val id: Long
+): ScreensRoutes

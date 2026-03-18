@@ -38,6 +38,8 @@ import com.h0uss.aimart.ui.assets.Alert
 import com.h0uss.aimart.ui.assets.ShowPortfolio
 import com.h0uss.aimart.ui.state.authorize.SignIn
 import com.h0uss.aimart.ui.state.authorize.SignUp
+import com.h0uss.aimart.ui.state.chat.ChatUser
+import com.h0uss.aimart.ui.state.chat.Chats
 import com.h0uss.aimart.ui.state.main.Home
 import com.h0uss.aimart.ui.state.main.MyProducts
 import com.h0uss.aimart.ui.state.main.Orders
@@ -161,6 +163,27 @@ fun Navigation(
                                     navController.navigate(SearchTextField)
                                 }
                             )
+                        }
+                        navigation<Chat>(
+                            startDestination = ChatList
+                        ) {
+                            composable<ChatList> {
+                                isBottomNavBarShow = true
+                                Chats(
+                                    navToChat = { chatId ->
+                                        navController.navigate(ChatWithUser(chatId))
+                                    }
+                                )
+                            }
+
+                            composable<ChatWithUser> {
+                                isBottomNavBarShow = false
+                                ChatUser(
+                                    chatId = it.toRoute<ChatWithUser>().id,
+                                    navToChatList = {},
+                                    navToUser = {},
+                                )
+                            }
                         }
                         navigation<Search>(
                             startDestination = SearchTextField

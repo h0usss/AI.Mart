@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -41,17 +42,20 @@ import com.h0uss.aimart.data.entity.UserEntity
 import com.h0uss.aimart.data.entity.UserSellInfoEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.mindrot.jbcrypt.BCrypt
 import java.time.LocalDateTime
 import kotlin.random.Random
 
-@TypeConverters( value = [
-    LocalDateTimeConverter::class,
-    ListStringConverter::class,
-    BigDecimalConverter::class,
-    ListIntConverter::class,
-] )
+@TypeConverters(
+    value = [
+        LocalDateTimeConverter::class,
+        ListStringConverter::class,
+        BigDecimalConverter::class,
+        ListIntConverter::class,
+    ]
+)
 @Database(
     entities = [
         PortfolioItemEntity::class,
@@ -71,10 +75,10 @@ import kotlin.random.Random
     views = [
         FeedbackWithUserReferenceView::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
-abstract class AppDataBase: RoomDatabase() {
+abstract class AppDataBase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun productDao(): ProductDao
     abstract fun orderDao(): OrderDao
@@ -85,12 +89,12 @@ abstract class AppDataBase: RoomDatabase() {
     abstract fun chatDao(): ChatDao
     abstract fun messageDao(): MessageDao
 
-    companion object{
+    companion object {
         @Volatile
         var INSTANCE: AppDataBase? = null
-        fun getDataBase(context: Context, scope: CoroutineScope): AppDataBase{
+        fun getDataBase(context: Context, scope: CoroutineScope): AppDataBase {
 
-            return INSTANCE ?: synchronized(this){
+            return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context = context,
                     klass = AppDataBase::class.java,
@@ -123,6 +127,8 @@ abstract class AppDataBase: RoomDatabase() {
                         portfolioDao = database.portfolioDao(),
                         orderDao = database.orderDao(),
                         feedbackDao = database.feedbackDao(),
+                        chatDao = database.chatDao(),
+                        messageDao = database.messageDao(),
                     )
                 } ?: Log.e("AI.MartDB", "Fatal: AppDataBase INSTANCE was null after creation.")
             }
@@ -138,35 +144,54 @@ suspend fun populateDatabase(
     portfolioDao: PortfolioDao,
     orderDao: OrderDao,
     feedbackDao: FeedbackDao,
+    chatDao: ChatDao,
+    messageDao: MessageDao,
 ) {
     val usersIds: List<Long> = fillUsers(userDao, userSellInfoDao)
     val p = fillProduct(productDao, usersIds)
     fillPortfolio(portfolioDao, usersIds)
     val o = fillOrders(orderDao = orderDao, usersIds, p)
     fillFeedback(feedbackDao, o)
+    feelChat(chatDao, messageDao, p, productDao)
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 suspend fun fillUsers(
     userDao: UserDao,
     userSellInfoDao: UserSellInfoDao
-): List<Long>{
+): List<Long> {
 
     val rates = listOf(
         1f, 2f, 3f, 4f, 5f,
         0.1f, 0.2f, 3.1f, 4.4f, 5f,
     )
     val avatars = listOf(
-        R.drawable.avatar_10, R.drawable.avatar_1, R.drawable.avatar_2, R.drawable.avatar_3, R.drawable.seller,
-        R.drawable.avatar_0, R.drawable.avatar_1, R.drawable.avatar_2, R.drawable.avatar_3, R.drawable.seller
+        R.drawable.avatar_10,
+        R.drawable.avatar_1,
+        R.drawable.avatar_2,
+        R.drawable.avatar_3,
+        R.drawable.seller,
+        R.drawable.avatar_0,
+        R.drawable.avatar_1,
+        R.drawable.avatar_2,
+        R.drawable.avatar_3,
+        R.drawable.seller
     )
     val names = listOf(
         "im", "Комбуча", "Няшка", "Дураша", "Нюша",
         "Авраам", "Кокакола", "Кофи", "Привет", "Крош",
     )
     val emails = listOf(
-        "im@gmail.com", "Комбуча@gmail.com", "Няшка@gmail.com", "Дураша@gmail.com", "Нюша@gmail.com",
-        "Авраам@gmail.com", "Кокакола@gmail.com", "Кофи@gmail.com", "Привет@gmail.com", "Крош@gmail.com",
+        "im@gmail.com",
+        "Комбуча@gmail.com",
+        "Няшка@gmail.com",
+        "Дураша@gmail.com",
+        "Нюша@gmail.com",
+        "Авраам@gmail.com",
+        "Кокакола@gmail.com",
+        "Кофи@gmail.com",
+        "Привет@gmail.com",
+        "Крош@gmail.com",
     )
     val balances = listOf(
         100f, 200f, 300f, 400f, 500f,
@@ -241,16 +266,18 @@ suspend fun fillUsers(
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-suspend fun fillProduct(productDao: ProductDao, users: List<Long>): List<Long>{
+suspend fun fillProduct(productDao: ProductDao, users: List<Long>): List<Long> {
 
     val productArtTypes = listOf("Портрет", "Пейзаж", "Абстракция", "Фэнтези", "Киберпанк", "Аниме")
     val productImageIds = listOf(
-        R.drawable.add_0, R.drawable.background, R.drawable.background_0)
+        R.drawable.add_0, R.drawable.background, R.drawable.background_0
+    )
 
     val names = List(50) { "${productArtTypes.random()} #${it + 1}" }
-    val imageIds:List<Int> = List(50) { productImageIds.random() }
+    val imageIds: List<Int> = List(50) { productImageIds.random() }
     val prices = List(50) { Random.nextInt(5, 500).toFloat() }
-    val descriptions = List(50) { "Высококачественное цифровое изображение, созданное с помощью нейронных сетей. Идеально подходит для печати или использования в качестве аватара. Стиль: ${productArtTypes.random()}." }
+    val descriptions =
+        List(50) { "Высококачественное цифровое изображение, созданное с помощью нейронных сетей. Идеально подходит для печати или использования в качестве аватара. Стиль: ${productArtTypes.random()}." }
     val createDates = List(50) { LocalDateTime.now().minusDays(Random.nextLong(0, 365)) }
     val productStatuses = List(50) { ProductStatus.entries.toTypedArray().random() }
 
@@ -264,7 +291,7 @@ suspend fun fillProduct(productDao: ProductDao, users: List<Long>): List<Long>{
                     description = descriptions[i],
                     createDate = createDates[i],
                     productStatus = productStatuses[i],
-                    userId = users[i%5]
+                    userId = users[i % 5]
                 )
             )
         }
@@ -274,9 +301,10 @@ suspend fun fillProduct(productDao: ProductDao, users: List<Long>): List<Long>{
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-suspend fun fillPortfolio(portfolioDao: PortfolioDao, userIds: List<Long>){
+suspend fun fillPortfolio(portfolioDao: PortfolioDao, userIds: List<Long>) {
     val portfolioImageIds = listOf(
-        R.drawable.add_0, R.drawable.background, R.drawable.background_0)
+        R.drawable.add_0, R.drawable.background, R.drawable.background_0
+    )
     val artStyles = listOf("Fantasy", "Cyberpunk", "Anime", "Realism", "Abstract", "Sci-Fi")
     val artTypes = listOf("Character", "Environment", "Creature", "Prop", "Vehicle")
 
@@ -290,7 +318,11 @@ suspend fun fillPortfolio(portfolioDao: PortfolioDao, userIds: List<Long>){
                 add(
                     PortfolioItemEntity(
                         price = Random.nextInt(50, 1000).toFloat(),
-                        media = listOf(portfolioImageIds.random(),portfolioImageIds.random(),portfolioImageIds.random()),
+                        media = listOf(
+                            portfolioImageIds.random(),
+                            portfolioImageIds.random(),
+                            portfolioImageIds.random()
+                        ),
                         title = "$style $type",
                         description = "A custom piece of art in the $style style, depicting a unique $type. Created using advanced AI generation techniques and manual refinement.",
                         createTime = LocalDateTime.now().minusDays(Random.nextLong(0, 730)),
@@ -304,7 +336,11 @@ suspend fun fillPortfolio(portfolioDao: PortfolioDao, userIds: List<Long>){
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-suspend fun fillOrders(orderDao: OrderDao, userIds: List<Long>, productIds: List<Long>): List<Long>{
+suspend fun fillOrders(
+    orderDao: OrderDao,
+    userIds: List<Long>,
+    productIds: List<Long>
+): List<Long> {
     val sellerIds = userIds.take(5)
     val buyerIds = userIds.drop(5)
     val statuses = OrderStatus.entries.toTypedArray()
@@ -339,9 +375,21 @@ suspend fun fillOrders(orderDao: OrderDao, userIds: List<Long>, productIds: List
 
 @RequiresApi(Build.VERSION_CODES.O)
 suspend fun fillFeedback(feedbackDao: FeedbackDao, orderIds: List<Long>) {
-    val positiveTexts = listOf("Отличная работа!", "Все супер, рекомендую!", "Очень быстро и качественно.", "Результат превзошел ожидания!", "Буду обращаться еще.")
-    val neutralTexts = listOf("Нормально.", "Работа выполнена.", "В целом, неплохо.", "Соответствует описанию.")
-    val negativeTexts = listOf("Были некоторые проблемы.", "Не совсем то, что я ожидал.", "Пришлось вносить много правок.", "Затянули со сроками.")
+    val positiveTexts = listOf(
+        "Отличная работа!",
+        "Все супер, рекомендую!",
+        "Очень быстро и качественно.",
+        "Результат превзошел ожидания!",
+        "Буду обращаться еще."
+    )
+    val neutralTexts =
+        listOf("Нормально.", "Работа выполнена.", "В целом, неплохо.", "Соответствует описанию.")
+    val negativeTexts = listOf(
+        "Были некоторые проблемы.",
+        "Не совсем то, что я ожидал.",
+        "Пришлось вносить много правок.",
+        "Затянули со сроками."
+    )
 
     val initialFeedback: List<FeedbackEntity> = buildList {
         orderIds.forEach { orderId ->
@@ -364,4 +412,58 @@ suspend fun fillFeedback(feedbackDao: FeedbackDao, orderIds: List<Long>) {
     }
 
     feedbackDao.insertAll(initialFeedback)
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+suspend fun feelChat(
+    chatDao: ChatDao,
+    messageDao: MessageDao,
+    products: List<Long>,
+    productsDao: ProductDao
+) {
+    val initialChats: List<ChatEntity> = buildList {
+        var c = 0
+        var i = 0
+        while (c != 10) {
+            val sUId = productsDao.getProductById(products[i]).first().userId
+            if (sUId == 1L){
+                i++
+                continue
+            }
+            add(
+                ChatEntity(
+                    fUserId = 1,
+                    sUserId = sUId,
+                    productId = products[i],
+                    createdAt = LocalDateTime.now(),
+                )
+            )
+            c++
+            i++
+        }
+    }
+
+    chatDao.insertAll(initialChats)
+    val chats = chatDao.getAll()
+
+    val messages = List(30) {
+        LoremIpsum(Random.nextInt(1, 30)).values.joinToString("") { it }
+    }
+
+    val initialMessage: List<MessageEntity> = buildList {
+        chats.first().forEach { chat ->
+            repeat(Random.nextInt(1, 15)) {
+                add(
+                    MessageEntity(
+                        chatId = chat.id,
+                        senderId = if (Random.nextBoolean()) chat.fUserId else chat.sUserId,
+                        message = messages[Random.nextInt(0, messages.size - 1)],
+                        createdAt = LocalDateTime.now(),
+                    )
+                )
+            }
+        }
+    }
+    messageDao.insertAll(initialMessage)
+
 }

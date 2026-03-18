@@ -14,9 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.KeyboardActionHandler
-import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Text
@@ -36,32 +34,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.h0uss.aimart.R
 import com.h0uss.aimart.ui.theme.Black10
-import com.h0uss.aimart.ui.theme.Black5
 import com.h0uss.aimart.ui.theme.Black50
 import com.h0uss.aimart.ui.theme.Black80
-import com.h0uss.aimart.ui.theme.ErrorBG
-import com.h0uss.aimart.ui.theme.ErrorText
 import com.h0uss.aimart.ui.theme.Inter
 import com.h0uss.aimart.ui.theme.White
 import com.h0uss.aimart.ui.theme.regularStyle
 
 @Composable
-fun TextField(
+fun SendMessageField(
     modifier: Modifier = Modifier,
-    errorMessage: String = "",
-    isFocus: Boolean = false,
-    isFill: Boolean = false,
-    isBigTextField: Boolean = false,
-    placeHolder: String,
-    radiusPercent: Int = 20,
-    inputTransformation: InputTransformation = InputTransformation{},
-    outputTransformation: OutputTransformation = OutputTransformation{},
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Default),
+    placeHolder: String = "Send a message…",
     state: TextFieldState = remember { TextFieldState("") },
-    rightImageId: Int = -1,
-    leftImageId: Int = -1,
-    onClickRightImage: () -> Unit = {},
-    onClickLeftImage: () -> Unit = {},
     onClickEnter: () -> Unit = {},
 ){
 
@@ -80,13 +63,9 @@ fun TextField(
         BasicTextField(
             modifier = Modifier,
             state = state,
-            keyboardOptions = keyboardOptions,
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Default),
             onKeyboardAction = keyboardActions,
-            outputTransformation = outputTransformation,
-            lineLimits =
-                if (isBigTextField) TextFieldLineLimits.Default
-                else TextFieldLineLimits.SingleLine,
-            inputTransformation = inputTransformation,
+            lineLimits = TextFieldLineLimits.SingleLine,
             textStyle = TextStyle(
                 fontSize = 14.sp,
                 fontFamily = Inter,
@@ -99,25 +78,17 @@ fun TextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(min = 40.dp)
-                        .clip(RoundedCornerShape(radiusPercent))
+                        .clip(RoundedCornerShape(6.dp))
                         .border(
-                            color =
-                                if (!errorMessage.isEmpty()) ErrorText
-                                else if (isFocus) Black80
-                                else Black10,
+                            color = Black10,
                             width = 1.dp,
-                            shape = RoundedCornerShape(radiusPercent)
+                            shape = RoundedCornerShape(6.dp)
                         )
                         .background(
-                            color =
-                                if (!errorMessage.isEmpty()) ErrorBG
-                                else if (isFill) Black5
-                                else White
+                            color = White
                         )
                         .padding(
-                            start =
-                                if (leftImageId == -1) 16.dp
-                                else 8.dp,
+                            start = 16.dp,
                             top = 8.dp,
                             end = 16.dp,
                             bottom = 8.dp
@@ -129,17 +100,6 @@ fun TextField(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ){
-                        if (leftImageId != -1)
-                            Image(
-                                modifier = Modifier
-                                    .padding(end = 8.dp)
-                                    .clickable {
-                                        onClickLeftImage()
-                                    },
-                                painter = painterResource(leftImageId),
-                                contentDescription = "Left image"
-                            )
-
                         Box(
                             modifier = Modifier
                                 .weight(1f)
@@ -154,36 +114,21 @@ fun TextField(
                             innerTextField()
                         }
 
-                        if (rightImageId != -1)
+                        if (!state.text.isEmpty())
                             Image(
-                                modifier = Modifier.clickable{
-                                    onClickRightImage()
-                                },
-                                painter = painterResource(rightImageId),
+                                modifier = Modifier
+                                    .padding(start = 16.dp)
+                                    .clickable{
+                                        onClickEnter()
+                                    }
+                                ,
+                                painter = painterResource(R.drawable.send),
                                 contentDescription = "RightImage"
                             )
                     }
                 }
             }
         )
-
-        if (!errorMessage.isEmpty()) {
-            Row(
-                modifier = Modifier.padding(top = 6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Image(
-                    painter = painterResource( R.drawable.error_status ),
-                    contentDescription = "Error"
-                )
-                Text(
-                    text = " $errorMessage",
-                    fontSize = 12.sp,
-                    style = regularStyle,
-                    color = ErrorText,
-                )
-            }
-        }
     }
 }
 
@@ -191,25 +136,9 @@ fun TextField(
 @Composable
 private fun PreviewNecessarily() {
     Column(){
-        TextField(
-            placeHolder = "Пароль",
-            errorMessage = "aAlax",
+        SendMessageField(
         )
-        TextField(
-            placeHolder = "Пароль",
-            isFocus = true
-        )
-        TextField(
-            placeHolder = "Пароль",
-            rightImageId = R.drawable.calendar
-        )
-        TextField(
-            placeHolder = "Пароль",
-            leftImageId = R.drawable.loupe
-        )
-        TextField(
-            placeHolder = "Пароль",
-            isBigTextField = true,
+        SendMessageField(
             state = remember{ TextFieldState("dfasjhdlhas jd sj fdkjlshd flksdfs dsdh sdjk lasldk jhfaslkdjfhlskahj dhfk jsdhakjshdf slkjh fkjsd hlsdkjhf lskjdh fljksda hldjhf ljks dhahf ljkash fdasjhkl f") }
         )
     }

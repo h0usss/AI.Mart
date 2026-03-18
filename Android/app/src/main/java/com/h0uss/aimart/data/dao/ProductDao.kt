@@ -40,6 +40,14 @@ interface ProductDao {
     fun getProductsByUserId(userId: Long): Flow<List<ProductEntity>>
 
     @Query("""
+        SELECT * 
+        FROM product
+        WHERE id = :productId
+        ORDER BY create_date DESC
+    """)
+    fun getProductById(productId: Long): Flow<ProductEntity>
+
+    @Query("""
         SELECT 
             p.id AS id,
             u.name AS authorName,
