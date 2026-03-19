@@ -180,8 +180,12 @@ fun Navigation(
                                 isBottomNavBarShow = false
                                 ChatUser(
                                     chatId = it.toRoute<ChatWithUser>().id,
-                                    navToChatList = {},
-                                    navToUser = {},
+                                    navToChatList = {
+                                        navController.navigate(ChatList)
+                                    },
+                                    navToUser = {userId ->
+                                        navController.navigate(Seller(userId))
+                                    },
                                 )
                             }
                         }

@@ -27,18 +27,14 @@ class ChatUserViewModel(
 
     init {
         viewModelScope.launch {
-            // Подписываемся на сообщения
-            launch {
-                messageRepository.getMessagesByChatId(chatId).collect { messages ->
-                    state.update { it.copy(messages = messages) }
-                }
+            messageRepository.getMessagesByChatId(chatId).collect { messages ->
+                state.update { it.copy(messages = messages) }
             }
-            
-            // Подписываемся на данные пользователя
-            launch {
-                userRepository.getOtherUserByChatId(chatId, authUserIdLong).collect { user ->
-                    state.update { it.copy(userData = user) }
-                }
+        }
+
+        viewModelScope.launch {
+            userRepository.getOtherUserByChatId(chatId, authUserIdLong).collect { user ->
+                state.update { it.copy(userData = user) }
             }
         }
     }
@@ -55,6 +51,11 @@ class ChatUserViewModel(
                     navigationEvents.send(ChatUserNavigationEvent.User(event.value))
                 }
             }
+            is ChatUserEvent.SendMessage -> {
+                viewModelScope.launch {
+                    messageRepository.addMessageToChat(chatId, authUserIdLong, event.value)
+                }
+            }
         }
     }
 }
@@ -67,6 +68,7 @@ data class ChatUserState(
 sealed class ChatUserEvent {
     object ToListClick : ChatUserEvent()
     data class UserClick(val value: Long) : ChatUserEvent()
+    data class SendMessage(val value: String) : ChatUserEvent()
 }
 
 sealed class ChatUserNavigationEvent {

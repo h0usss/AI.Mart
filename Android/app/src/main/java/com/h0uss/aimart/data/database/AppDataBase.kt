@@ -75,7 +75,7 @@ import kotlin.random.Random
     views = [
         FeedbackWithUserReferenceView::class,
     ],
-    version = 2,
+    version = 1,
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {
@@ -183,15 +183,15 @@ suspend fun fillUsers(
     )
     val emails = listOf(
         "im@gmail.com",
-        "Комбуча@gmail.com",
-        "Няшка@gmail.com",
-        "Дураша@gmail.com",
-        "Нюша@gmail.com",
-        "Авраам@gmail.com",
-        "Кокакола@gmail.com",
-        "Кофи@gmail.com",
-        "Привет@gmail.com",
-        "Крош@gmail.com",
+        "Komb@gmail.com",
+        "Nua@gmail.com",
+        "dur@gmail.com",
+        "nusha@gmail.com",
+        "avraa@gmail.com",
+        "pipisi@gmail.com",
+        "coFe@gmail.com",
+        "hi@gmail.com",
+        "krr@gmail.com",
     )
     val balances = listOf(
         100f, 200f, 300f, 400f, 500f,

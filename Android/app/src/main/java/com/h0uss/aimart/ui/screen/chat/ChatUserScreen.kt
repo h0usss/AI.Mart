@@ -79,7 +79,10 @@ fun ChatUserScreen(
                         )
                     } else {
                         OtherMessage(
-                            messageData = message
+                            messageData = message,
+                            onUserClick = {id ->
+                                onEvent(ChatUserEvent.UserClick(id))
+                            }
                         )
                     }
                 }
@@ -91,7 +94,11 @@ fun ChatUserScreen(
             SendMessageField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 10.dp),
+                    .padding(bottom = 10.dp)
+                ,
+                onClickEnter = { message ->
+                    onEvent(ChatUserEvent.SendMessage(message))
+                }
             )
         }
     }

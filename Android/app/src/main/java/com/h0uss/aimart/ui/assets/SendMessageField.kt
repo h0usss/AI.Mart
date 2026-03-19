@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -45,13 +46,16 @@ fun SendMessageField(
     modifier: Modifier = Modifier,
     placeHolder: String = "Send a message…",
     state: TextFieldState = remember { TextFieldState("") },
-    onClickEnter: () -> Unit = {},
+    onClickEnter: (String) -> Unit = {},
 ){
 
     val focusManager = LocalFocusManager.current
     val keyboardActions = remember(onClickEnter) {
         KeyboardActionHandler({
-                onClickEnter()
+                if (!state.text.isEmpty()) {
+                    onClickEnter(state.text.toString())
+                    state.clearText()
+                }
                 focusManager.clearFocus()
             }
         )
@@ -118,8 +122,9 @@ fun SendMessageField(
                             Image(
                                 modifier = Modifier
                                     .padding(start = 16.dp)
-                                    .clickable{
-                                        onClickEnter()
+                                    .clickable {
+                                        onClickEnter(state.text.toString())
+                                        state.clearText()
                                     }
                                 ,
                                 painter = painterResource(R.drawable.send),

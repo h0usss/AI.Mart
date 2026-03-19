@@ -14,6 +14,9 @@ interface MessageDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(messages: List<MessageEntity>): List<Long>
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMessage(message: MessageEntity): Long
+
     @Query(
         """
         SELECT
@@ -24,7 +27,7 @@ interface MessageDao {
         FROM messages AS m
         JOIN user AS u ON m.sender_id = u.id
         WHERE m.chat_id = :chatId
-        ORDER BY created_at
+        ORDER BY created_at DESC
     """
     )
     fun getMessagesByChatId(chatId: Long): Flow<List<MessageData>>
