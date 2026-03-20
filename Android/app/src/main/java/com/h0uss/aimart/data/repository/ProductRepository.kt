@@ -8,6 +8,7 @@ import androidx.paging.PagingData
 import com.h0uss.aimart.data.dao.ProductDao
 import com.h0uss.aimart.data.mapper.toUserProductCardData
 import com.h0uss.aimart.data.model.ProductCardData
+import com.h0uss.aimart.data.model.ProductData
 import com.h0uss.aimart.data.model.UserProductCardData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -33,6 +34,10 @@ class ProductRepository(
         return productDao.getProductsByUserId(userId).map { list ->
             list.map { it.toUserProductCardData() }
         }
+    }
+
+    fun getProductById(productId: Long): Flow<ProductData> {
+        return productDao.getProductById(productId)
     }
 
     fun getProductByStringInside(string: String): Flow<PagingData<ProductCardData>> {

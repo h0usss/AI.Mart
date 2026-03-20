@@ -75,7 +75,7 @@ import kotlin.random.Random
     views = [
         FeedbackWithUserReferenceView::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {
@@ -274,7 +274,6 @@ suspend fun fillProduct(productDao: ProductDao, users: List<Long>): List<Long> {
     )
 
     val names = List(50) { "${productArtTypes.random()} #${it + 1}" }
-    val imageIds: List<Int> = List(50) { productImageIds.random() }
     val prices = List(50) { Random.nextInt(5, 500).toFloat() }
     val descriptions =
         List(50) { "Высококачественное цифровое изображение, созданное с помощью нейронных сетей. Идеально подходит для печати или использования в качестве аватара. Стиль: ${productArtTypes.random()}." }
@@ -286,7 +285,7 @@ suspend fun fillProduct(productDao: ProductDao, users: List<Long>): List<Long> {
             add(
                 ProductEntity(
                     name = names[i],
-                    imageId = imageIds[i],
+                    imagesId = List(4) { productImageIds.random() },
                     price = prices[i],
                     description = descriptions[i],
                     createDate = createDates[i],
@@ -364,7 +363,8 @@ suspend fun fillOrders(
                     completionDate = completionDate,
                     buyerId = buyerIds.random(),
                     sellerId = sellerIds.random(),
-                    productId = productIds.random()
+                    productId = productIds.random(),
+                    description = LoremIpsum(Random.nextInt(20, 50)).values.joinToString("") { it }
                 )
             )
         }

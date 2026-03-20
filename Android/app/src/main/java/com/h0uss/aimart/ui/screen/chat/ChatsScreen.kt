@@ -121,7 +121,7 @@ private fun Preview_Full() {
             chats = List(2) { item ->
                 ChatData(
                     id = 1L,
-                    imageId = R.drawable.base_avatar,
+                    imagesId = List(4) { R.drawable.background },
                     productName = "3D Model",
                     userName = "Детка геймер",
                     price = 100f,
@@ -140,7 +140,7 @@ private fun Preview_Full_V2() {
             chats = List(10) { item ->
                 ChatData(
                     id = 1L,
-                    imageId = R.drawable.base_avatar,
+                    imagesId = List(4) { R.drawable.background },
                     productName = "3D Model",
                     userName = "Детка геймер",
                     price = 100f,

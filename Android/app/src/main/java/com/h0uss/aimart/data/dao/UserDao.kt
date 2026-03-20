@@ -58,20 +58,32 @@ interface UserDao {
         u.nick_name AS nick,
         u.avatar AS imageId,
         u.rate AS rate,
-        COUNT(o.id) AS countBuy,
         u.balance AS balance
         FROM user AS u
         LEFT JOIN orders AS o ON u.id = o.buyer_id 
         WHERE u.id = :userId
-        GROUP BY u.id
     """)
     fun getUserByIdFlow(userId: Long): Flow<UserData>
 
     @Query("""
         SELECT
+        u.id AS id,
+        u.name AS name,
+        u.nick_name AS nick,
+        u.avatar AS imageId,
+        u.rate AS rate,
+        u.balance AS balance
+        FROM user AS u
+        LEFT JOIN product AS p ON u.id = p.user_id 
+        WHERE p.id = :productId
+    """)
+    fun getUserByProductId(productId: Long): Flow<UserData>
+
+    @Query("""
+        SELECT
             u.id AS id,
             u.name AS userName,
-            p.image AS productImageId
+            p.images AS productImagesId
         FROM user AS u
         LEFT JOIN chats AS c ON u.id = c.f_user_id OR u.id = c.s_user_id 
         LEFT JOIN product AS p ON c.product_id = p.id

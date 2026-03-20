@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -36,10 +37,13 @@ import com.h0uss.aimart.data.model.AlertData
 import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.ui.assets.Alert
 import com.h0uss.aimart.ui.assets.ShowPortfolio
+import com.h0uss.aimart.ui.assets.SuccessNewOrder
 import com.h0uss.aimart.ui.state.authorize.SignIn
 import com.h0uss.aimart.ui.state.authorize.SignUp
 import com.h0uss.aimart.ui.state.chat.ChatUser
 import com.h0uss.aimart.ui.state.chat.Chats
+import com.h0uss.aimart.ui.state.create.NewOrder
+import com.h0uss.aimart.ui.state.info.ProductInfo
 import com.h0uss.aimart.ui.state.main.Home
 import com.h0uss.aimart.ui.state.main.MyProducts
 import com.h0uss.aimart.ui.state.main.Orders
@@ -61,11 +65,15 @@ fun Navigation(
     modifier: Modifier = Modifier,
 ) {
     val navController = rememberNavController()
-    var isBottomNavBarShow by remember{ mutableStateOf(false) }
-    var isSplashSender by remember{ mutableStateOf(true) }
+    var isBottomNavBarShow by remember { mutableStateOf(false) }
+    var isSplashSender by remember { mutableStateOf(true) }
+    var isSeller by rememberSaveable { mutableStateOf<Boolean?>(null) }
+
     var alertData by remember { mutableStateOf<AlertData?>(null) }
     var portfolioData by remember { mutableStateOf<PortfolioItemData?>(null) }
-    var isSeller by rememberSaveable { mutableStateOf<Boolean?>(null) }
+    var sellerIdForOrder by remember { mutableLongStateOf(-1L) }
+    var productIdForOrder by remember { mutableLongStateOf(-1L) }
+    var isSuccessNewOrder by remember { mutableStateOf(false) }
 
     LaunchedEffect(authUserIdLong) {
         isSeller = if (authUserIdLong != 0L)
@@ -155,12 +163,25 @@ fun Navigation(
                                 navToSeller = { sellerId ->
                                     navController.navigate(Seller(sellerId))
                                 },
-                                navToProduct = {
-                                    //                        productId ->
-                                    //                        navController.navigate(Product(productId))
+                                navToProduct = { productId ->
+                                    navController.navigate(ProductInfo(productId))
                                 },
                                 navToSearch = {
                                     navController.navigate(SearchTextField)
+                                }
+                            )
+                        }
+                        composable<ProductInfo> {
+                            isBottomNavBarShow = true
+
+                            ProductInfo(
+                                productId = it.toRoute<ProductInfo>().productId,
+                                navToUser = { userId ->
+                                    navController.navigate(Seller(userId))
+                                },
+                                onBuy = { sellerId, productId ->
+                                    sellerIdForOrder = sellerId
+                                    productIdForOrder = productId
                                 }
                             )
                         }
@@ -183,7 +204,7 @@ fun Navigation(
                                     navToChatList = {
                                         navController.navigate(ChatList)
                                     },
-                                    navToUser = {userId ->
+                                    navToUser = { userId ->
                                         navController.navigate(Seller(userId))
                                     },
                                 )
@@ -203,8 +224,8 @@ fun Navigation(
                                     navToSeller = { sellerId ->
                                         navController.navigate(Seller(sellerId))
                                     },
-                                    navToProduct = {
-                                        //                                navController.navigate(Home)
+                                    navToProduct = { productId ->
+                                        navController.navigate(ProductInfo(productId))
                                     },
                                     navToSearchResult = {
                                         navController.navigate(SearchResult)
@@ -229,8 +250,8 @@ fun Navigation(
                                     navToSeller = { sellerId ->
                                         navController.navigate(Seller(sellerId))
                                     },
-                                    navToProduct = {
-                                        //                                navController.navigate(Home)
+                                    navToProduct = { productId ->
+                                        navController.navigate(ProductInfo(productId))
                                     },
                                     navToSearchResult = {
                                         navController.navigate(SearchResult)
@@ -249,8 +270,8 @@ fun Navigation(
                             isBottomNavBarShow = true
 
                             MyProducts(
-                                navToProduct = {
-                                    //                        navController.navigate()
+                                navToProduct = { productId ->
+                                    navController.navigate(ProductInfo(productId))
                                 },
                                 navToNewProduct = {
                                     //                        navController.navigate()
@@ -262,8 +283,8 @@ fun Navigation(
                             isBottomNavBarShow = true
 
                             Orders(
-                                navToProduct = {
-                                    //                        navController.navigate()
+                                navToProduct = { productId ->
+                                    navController.navigate(ProductInfo(productId))
                                 }
                             )
                         }
@@ -386,7 +407,10 @@ fun Navigation(
 
 
         AnimatedVisibility(
-            visible = alertData != null || portfolioData != null,
+            visible = alertData != null
+                    || portfolioData != null
+                    || (sellerIdForOrder != -1L && productIdForOrder != -1L)
+                    || isSuccessNewOrder,
             enter = fadeIn(animationSpec = tween(durationMillis = 300)),
             exit = fadeOut(animationSpec = tween(durationMillis = 300))
         ) {
@@ -396,9 +420,9 @@ fun Navigation(
                     .background(Black20Transparent)
                     .clickable {
                         alertData = null
+                        portfolioData = null
                     }
-                    .padding(horizontal = 21.dp)
-                ,
+                    .padding(horizontal = 21.dp),
                 contentAlignment = Alignment.Center
             ) {
 
@@ -415,6 +439,32 @@ fun Navigation(
                         data = data,
                         onExit = {
                             portfolioData = null
+                        }
+                    )
+                }
+
+                if (sellerIdForOrder != -1L && productIdForOrder != -1L) {
+                    NewOrder(
+                        modifier = Modifier.clickable(enabled = false) {},
+                        sellerId = sellerIdForOrder,
+                        productId = productIdForOrder,
+                        onExit = {
+                            sellerIdForOrder = -1L
+                            productIdForOrder = -1L
+                        },
+                        onSuccess = {
+                            sellerIdForOrder = -1L
+                            productIdForOrder = -1L
+                            isSuccessNewOrder = true
+                        }
+                    )
+                }
+
+                if (isSuccessNewOrder) {
+                    SuccessNewOrder(
+                        modifier = Modifier.clickable(enabled = false) {},
+                        onExit = {
+                            isSuccessNewOrder = false
                         }
                     )
                 }

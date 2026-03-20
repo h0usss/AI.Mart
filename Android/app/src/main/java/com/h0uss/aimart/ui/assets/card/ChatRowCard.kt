@@ -38,7 +38,7 @@ fun ChatRowCard(
         modifier = modifier
             .fillMaxWidth()
             .background(White)
-            .clickable{
+            .clickable {
                 onClick(chat.id)
             }
         ,
@@ -52,7 +52,7 @@ fun ChatRowCard(
                     .size(80.dp)
                     .clip(RoundedCornerShape(10))
                 ,
-                painter = painterResource(chat.imageId),
+                painter = painterResource(chat.imagesId[0]),
                 contentDescription = chat.productName,
                 contentScale = ContentScale.Crop
             )
@@ -101,7 +101,7 @@ private fun Preview() {
             id = 1L,
             userName = "Пипипу",
             price = 100.00f,
-            imageId = R.drawable.background,
+            imagesId = List(4) { R.drawable.background },
             productName = "3d Модель",
         )
     )

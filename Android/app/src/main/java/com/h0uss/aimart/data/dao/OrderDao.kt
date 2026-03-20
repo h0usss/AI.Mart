@@ -12,14 +12,18 @@ import kotlinx.coroutines.flow.Flow
 interface OrderDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAll(products: List<OrderEntity>): List<Long>
+    suspend fun insertAll(orders: List<OrderEntity>): List<Long>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(order: OrderEntity): Long
+
     @Query("""
         SELECT
         o.id AS id,
         p.name AS name,
         o.price AS price,
         o.status AS status,
-        p.image AS imageId
+        p.images AS imagesId
         FROM orders AS o
         JOIN product AS p ON o.product_id = p.id
         WHERE o.seller_id = :userId

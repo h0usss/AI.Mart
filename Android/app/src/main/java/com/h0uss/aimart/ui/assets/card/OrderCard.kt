@@ -51,7 +51,7 @@ fun OrderCard(
                     .size(164.dp)
                     .clip(RoundedCornerShape(5))
                 ,
-                painter = painterResource(order.imageId),
+                painter = painterResource(order.imagesId[0]),
                 contentDescription = "Product image",
                 contentScale = ContentScale.Crop
             )
@@ -91,7 +91,7 @@ private fun Preview() {
                 id = 1L,
                 name = "ProductName",
                 price = 10.99f,
-                imageId = R.drawable.background,
+                imagesId = List(4) { R.drawable.background },
                 status = OrderStatus.COMPLETE
             )
         )
@@ -100,7 +100,7 @@ private fun Preview() {
                 id = 1L,
                 name = "ProductName",
                 price = 10.99f,
-                imageId = R.drawable.background,
+                imagesId = List(4) { R.drawable.background },
                 status = OrderStatus.COMPLETE
             )
         )

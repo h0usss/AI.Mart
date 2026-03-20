@@ -255,7 +255,7 @@ private fun Preview_fill() {
             authorName = "Бильбо",
             name = "AI Кольцо всевластия",
             price = 0.09f,
-            imageId = R.drawable.background,
+            imagesId = List(4) { R.drawable.background },
             description = "Ты не пройдёшь"
         )
     }))

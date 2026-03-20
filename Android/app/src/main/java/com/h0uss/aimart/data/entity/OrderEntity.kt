@@ -15,9 +15,11 @@ data class OrderEntity(
 
     @ColumnInfo( name = "price" )           val price: Float,
     @ColumnInfo( name = "status" )          val status: OrderStatus,
-//    @ColumnInfo( name = "description" )     val description: String,
-    @ColumnInfo( name = "deadline" )        val deadline: LocalDateTime,
-    @ColumnInfo( name = "start_date" )      val startDate: LocalDateTime,
+
+    @ColumnInfo( name = "description" )     val description: String?,
+
+    @ColumnInfo( name = "deadline" )        val deadline: LocalDateTime?,
+    @ColumnInfo( name = "start_date" )      val startDate: LocalDateTime?,
     @ColumnInfo( name = "completion_date" ) val completionDate: LocalDateTime?,
 
     @ColumnInfo( name = "buyer_id" )        val buyerId: Long,

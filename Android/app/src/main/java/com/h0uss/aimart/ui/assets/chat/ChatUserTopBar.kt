@@ -55,7 +55,7 @@ fun ChatUserTopBar(
                 .padding(start = 20.dp)
                 .fillMaxWidth(),
         ){
-            if (userData.productImageId != -1) {
+            if (userData.productImagesId.isNotEmpty()) {
                 Image(
                     modifier = Modifier
                         .size(40.dp)
@@ -63,7 +63,7 @@ fun ChatUserTopBar(
                         .clickable {
                             onUserClick(userData.id)
                         },
-                    painter = painterResource(userData.productImageId),
+                    painter = painterResource(userData.productImagesId[0]),
                     contentDescription = "ToUser",
                     contentScale = ContentScale.Crop
                 )
@@ -108,7 +108,7 @@ private fun Preview() {
     ChatUserTopBar(
         userData = ChatUserData(
             id = 1L,
-            productImageId = R.drawable.background_0,
+            productImagesId = List(4) { R.drawable.background },
             userName = "Детка геймер",
         )
     )

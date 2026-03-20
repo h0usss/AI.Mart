@@ -45,7 +45,7 @@ fun ProductCard(
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(5))
             ,
-            painter = painterResource(product.imageId),
+            painter = painterResource(product.imagesId[0]),
             contentDescription = "Product image",
             contentScale = ContentScale.Crop
         )
@@ -84,7 +84,7 @@ private fun Preview() {
                 authorName = "Чуча",
                 name = "ProductName",
                 price = 10.99f,
-                imageId = R.drawable.background,
+                imagesId = List(4) { R.drawable.background },
                 description = "a"
             )
         )

@@ -53,3 +53,8 @@ object ChatList: ScreensRoutes
 data class ChatWithUser(
     val id: Long
 ): ScreensRoutes
+
+@Serializable
+data class ProductInfo(
+    val productId: Long
+): ScreensRoutes

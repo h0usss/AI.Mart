@@ -13,7 +13,7 @@ data class ProductEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo( name = "id")               val id: Long = 0L,
     @ColumnInfo( name = "name")             val name: String,
-    @ColumnInfo( name = "image")            val imageId: Int,
+    @ColumnInfo( name = "images")           val imagesId: List<Int>,
     @ColumnInfo( name = "price")            val price: Float,
     @ColumnInfo( name = "description")      val description: String,
     @ColumnInfo( name = "create_date")      val createDate: LocalDateTime,

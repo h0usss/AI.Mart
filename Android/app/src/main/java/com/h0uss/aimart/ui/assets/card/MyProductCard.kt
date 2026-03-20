@@ -55,7 +55,7 @@ fun MyProductCard(
                     .size(100.dp)
                     .clip(RoundedCornerShape(10))
                 ,
-                painter = painterResource(product.imageId),
+                painter = painterResource(product.imagesId[0]),
                 contentDescription = product.name,
                 contentScale = ContentScale.Crop
             )
@@ -115,7 +115,7 @@ private fun Preview() {
             id = 1L,
             name = "Пипипу",
             price = 100.00f,
-            imageId = R.drawable.background,
+            imagesId = List(4) { R.drawable.background },
             status = ProductStatus.ACTIVE,
             description = "Бяки буки для запуки Бяки буки для запуки Бяки буки для запуки Бяки буки для запуки Бяки буки для запуки Бяки буки для запуки Бяки буки для запуки Бяки буки для запуки Бяки буки для запуки"
         )

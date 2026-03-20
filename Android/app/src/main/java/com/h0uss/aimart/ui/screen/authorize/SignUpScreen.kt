@@ -45,7 +45,7 @@ import com.h0uss.aimart.ui.theme.regularStyle
 import com.h0uss.aimart.ui.theme.semiboldStyle
 import com.h0uss.aimart.ui.viewModel.authorize.SignUpEvent
 import com.h0uss.aimart.ui.viewModel.authorize.SignUpState
-import com.h0uss.aimart.util.DateValidator
+import com.h0uss.aimart.util.DateValidatorNoFuture
 import com.h0uss.aimart.util.inputTransformation.dateInputTransformation
 import com.h0uss.aimart.util.inputTransformation.emailInputTransformation
 import com.h0uss.aimart.util.inputTransformation.nameInputTransformation
@@ -63,7 +63,7 @@ fun SignUpScreen(
     onEvent: (SignUpEvent) -> Unit = {},
 ) {
     val datePickerState = rememberDatePickerState(
-        selectableDates = DateValidator
+        selectableDates = DateValidatorNoFuture
     )
     var showDatePicker by remember { mutableStateOf(false) }
 

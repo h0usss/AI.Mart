@@ -26,7 +26,7 @@ interface ChatDao {
         """
         SELECT
             c.id AS id,
-            p.image AS imageId,
+            p.images AS imagesId,
             p.name AS productName,
             CASE 
                 WHEN c.f_user_id = :userId THEN u2.name 

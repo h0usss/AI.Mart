@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.h0uss.aimart.data.entity.ProductEntity
 import com.h0uss.aimart.data.model.ProductCardData
+import com.h0uss.aimart.data.model.ProductData
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -21,7 +22,7 @@ interface ProductDao {
             u.name AS authorName,
             p.name AS name,
             p.price AS price,
-            p.image AS imageId,
+            p.images AS imagesId,
             p.product_status AS status,
             p.description AS description
         FROM product AS p
@@ -40,12 +41,19 @@ interface ProductDao {
     fun getProductsByUserId(userId: Long): Flow<List<ProductEntity>>
 
     @Query("""
-        SELECT * 
-        FROM product
-        WHERE id = :productId
-        ORDER BY create_date DESC
+        SELECT 
+            p.id AS productId,
+            u.id AS userId,
+            u.name AS author,
+            p.name AS name,
+            p.price AS price,
+            p.images AS imagesId,
+            p.product_status AS status
+        FROM product AS p
+        JOIN user AS u ON p.user_id = u.id
+        WHERE p.id = :productId
     """)
-    fun getProductById(productId: Long): Flow<ProductEntity>
+    fun getProductById(productId: Long): Flow<ProductData>
 
     @Query("""
         SELECT 
@@ -53,12 +61,12 @@ interface ProductDao {
             u.name AS authorName,
             p.name AS name,
             p.price AS price,
-            p.image AS imageId,
+            p.images AS imagesId,
             p.product_status AS status,
             p.description AS description
         FROM product AS p
         LEFT JOIN user AS u ON p.user_id = u.id
-        WHERE COALESCE(p.name, '') LIKE '%' || :string || '%'
+        WHERE COALESCE(p.name, '') LIKE '%' || :string || '%' OR COALESCE(u.name, '') LIKE '%' || :string || '%'
         ORDER BY p.create_date DESC
     """)
     fun getProductByStringInside(string: String):  PagingSource<Int, ProductCardData>

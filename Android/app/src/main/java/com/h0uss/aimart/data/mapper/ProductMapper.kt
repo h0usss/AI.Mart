@@ -8,7 +8,7 @@ fun ProductEntity.toUserProductCardData(): UserProductCardData{
         id = this.id,
         name = this.name,
         price = this.price,
-        imageId = this.imageId,
+        imagesId = this.imagesId,
         description = this.description,
         status = this.productStatus
     )

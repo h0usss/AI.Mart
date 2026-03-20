@@ -184,7 +184,7 @@ private fun Preview_Full() {
                     id = 1L,
                     name = "AI Кольцо всевластия",
                     price = 0.99f,
-                    imageId = R.drawable.background,
+                    imagesId = List(4) { R.drawable.background },
                     status = OrderStatus.COMPLETE,
                 )
             },
@@ -204,7 +204,7 @@ private fun Preview_Full_V2() {
                     id = 1L,
                     name = "AI Кольцо всевластия",
                     price = 0.99f,
-                    imageId = R.drawable.background,
+                    imagesId = List(4) { R.drawable.background },
                     status = OrderStatus.COMPLETE,
                 )
             },
