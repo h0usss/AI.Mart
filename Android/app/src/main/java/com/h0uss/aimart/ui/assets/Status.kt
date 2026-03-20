@@ -57,6 +57,10 @@ fun Status(
             name = if (statusData.isTag) "Завершенные" else "Завершен"
             color = Complete
         }
+        OrderStatus.DELETED -> {
+            name = "Удалён"
+            color = Debate
+        }
     }
 
     Row(

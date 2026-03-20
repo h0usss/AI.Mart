@@ -14,6 +14,9 @@ interface ChatDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(chats: List<ChatEntity>): List<Long>
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(chats: ChatEntity): Long
+
 
     @Query("""
         SELECT * 
@@ -42,4 +45,25 @@ interface ChatDao {
     """
     )
     fun getAllUserChats(userId: Long): Flow<List<ChatData>>
+
+    @Query(
+        """
+        SELECT
+            c.id AS id,
+            p.images AS imagesId,
+            p.name AS productName,
+            CASE 
+                WHEN c.f_user_id = :myId THEN u2.name 
+                ELSE u1.name 
+            END AS userName,
+            p.price AS price
+        FROM chats AS c
+        JOIN product AS p ON c.product_id = p.id
+        JOIN user AS u1 ON c.f_user_id = u1.id
+        JOIN user AS u2 ON c.s_user_id = u2.id
+        WHERE p.id = :productId
+        ORDER BY c.created_at DESC
+    """
+    )
+    fun getChatByProductId(productId: Long, myId: Long): Flow<List<ChatData>>
 }

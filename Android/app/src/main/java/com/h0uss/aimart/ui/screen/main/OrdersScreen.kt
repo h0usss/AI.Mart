@@ -127,6 +127,9 @@ fun OrdersScreen(
                         val order1 = state.orders[rowIndex * 2]
                         OrderCard(
                             order = order1,
+                            onClick = {
+                                onEvent(OrdersEvent.OrderClick(order1.id))
+                            }
                         )
 
                     }
@@ -139,6 +142,9 @@ fun OrdersScreen(
                             val order2 = state.orders[order2Index]
                             OrderCard(
                                 order = order2,
+                                onClick = {
+                                    onEvent(OrdersEvent.OrderClick(order2.id))
+                                }
                             )
 
                         } else {

@@ -23,6 +23,7 @@ import com.h0uss.aimart.R
 import com.h0uss.aimart.ui.theme.Black10
 import com.h0uss.aimart.ui.theme.Black5
 import com.h0uss.aimart.ui.theme.Black80
+import com.h0uss.aimart.ui.theme.Complete
 import com.h0uss.aimart.ui.theme.Debate
 import com.h0uss.aimart.ui.theme.Teal
 import com.h0uss.aimart.ui.theme.White
@@ -36,6 +37,7 @@ fun Button(
     isWhite: Boolean = false,
     isRedBorder: Boolean = false,
     isRedFill: Boolean = false,
+    isGreen: Boolean = false,
     onClick: () -> Unit,
     leftImageId: Int = -1,
     rightImageId: Int = -1,
@@ -47,6 +49,7 @@ fun Button(
             .clip(RoundedCornerShape(20))
             .background(
                 if (isGray) Black5
+                else if (isGreen) Complete
                 else if (isRedBorder || isWhite) White
                 else if (isRedFill) Debate
                 else Teal
@@ -60,19 +63,18 @@ fun Button(
                     else Teal,
                 shape = RoundedCornerShape(20)
             )
-            .clickable{
+            .clickable {
                 onClick()
-            }
-        ,
+            },
         contentAlignment = Alignment.Center
-    ){
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ){
+        ) {
             if (leftImageId != -1)
                 Image(
-                    painter = painterResource( leftImageId ),
+                    painter = painterResource(leftImageId),
                     contentDescription = "Arrow"
                 )
 
@@ -82,14 +84,13 @@ fun Button(
                 color =
                     if (isGray || isWhite) Black80
                     else if (isRedBorder) Debate
-                    else White
-                ,
+                    else White,
                 style = semiboldStyle,
             )
 
             if (rightImageId != -1)
                 Image(
-                    painter = painterResource( rightImageId ),
+                    painter = painterResource(rightImageId),
                     contentDescription = "Arrow"
                 )
         }
@@ -99,7 +100,7 @@ fun Button(
 @Preview
 @Composable
 private fun Preview() {
-    Column( verticalArrangement = Arrangement.spacedBy(10.dp)){
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Button(
             text = "Войти",
             onClick = {}

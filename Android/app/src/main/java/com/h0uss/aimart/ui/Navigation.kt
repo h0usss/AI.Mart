@@ -43,6 +43,7 @@ import com.h0uss.aimart.ui.state.authorize.SignUp
 import com.h0uss.aimart.ui.state.chat.ChatUser
 import com.h0uss.aimart.ui.state.chat.Chats
 import com.h0uss.aimart.ui.state.create.NewOrder
+import com.h0uss.aimart.ui.state.info.OrderInfo
 import com.h0uss.aimart.ui.state.info.ProductInfo
 import com.h0uss.aimart.ui.state.main.Home
 import com.h0uss.aimart.ui.state.main.MyProducts
@@ -182,6 +183,9 @@ fun Navigation(
                                 onBuy = { sellerId, productId ->
                                     sellerIdForOrder = sellerId
                                     productIdForOrder = productId
+                                },
+                                navToBack = {
+                                    navController.popBackStack()
                                 }
                             )
                         }
@@ -279,16 +283,33 @@ fun Navigation(
                             )
                         }
 
-                        composable<Orders> {
-                            isBottomNavBarShow = true
 
-                            Orders(
-                                navToProduct = { productId ->
-                                    navController.navigate(ProductInfo(productId))
-                                }
-                            )
+                        navigation<Orders>(
+                            startDestination = OrderList
+                        ) {
+                            composable<OrderList> {
+                                isBottomNavBarShow = true
+
+                                Orders(
+                                    navToOrder = { orderId ->
+                                        navController.navigate(Order(orderId))
+                                    }
+                                )
+                            }
+                            composable<Order> {
+                                isBottomNavBarShow = true
+
+                                OrderInfo(
+                                    orderId = it.toRoute<Order>().orderId,
+                                    navToBack = {
+                                        navController.popBackStack()
+                                    },
+                                    navToChat = { chatId ->
+                                        navController.navigate(ChatWithUser(chatId))
+                                    }
+                                )
+                            }
                         }
-
                         composable<Seller> {
                             isBottomNavBarShow = true
 

@@ -16,15 +16,15 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @Composable
 fun Orders(
     viewModel: OrdersViewModel = viewModel<OrdersViewModel>(),
-    navToProduct: (Long) -> Unit,
+    navToOrder: (Long) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.receiveAsFlow().collect { event ->
             when(event) {
-                is OrdersNavigationEvent.Product -> {
-                    navToProduct(event.value)
+                is OrdersNavigationEvent.Order -> {
+                    navToOrder(event.value)
                 }
             }
         }

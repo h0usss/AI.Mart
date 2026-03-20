@@ -25,7 +25,7 @@ class OrdersViewModel : ViewModel(){
         private set
 
     init {
-        orderRepository.getOrderByUserId(authUserIdLong)
+        orderRepository.getOrdersByUserId(authUserIdLong)
             .onEach { newOrders ->
                 val ordersByStatus = newOrders.groupBy { it.status }
 
@@ -45,9 +45,9 @@ class OrdersViewModel : ViewModel(){
 
     fun onEvent(event: OrdersEvent) {
         when(event){
-            is OrdersEvent.ProductClick -> {
+            is OrdersEvent.OrderClick -> {
                 viewModelScope.launch {
-                    navigationEvents.send(OrdersNavigationEvent.Product(event.value))
+                    navigationEvents.send(OrdersNavigationEvent.Order(event.value))
                 }
             }
             is OrdersEvent.DebateClick -> {
@@ -136,7 +136,7 @@ data class OrdersState(
 )
 
 sealed class OrdersEvent {
-    data class ProductClick(val value: Long) : OrdersEvent()
+    data class OrderClick(val value: Long) : OrdersEvent()
     object DebateClick : OrdersEvent()
     object WaitingClick : OrdersEvent()
     object InWorkClick : OrdersEvent()
@@ -144,5 +144,5 @@ sealed class OrdersEvent {
 }
 
 sealed class OrdersNavigationEvent {
-    data class Product(val value: Long) : OrdersNavigationEvent()
+    data class Order(val value: Long) : OrdersNavigationEvent()
 }

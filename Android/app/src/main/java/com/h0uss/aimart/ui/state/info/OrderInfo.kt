@@ -7,22 +7,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.h0uss.aimart.data.factory.ProductInfoViewModelFactory
-import com.h0uss.aimart.ui.screen.info.ProductInfoScreen
-import com.h0uss.aimart.ui.viewModel.info.ProductInfoNavigationEvent
-import com.h0uss.aimart.ui.viewModel.info.ProductInfoViewModel
+import com.h0uss.aimart.data.factory.OrderInfoViewModelFactory
+import com.h0uss.aimart.ui.screen.info.OrderInfoScreen
+import com.h0uss.aimart.ui.viewModel.info.OrderInfoNavigationEvent
+import com.h0uss.aimart.ui.viewModel.info.OrderInfoViewModel
 import kotlinx.coroutines.flow.receiveAsFlow
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ProductInfo(
-    productId: Long,
-    navToUser: (Long) -> Unit,
+fun OrderInfo(
+    orderId: Long,
     navToBack: () -> Unit,
-    onBuy: (Long, Long) -> Unit,
+    navToChat: (Long) -> Unit,
 ) {
-    val viewModel: ProductInfoViewModel = viewModel(
-        factory = ProductInfoViewModelFactory(productId)
+    val viewModel: OrderInfoViewModel = viewModel(
+        factory = OrderInfoViewModelFactory(orderId)
     )
 
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -30,17 +29,19 @@ fun ProductInfo(
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.receiveAsFlow().collect { event ->
             when(event) {
-                is ProductInfoNavigationEvent.User -> {
-                    navToUser(event.value)
+                is OrderInfoNavigationEvent.ToOrderList -> {
+                    navToBack()
+                }
+                is OrderInfoNavigationEvent.ToChat -> {
+                    navToChat(event.value)
                 }
             }
         }
     }
 
-    ProductInfoScreen(
+    OrderInfoScreen(
         state = state,
         onEvent = viewModel::onEvent,
-        onBuy = onBuy,
-        onBackClick = navToBack
+        onBack = navToBack
     )
 }

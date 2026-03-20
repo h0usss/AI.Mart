@@ -64,6 +64,7 @@ fun ProductInfoScreen(
     state: ProductInfoState = ProductInfoState(),
     onEvent: (ProductInfoEvent) -> Unit = {},
     onBuy: (Long, Long) -> Unit = {sellerId, productId -> },
+    onBackClick: () -> Unit = {},
 ) {
     var countFeedbackItem by remember { mutableIntStateOf(3) }
     var likeImage by remember { mutableIntStateOf(R.drawable.like) }
@@ -76,11 +77,14 @@ fun ProductInfoScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
+                .padding(start = 16.dp, top = 63.dp, end = 16.dp, bottom = 14.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Image(
-                modifier = Modifier,
+                modifier = Modifier
+                    .clickable{
+                        onBackClick()
+                    },
                 painter = painterResource(R.drawable.back),
                 contentDescription = "Back",
             )
@@ -110,7 +114,8 @@ fun ProductInfoScreen(
         ) {
             item {
                 LazyRow(
-                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 14.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    contentPadding = PaddingValues(bottom = 14.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(state.product.imagesId) { imageId ->
