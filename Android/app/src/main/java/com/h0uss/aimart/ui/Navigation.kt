@@ -317,16 +317,13 @@ fun Navigation(
 
                             if (authUserIdLong == sellerId)
                                 SellerProfileForSelf(
-                                    navToPortfolioItem = {
-                                        //                            navController.navigate()
-                                    },
                                     navToEdit = {
                                         navController.navigate(ProfileEdit)
                                     },
                                     changeAlert = { data ->
                                         alertData = data
                                     },
-                                    changePortfolio = { data ->
+                                    showPortfolio = { data ->
                                         portfolioData = data
                                     },
                                 )
@@ -336,13 +333,10 @@ fun Navigation(
                                     navToBack = {
                                         navController.popBackStack()
                                     },
-                                    navToChat = {
-                                        //                            navController.navigate()
+                                    navToChat = { chatId ->
+                                        navController.navigate(ChatWithUser(chatId))
                                     },
-                                    navToPortfolioItem = {
-                                        //                            navController.navigate()
-                                    },
-                                    changePortfolio = { data ->
+                                    showPortfolio = { data ->
                                         portfolioData = data
                                     },
                                 )
@@ -366,16 +360,13 @@ fun Navigation(
 
                             when (isSeller) {
                                 true -> SellerProfileForSelf(
-                                    navToPortfolioItem = {
-                                        // navController.navigate()
-                                    },
                                     navToEdit = {
                                         navController.navigate(ProfileEdit)
                                     },
                                     changeAlert = { data ->
                                         alertData = data
                                     },
-                                    changePortfolio = { data ->
+                                    showPortfolio = { data ->
                                         portfolioData = data
                                     },
                                 )

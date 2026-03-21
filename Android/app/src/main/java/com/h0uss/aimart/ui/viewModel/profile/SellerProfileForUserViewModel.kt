@@ -4,9 +4,12 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.h0uss.aimart.Graph.authUserIdLong
+import com.h0uss.aimart.Graph.chatRepository
 import com.h0uss.aimart.Graph.feedbackRepository
 import com.h0uss.aimart.Graph.portfolioRepository
 import com.h0uss.aimart.Graph.userRepository
+import com.h0uss.aimart.data.entity.ChatEntity
 import com.h0uss.aimart.data.model.FeedbackData
 import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.data.model.SellerData
@@ -14,9 +17,11 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 class SellerProfileForUserViewModel(
@@ -76,10 +81,24 @@ class SellerProfileForUserViewModel(
                 state.update { it.copy(isLike = !state.value.isLike) }
             }
             is SellerProfileForUserEvent.WriteClick -> {
-                sendNavEvent(SellerProfileForUserNavigationEvent.WriteClick(event.id))
-            }
-            is SellerProfileForUserEvent.PortfolioItemClick -> {
-                sendNavEvent(SellerProfileForUserNavigationEvent.PortfolioItemClick(event.id))
+                viewModelScope.launch {
+                    val sellerId = state.value.user.id
+                    val chat = chatRepository.getChatNoProduct(authUserIdLong, sellerId).firstOrNull()
+                    
+                    if (chat != null) {
+                        sendNavEvent(SellerProfileForUserNavigationEvent.WriteClick(chat.id))
+                    } else {
+                        val newChatId = chatRepository.insert(
+                            ChatEntity(
+                                fUserId = authUserIdLong,
+                                sUserId = sellerId,
+                                productId = null,
+                                createdAt = LocalDateTime.now(),
+                            )
+                        )
+                        sendNavEvent(SellerProfileForUserNavigationEvent.WriteClick(newChatId))
+                    }
+                }
             }
             is SellerProfileForUserEvent.PortfolioTagClick -> {
                 handlePortfolioTagClick(event.name)
@@ -194,10 +213,9 @@ sealed class SellerProfileForUserEvent {
     object ShowAdditionalMenu : SellerProfileForUserEvent()
     object DismissAdditionalMenu : SellerProfileForUserEvent()
     object LikeClick : SellerProfileForUserEvent()
+    object WriteClick : SellerProfileForUserEvent()
     data class AdditionalItemClick(val id: String) : SellerProfileForUserEvent()
-    data class WriteClick(val id: Long) : SellerProfileForUserEvent()
     data class PortfolioTagClick(val name: String) : SellerProfileForUserEvent()
-    data class PortfolioItemClick(val id: Long) : SellerProfileForUserEvent()
     data class FeedbackTagClick(val index: Int) : SellerProfileForUserEvent()
     data class ShowPortfolioItem(val portfolioId: Long) : SellerProfileForUserEvent()
 }
@@ -205,6 +223,5 @@ sealed class SellerProfileForUserEvent {
 sealed class SellerProfileForUserNavigationEvent {
     object BackClick : SellerProfileForUserNavigationEvent()
     data class WriteClick(val id: Long) : SellerProfileForUserNavigationEvent()
-    data class PortfolioItemClick(val id: Long) : SellerProfileForUserNavigationEvent()
     data class ShowPortfolioItem(val portfolioItem: PortfolioItemData) : SellerProfileForUserNavigationEvent()
 }

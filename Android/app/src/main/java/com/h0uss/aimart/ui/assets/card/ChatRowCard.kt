@@ -72,7 +72,7 @@ fun ChatRowCard(
                     modifier = Modifier
                         .padding(top = 4.dp)
                     ,
-                    text = chat.productName,
+                    text = chat.productName ?: "",
                     style = regularStyle,
                     fontSize = 16.sp,
                     color = Black50,
@@ -83,7 +83,7 @@ fun ChatRowCard(
                     modifier = Modifier
                         .padding(top = 4.dp)
                     ,
-                    text = "$${chat.price}",
+                    text = if (chat.price != null) "$${chat.price}" else "",
                     style = regularStyle,
                     fontSize = 16.sp,
                     color = Black100
@@ -95,7 +95,7 @@ fun ChatRowCard(
 
 @Preview
 @Composable
-private fun Preview() {
+private fun Preview_v1() {
     ChatRowCard(
         chat = ChatData(
             id = 1L,
@@ -103,6 +103,18 @@ private fun Preview() {
             price = 100.00f,
             imagesId = List(4) { R.drawable.background },
             productName = "3d Модель",
+        )
+    )
+}
+
+@Preview
+@Composable
+private fun Preview_V2() {
+    ChatRowCard(
+        chat = ChatData(
+            id = 1L,
+            userName = "Пипипу",
+            imagesId = List(4) { R.drawable.background },
         )
     )
 }

@@ -165,7 +165,7 @@ fun SellerProfileForUserScreen(
                             ,
                             text = "Написать продавцу",
                             onClick = {
-                                onEvent(SellerProfileForUserEvent.WriteClick(state.user.id))
+                                onEvent(SellerProfileForUserEvent.WriteClick)
                             },
                         )
                     }

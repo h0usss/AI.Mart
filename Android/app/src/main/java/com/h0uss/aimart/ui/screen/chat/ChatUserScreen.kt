@@ -112,7 +112,7 @@ private fun Preview_Full() {
         state = ChatUserState(
             userData = ChatUserData(
                 id = -1L,
-                productImagesId = List(4) { R.drawable.background },
+                imagesId = List(4) { R.drawable.background },
                 userName = "Pipipupu"
             ),
             messages = List(20){
@@ -136,7 +136,7 @@ private fun Preview_Full_V2() {
         state = ChatUserState(
             userData = ChatUserData(
                 id = -1L,
-                productImagesId = List(4) { R.drawable.background },
+                imagesId = List(4) { R.drawable.background },
                 userName = "Pipipupu"
             ),
             messages = listOf(
@@ -165,7 +165,7 @@ private fun Preview_Empty() {
         state = ChatUserState(
             userData = ChatUserData(
                 id = -1L,
-                productImagesId = List(4) { R.drawable.background },
+                imagesId = List(4) { R.drawable.background },
                 userName = "Pipipupu"
             ),
             messages = listOf()

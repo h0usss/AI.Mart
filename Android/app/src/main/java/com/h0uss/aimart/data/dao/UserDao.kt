@@ -83,7 +83,7 @@ interface UserDao {
         SELECT
             u.id AS id,
             u.name AS userName,
-            p.images AS productImagesId
+            COALESCE(p.images, u.avatar) AS imagesId
         FROM user AS u
         LEFT JOIN chats AS c ON u.id = c.f_user_id OR u.id = c.s_user_id 
         LEFT JOIN product AS p ON c.product_id = p.id

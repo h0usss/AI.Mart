@@ -150,6 +150,23 @@ private fun Preview_Full_V2() {
     )
 }
 
+
+@Preview(showSystemUi = true, widthDp = 360, heightDp = 1000)
+@Composable
+private fun Preview_Full_V3() {
+    ChatsScreen(
+        state = ChatsState(
+            chats = List(10) { item ->
+                ChatData(
+                    id = 1L,
+                    imagesId = List(4) { R.drawable.background },
+                    userName = "Детка геймер",
+                )
+            }
+        )
+    )
+}
+
 @Preview(showSystemUi = true)
 @Composable
 private fun Preview_Empty() {

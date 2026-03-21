@@ -83,9 +83,6 @@ class SellerProfileForSelfViewModel : ViewModel(){
                     portfolioRepository.deletePortfolioItem(event.id)
                 }
             }
-            is SellerProfileForSelfEvent.PortfolioItemClick -> {
-                sendNavEvent(SellerProfileForSelfNavigationEvent.PortfolioItemClick(event.id))
-            }
             is SellerProfileForSelfEvent.PortfolioTagClick -> {
                 handlePortfolioTagClick(event.name)
             }
@@ -209,7 +206,6 @@ sealed class SellerProfileForSelfEvent {
     data class ShowAlert(val alert: AlertData) : SellerProfileForSelfEvent()
     data class ShowPortfolioItem(val portfolioId: Long) : SellerProfileForSelfEvent()
     data class PortfolioTagClick(val name: String) : SellerProfileForSelfEvent()
-    data class PortfolioItemClick(val id: Long) : SellerProfileForSelfEvent()
     data class FeedbackTagClick(val index: Int) : SellerProfileForSelfEvent()
 }
 
@@ -219,7 +215,6 @@ sealed class SellerProfileForSelfNavigationEvent {
     object EmptiedAccountClick : SellerProfileForSelfNavigationEvent()
     object AddCaseClick : SellerProfileForSelfNavigationEvent()
     object DeleteAlert : SellerProfileForSelfNavigationEvent()
-    data class PortfolioItemClick(val id: Long) : SellerProfileForSelfNavigationEvent()
     data class ShowAlert(val alert: AlertData) : SellerProfileForSelfNavigationEvent()
     data class ShowPortfolioItem(val portfolioItem: PortfolioItemData) : SellerProfileForSelfNavigationEvent()
 }

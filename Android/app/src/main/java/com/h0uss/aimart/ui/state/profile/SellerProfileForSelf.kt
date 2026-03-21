@@ -18,10 +18,9 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @Composable
 fun SellerProfileForSelf(
     viewModel: SellerProfileForSelfViewModel = viewModel<SellerProfileForSelfViewModel>(),
-    navToPortfolioItem: (Long) -> Unit,
     navToEdit: () -> Unit,
     changeAlert: (AlertData?) -> Unit,
-    changePortfolio: (PortfolioItemData?) -> Unit,
+    showPortfolio: (PortfolioItemData?) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -40,9 +39,6 @@ fun SellerProfileForSelf(
                 is SellerProfileForSelfNavigationEvent.ReplenishAccountClick -> {
 
                 }
-                is SellerProfileForSelfNavigationEvent.PortfolioItemClick -> {
-                    navToPortfolioItem(event.id)
-                }
                 is SellerProfileForSelfNavigationEvent.ShowAlert -> {
                     changeAlert(event.alert)
                 }
@@ -50,7 +46,7 @@ fun SellerProfileForSelf(
                     changeAlert(null)
                 }
                 is SellerProfileForSelfNavigationEvent.ShowPortfolioItem -> {
-                    changePortfolio(event.portfolioItem)
+                    showPortfolio(event.portfolioItem)
                 }
             }
         }
