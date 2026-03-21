@@ -27,6 +27,9 @@ import com.h0uss.aimart.ui.theme.semiboldStyle
 fun OrderEnd(
     modifier: Modifier = Modifier,
     orderData: OrderData,
+    canPay: Boolean,
+    onPayClick: () -> Unit = {},
+    onOpenTicketClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -82,7 +85,11 @@ fun OrderEnd(
                 .padding(bottom = 8.dp)
             ,
             text = "Оплатить",
-            onClick = {}
+            isGray = !canPay,
+            onClick = {
+                if (canPay)
+                    onPayClick()
+            }
         )
         Button(
             modifier = Modifier
@@ -91,7 +98,9 @@ fun OrderEnd(
             ,
             text = "Открыть спор",
             isRedFill = true,
-            onClick = {}
+            onClick = {
+                onOpenTicketClick()
+            }
         )
     }
 }
@@ -105,6 +114,22 @@ private fun Preview_v1() {
             .background(White),
         orderData = OrderData(
             price = 11.2f
-        )
+        ),
+        canPay = true,
+    )
+}
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview
+@Composable
+private fun Preview_v2() {
+    OrderEnd(
+        modifier = Modifier
+            .background(White),
+        orderData = OrderData(
+            price = 11.2f
+        ),
+        canPay = false
     )
 }

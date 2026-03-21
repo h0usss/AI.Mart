@@ -24,6 +24,7 @@ import com.h0uss.aimart.ui.theme.semiboldStyle
 fun Balance(
     modifier: Modifier = Modifier,
     balance: String,
+    canWithdraw: Boolean = true,
     onEmptiedClick: () -> Unit = {},
     onReplenishClick: () -> Unit = {},
 ) {
@@ -65,16 +66,17 @@ fun Balance(
             ,
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ){
-            Button(
-                modifier = Modifier
-                    .weight(1f)
-                ,
-                text = "Вывести",
-                isGray = true,
-                onClick = {
-                    onEmptiedClick()
-                }
-            )
+            if (canWithdraw)
+                Button(
+                    modifier = Modifier
+                        .weight(1f)
+                    ,
+                    text = "Вывести",
+                    isGray = true,
+                    onClick = {
+                        onEmptiedClick()
+                    }
+                )
             Button(
                 modifier = Modifier
                     .weight(1f)
@@ -90,8 +92,16 @@ fun Balance(
 
 @Preview
 @Composable
-private fun Preview() {
+private fun Preview_v1() {
     Balance(
         balance = "1,000"
+    )
+}
+@Preview
+@Composable
+private fun Preview_v2() {
+    Balance(
+        balance = "1,000",
+        canWithdraw = false
     )
 }

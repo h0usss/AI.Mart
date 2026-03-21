@@ -61,6 +61,10 @@ fun Status(
             name = "Удалён"
             color = Debate
         }
+        OrderStatus.WAIT_PAY -> {
+            name = "Ожидание оплаты"
+            color = Waiting
+        }
     }
 
     Row(

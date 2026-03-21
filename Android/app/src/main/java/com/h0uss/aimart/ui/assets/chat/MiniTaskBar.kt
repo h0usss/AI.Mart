@@ -55,7 +55,7 @@ fun MiniTaskBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            modifier = modifier
+            modifier = Modifier
                 .padding(end = 16.dp)
             ,
             painter = painterResource(R.drawable.unpin),
@@ -63,7 +63,7 @@ fun MiniTaskBar(
         )
 
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .background(White)
             ,
         ) {

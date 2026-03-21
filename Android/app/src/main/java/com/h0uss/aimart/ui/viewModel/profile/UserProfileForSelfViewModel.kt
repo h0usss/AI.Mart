@@ -63,7 +63,9 @@ class UserProfileForSelfViewModel : ViewModel(){
                 }
             }
             is UserProfileForSelfEvent.ReplenishAccount -> {
-
+                viewModelScope.launch {
+                    navigationEvents.send(UserProfileForSelfNavigationEvent.ReplenishAccount)
+                }
             }
             is UserProfileForSelfEvent.EmptiedAccount -> {
 
@@ -99,7 +101,7 @@ sealed class UserProfileForSelfEvent {
 }
 
 sealed class UserProfileForSelfNavigationEvent {
+    object ReplenishAccount : UserProfileForSelfNavigationEvent()
     data class EditClick(val id: Long) : UserProfileForSelfNavigationEvent()
-    data class ReplenishAccount(val id: Long) : UserProfileForSelfNavigationEvent()
     data class EmptiedAccount(val id: Long) : UserProfileForSelfNavigationEvent()
 }

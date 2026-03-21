@@ -17,6 +17,10 @@ class ChatRepository(
         return chatDao.getAllUserChats(userId)
     }
 
+    fun getChatById(chatId: Long): Flow<ChatEntity?> {
+        return chatDao.getChatById(chatId)
+    }
+
     fun getChatNoProduct(myId: Long, sUserId: Long): Flow<ChatData?> {
         return chatDao.getChatNoOrder(myId, sUserId)
     }

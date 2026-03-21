@@ -54,6 +54,6 @@ fun UserEntity.toUserData(): UserData{
         nick = this.nickName,
         imageId = this.avatar,
         rate = this.rate,
-        balance = this.balance.toString(),
+        balance = this.balance,
     )
 }

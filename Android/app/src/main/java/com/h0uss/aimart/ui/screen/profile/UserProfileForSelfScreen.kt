@@ -133,13 +133,14 @@ fun UserProfileForSelfScreen(
             }
         }
         Balance(
-            balance = state.user.balance,
+            balance = state.user.balance.toString(),
             onEmptiedClick = {
                 onEvent(UserProfileForSelfEvent.EmptiedAccount)
             },
             onReplenishClick = {
                 onEvent(UserProfileForSelfEvent.ReplenishAccount)
-            }
+            },
+            canWithdraw = false
         )
         Row(
             modifier = Modifier

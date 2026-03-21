@@ -36,7 +36,8 @@ class OrdersViewModel : ViewModel(){
                         countDebate     = ordersByStatus[OrderStatus.DEBATE]?.size ?: 0,
                         countWaiting    = ordersByStatus[OrderStatus.WAITING]?.size ?: 0,
                         countInWork     = ordersByStatus[OrderStatus.IN_WORK]?.size ?: 0,
-                        countComplete   = ordersByStatus[OrderStatus.COMPLETE]?.size ?: 0
+                        countComplete   = ordersByStatus[OrderStatus.COMPLETE]?.size ?: 0,
+                        countWaitPay    = ordersByStatus[OrderStatus.WAIT_PAY]?.size ?: 0
                     )
                 }
             }
@@ -57,7 +58,8 @@ class OrdersViewModel : ViewModel(){
                         isDebate = !wasActive,
                         isWaiting = false,
                         isInWork = false,
-                        isComplete = false
+                        isComplete = false,
+                        isWaitPay = false,
                     )
                 }
                 applyFilters()
@@ -69,7 +71,8 @@ class OrdersViewModel : ViewModel(){
                         isDebate = false,
                         isWaiting = !wasActive,
                         isInWork = false,
-                        isComplete = false
+                        isComplete = false,
+                        isWaitPay = false,
                     )
                 }
                 applyFilters()
@@ -81,7 +84,8 @@ class OrdersViewModel : ViewModel(){
                         isDebate = false,
                         isWaiting = false,
                         isInWork = !wasActive,
-                        isComplete = false
+                        isComplete = false,
+                        isWaitPay = false,
                     )
                 }
                 applyFilters()
@@ -93,7 +97,21 @@ class OrdersViewModel : ViewModel(){
                         isDebate = false,
                         isWaiting = false,
                         isInWork = false,
-                        isComplete = !wasActive
+                        isComplete = !wasActive,
+                        isWaitPay = false,
+                    )
+                }
+                applyFilters()
+            }
+            is OrdersEvent.WaitPayClick -> {
+                val wasActive = state.value.isWaitPay
+                state.update {
+                    it.copy(
+                        isDebate = false,
+                        isWaiting = false,
+                        isInWork = false,
+                        isComplete = false,
+                        isWaitPay = !wasActive
                     )
                 }
                 applyFilters()
@@ -108,6 +126,7 @@ class OrdersViewModel : ViewModel(){
             if (currentState.isWaiting) add(OrderStatus.WAITING)
             if (currentState.isInWork) add(OrderStatus.IN_WORK)
             if (currentState.isComplete) add(OrderStatus.COMPLETE)
+            if (currentState.isWaitPay) add(OrderStatus.WAIT_PAY)
         }
 
         val filteredList = if (activeFilters.isEmpty()) {
@@ -128,11 +147,13 @@ data class OrdersState(
     val isWaiting: Boolean = false,
     val isInWork: Boolean = false,
     val isComplete: Boolean = false,
+    val isWaitPay: Boolean = false,
 
     val countDebate: Int = 0,
     val countWaiting: Int = 0,
     val countInWork: Int = 0,
     val countComplete: Int = 0,
+    val countWaitPay: Int = 0,
 )
 
 sealed class OrdersEvent {
@@ -141,6 +162,7 @@ sealed class OrdersEvent {
     object WaitingClick : OrdersEvent()
     object InWorkClick : OrdersEvent()
     object CompleteClick : OrdersEvent()
+    object WaitPayClick : OrdersEvent()
 }
 
 sealed class OrdersNavigationEvent {

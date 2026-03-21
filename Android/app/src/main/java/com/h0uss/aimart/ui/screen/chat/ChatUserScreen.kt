@@ -15,14 +15,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.R
+import com.h0uss.aimart.data.emun.OrderStatus
 import com.h0uss.aimart.data.model.ChatUserData
 import com.h0uss.aimart.data.model.MessageData
+import com.h0uss.aimart.data.model.OrderData
+import com.h0uss.aimart.data.model.UserData
 import com.h0uss.aimart.ui.assets.SendMessageField
 import com.h0uss.aimart.ui.assets.chat.ChatUserTopBar
+import com.h0uss.aimart.ui.assets.chat.MiniTaskBar
 import com.h0uss.aimart.ui.assets.chat.MyMessage
+import com.h0uss.aimart.ui.assets.chat.OrderEnd
 import com.h0uss.aimart.ui.assets.chat.OtherMessage
 import com.h0uss.aimart.ui.theme.White
 import com.h0uss.aimart.ui.viewModel.chat.ChatUserEvent
@@ -57,12 +63,24 @@ fun ChatUserScreen(
             }
         )
 
+        if (state.orderData.sellerId == authUserIdLong
+            && (state.orderData.status == OrderStatus.IN_WORK
+            || state.orderData.status == OrderStatus.WAIT_PAY))
+            MiniTaskBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 14.dp),
+                orderData = state.orderData,
+                onClick = {
+
+                }
+            )
+
         Column {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
-                ,
+                    .weight(1f),
                 verticalArrangement = Arrangement.spacedBy(
                     space = 14.dp,
                     alignment = Alignment.Bottom
@@ -80,7 +98,7 @@ fun ChatUserScreen(
                     } else {
                         OtherMessage(
                             messageData = message,
-                            onUserClick = {id ->
+                            onUserClick = { id ->
                                 onEvent(ChatUserEvent.UserClick(id))
                             }
                         )
@@ -91,11 +109,26 @@ fun ChatUserScreen(
                 }
             }
 
+            if (state.orderData.buyerId == authUserIdLong
+                && state.orderData.status == OrderStatus.WAIT_PAY)
+                OrderEnd(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 14.dp),
+                    orderData = state.orderData,
+                    onPayClick = {
+                        onEvent(ChatUserEvent.PayClick)
+                    },
+                    onOpenTicketClick = {
+
+                    },
+                    canPay = state.buyer.balance >= state.orderData.price
+                )
+
             SendMessageField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 10.dp)
-                ,
+                    .padding(bottom = 10.dp),
                 onClickEnter = { message ->
                     onEvent(ChatUserEvent.SendMessage(message))
                 }
@@ -115,7 +148,7 @@ private fun Preview_Full() {
                 imagesId = List(4) { R.drawable.background },
                 userName = "Pipipupu"
             ),
-            messages = List(20){
+            messages = List(20) {
                 MessageData(
                     text = "1 test my msg",
                     date = LocalDateTime.now(),
@@ -168,7 +201,85 @@ private fun Preview_Empty() {
                 imagesId = List(4) { R.drawable.background },
                 userName = "Pipipupu"
             ),
-            messages = listOf()
+            messages = listOf(),
+            orderData = OrderData(
+                status = OrderStatus.IN_WORK,
+                description = LoremIpsum(100).values.joinToString(" ") { it }
+            )
+        )
+    )
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showSystemUi = true)
+@Composable
+private fun Preview_V4() {
+    ChatUserScreen(
+        state = ChatUserState(
+            userData = ChatUserData(
+                id = -1L,
+                imagesId = List(4) { R.drawable.background },
+                userName = "Pipipupu"
+            ),
+            messages = listOf(
+                MessageData(
+                    text = "test my msg asd as das dasd as d da sdas da sdas dasd ",
+                    date = LocalDateTime.now(),
+                    avatarId = R.drawable.base_avatar,
+                    userId = authUserIdLong,
+                ),
+                MessageData(
+                    text = "test otasdasdasd as das as das das das das das das dasher msg",
+                    date = LocalDateTime.now(),
+                    avatarId = R.drawable.avatar_0,
+                    userId = 2,
+                ),
+            ),
+            orderData = OrderData(
+                status = OrderStatus.WAIT_PAY,
+                description = LoremIpsum(100).values.joinToString(" ") { it },
+                price = 100f
+            ),
+            buyer = UserData(
+                balance = 100f
+            )
+        )
+    )
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showSystemUi = true)
+@Composable
+private fun Preview_V5() {
+    ChatUserScreen(
+        state = ChatUserState(
+            userData = ChatUserData(
+                id = -1L,
+                imagesId = List(4) { R.drawable.background },
+                userName = "Pipipupu"
+            ),
+            messages = listOf(
+                MessageData(
+                    text = "test my msg asd as das dasd as d da sdas da sdas dasd ",
+                    date = LocalDateTime.now(),
+                    avatarId = R.drawable.base_avatar,
+                    userId = authUserIdLong,
+                ),
+                MessageData(
+                    text = "test otasdasdasd as das as das das das das das das dasher msg",
+                    date = LocalDateTime.now(),
+                    avatarId = R.drawable.avatar_0,
+                    userId = 2,
+                ),
+            ),
+            orderData = OrderData(
+                status = OrderStatus.WAIT_PAY,
+                description = LoremIpsum(100).values.joinToString(" ") { it },
+                price = 100f
+            ),
+            buyer = UserData(
+                balance = 99f
+            )
         )
     )
 }

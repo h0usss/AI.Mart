@@ -255,14 +255,14 @@ fun OrderInfoScreen(
                         )
                     }
                 }
-                OrderStatus.COMPLETE, OrderStatus.DEBATE -> {
+                OrderStatus.COMPLETE, OrderStatus.DEBATE, OrderStatus.WAIT_PAY -> {
                     Button(
                         modifier = Modifier
                             .fillMaxWidth(),
                         isGray = true,
                         text="Чат с заказчиком",
                         onClick = {
-                            onEvent(OrderInfoEvent.ToChat(state.order.buyerId))
+                            onEvent(OrderInfoEvent.ToChat(state.chat.id))
                         }
                     )
                 }

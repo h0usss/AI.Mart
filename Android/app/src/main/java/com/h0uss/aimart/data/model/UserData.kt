@@ -8,6 +8,6 @@ data class UserData(
     var nick: String = "",
     var imageId: Int = R.drawable.base_avatar,
     var rate: Float = -1f,
-    var balance: String = "0.00",
+    var balance: Float = 0f,
     var isSeller: Boolean = false,
 )

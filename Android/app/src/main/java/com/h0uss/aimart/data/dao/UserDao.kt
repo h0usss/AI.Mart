@@ -24,25 +24,34 @@ interface UserDao {
     @Update
     suspend fun update(user: UserEntity)
 
-    @Query("""
+    @Query(
+        """
         UPDATE user
         SET
             name = :name,
             nick_name = :nick,
             avatar = :imageId
         WHERE id = :id
-    """)
+    """
+    )
     suspend fun updateUserInfo(id: Long, name: String, nick: String, imageId: Int)
 
-    @Query("""
+    @Query(
+        """
         UPDATE user_sell_info
         SET
             profession = :profession,
             about = :about,
             skills = :skills
         WHERE user_id = :id
-    """)
-    suspend fun updateSellerSellInfo(id: Long, profession: String, about: String, skills: List<String>)
+    """
+    )
+    suspend fun updateSellerSellInfo(
+        id: Long,
+        profession: String,
+        about: String,
+        skills: List<String>
+    )
 
     @Delete
     suspend fun delete(user: UserEntity)
@@ -51,7 +60,8 @@ interface UserDao {
     suspend fun deleteById(userId: Long)
 
 
-    @Query("""
+    @Query(
+        """
         SELECT
         u.id AS id,
         u.name AS name,
@@ -63,10 +73,12 @@ interface UserDao {
         FROM user AS u
         LEFT JOIN orders AS o ON u.id = o.buyer_id 
         WHERE u.id = :userId
-    """)
+    """
+    )
     fun getUserByIdFlow(userId: Long): Flow<UserData>
 
-    @Query("""
+    @Query(
+        """
         SELECT
         u.id AS id,
         u.name AS name,
@@ -78,10 +90,12 @@ interface UserDao {
         FROM user AS u
         LEFT JOIN product AS p ON u.id = p.user_id 
         WHERE p.id = :productId
-    """)
+    """
+    )
     fun getUserByProductId(productId: Long): Flow<UserData>
 
-    @Query("""
+    @Query(
+        """
         SELECT
             u.id AS id,
             u.name AS userName,
@@ -92,33 +106,41 @@ interface UserDao {
         LEFT JOIN product AS p ON o.product_id = p.id
         WHERE c.id = :chatId
         GROUP BY u.id
-    """)
+    """
+    )
     fun getUsersByChatId(chatId: Long): Flow<List<ChatUserData>>
 
-    @Query("""
+    @Query(
+        """
         SELECT u.is_seller
         FROM user AS u
         WHERE u.id = :userId
-    """)
+    """
+    )
     suspend fun getUserIsSeller(userId: Long): Boolean
 
-    @Query("""
+    @Query(
+        """
         SELECT COUNT(o.id)
         FROM user AS u
         LEFT JOIN orders AS o ON u.id = o.buyer_id  
         WHERE u.id = :userId
-    """)
+    """
+    )
     fun getUserCountBuyFlow(userId: Long): Flow<Int?>
 
-    @Query("""
+    @Query(
+        """
         SELECT COUNT(o.id)
         FROM user AS u
         LEFT JOIN orders AS o ON u.id = o.seller_id 
         WHERE u.id = :userId
-    """)
+    """
+    )
     fun getUserCountSellFlow(userId: Long): Flow<Int>
 
-    @Query("""
+    @Query(
+        """
         SELECT
             u.id AS id,
             u.name AS name,
@@ -135,14 +157,17 @@ interface UserDao {
         LEFT JOIN user_sell_info AS usi ON u.id = usi.user_id
         WHERE u.id = :userId
         GROUP BY u.id
-    """)
+    """
+    )
     fun getSellerByIdFlow(userId: Long): Flow<SellerData?>
 
-    @Query("""
+    @Query(
+        """
         SELECT * 
         FROM user 
         WHERE email = :emailOrNick OR nick_name = :emailOrNick
-    """)
+    """
+    )
     suspend fun getUserByEmailOrNick(emailOrNick: String): UserEntity?
 
     @Query(
@@ -155,14 +180,17 @@ interface UserDao {
     )
     fun getSellerLimit(limit: Int): Flow<List<UserEntity>>
 
-    @Query("""
+    @Query(
+        """
         SELECT balance 
         FROM user 
         WHERE id = :userId
-    """)
+    """
+    )
     suspend fun getBalance(userId: Long): Float?
 
-    @Query("""
+    @Query(
+        """
         SELECT u.* 
         FROM user AS u
         LEFT JOIN user_sell_info AS usi ON u.id = usi.user_id
@@ -172,6 +200,14 @@ interface UserDao {
            OR COALESCE(usi.about, '') LIKE '%' || :string || '%'
            OR COALESCE(usi.skills, '') LIKE '%' || :string || '%'
            OR COALESCE(usi.profession, '') LIKE '%' || :string || '%'
-    """)
+    """
+    )
     fun getUsersByStringInside(string: String): Flow<List<UserEntity>>
+
+    @Query("""
+        UPDATE user 
+        SET balance = :newBalance 
+        WHERE id = :userId
+    """)
+    suspend fun updateBalance(userId: Long, newBalance: Float)
 }

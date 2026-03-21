@@ -95,7 +95,7 @@ class OrderInfoViewModel(
 
             is OrderInfoEvent.CloseOrder -> {
                 viewModelScope.launch {
-                    orderRepository.updateStatus(orderId, OrderStatus.COMPLETE)
+                    orderRepository.updateStatus(orderId, OrderStatus.WAIT_PAY)
                 }
             }
 

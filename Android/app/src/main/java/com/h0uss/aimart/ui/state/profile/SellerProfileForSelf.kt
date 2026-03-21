@@ -21,6 +21,7 @@ fun SellerProfileForSelf(
     navToEdit: () -> Unit,
     changeAlert: (AlertData?) -> Unit,
     showPortfolio: (PortfolioItemData?) -> Unit,
+    topUpClick: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -37,7 +38,7 @@ fun SellerProfileForSelf(
 
                 }
                 is SellerProfileForSelfNavigationEvent.ReplenishAccountClick -> {
-
+                    topUpClick()
                 }
                 is SellerProfileForSelfNavigationEvent.ShowAlert -> {
                     changeAlert(event.alert)

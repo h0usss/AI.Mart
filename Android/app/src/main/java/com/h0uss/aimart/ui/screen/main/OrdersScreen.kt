@@ -75,6 +75,15 @@ fun OrdersScreen(
                 onEvent(OrdersEvent.CompleteClick)
             }
         ),
+        StatusData(
+            status = OrderStatus.WAIT_PAY,
+            count = state.countWaitPay,
+            isTag = true,
+            isActive = state.isWaitPay,
+            onClick = {
+                onEvent(OrdersEvent.WaitPayClick)
+            }
+        ),
     )
 
     Column(

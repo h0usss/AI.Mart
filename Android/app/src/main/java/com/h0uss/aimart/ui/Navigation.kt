@@ -51,6 +51,7 @@ import com.h0uss.aimart.ui.state.main.Orders
 import com.h0uss.aimart.ui.state.profile.SellerProfileForSelf
 import com.h0uss.aimart.ui.state.profile.SellerProfileForSelfEdit
 import com.h0uss.aimart.ui.state.profile.SellerProfileForUser
+import com.h0uss.aimart.ui.state.profile.TopUpWallet
 import com.h0uss.aimart.ui.state.profile.UserProfileForOther
 import com.h0uss.aimart.ui.state.profile.UserProfileForSelf
 import com.h0uss.aimart.ui.state.search.Search
@@ -75,6 +76,7 @@ fun Navigation(
     var sellerIdForOrder by remember { mutableLongStateOf(-1L) }
     var productIdForOrder by remember { mutableLongStateOf(-1L) }
     var isSuccessNewOrder by remember { mutableStateOf(false) }
+    var isTopUpWallet by remember { mutableStateOf(false) }
 
     LaunchedEffect(authUserIdLong) {
         isSeller = if (authUserIdLong != 0L)
@@ -329,6 +331,9 @@ fun Navigation(
                                     showPortfolio = { data ->
                                         portfolioData = data
                                     },
+                                    topUpClick = {
+                                        isTopUpWallet = true
+                                    }
                                 )
                             else
                                 SellerProfileForUser(
@@ -372,11 +377,17 @@ fun Navigation(
                                     showPortfolio = { data ->
                                         portfolioData = data
                                     },
+                                    topUpClick = {
+                                        isTopUpWallet = true
+                                    }
                                 )
 
                                 false -> UserProfileForSelf(
                                     navToEditProfile = {
                                         // navController.navigate(ProfileEdit)
+                                    },
+                                    topUpClick = {
+                                        isTopUpWallet = true
                                     }
                                 )
 
@@ -425,7 +436,8 @@ fun Navigation(
             visible = alertData != null
                     || portfolioData != null
                     || (sellerIdForOrder != -1L && productIdForOrder != -1L)
-                    || isSuccessNewOrder,
+                    || isSuccessNewOrder
+                    || isTopUpWallet,
             enter = fadeIn(animationSpec = tween(durationMillis = 300)),
             exit = fadeOut(animationSpec = tween(durationMillis = 300))
         ) {
@@ -436,6 +448,10 @@ fun Navigation(
                     .clickable {
                         alertData = null
                         portfolioData = null
+                        sellerIdForOrder = -1L
+                        productIdForOrder = -1L
+                        isSuccessNewOrder = false
+                        isTopUpWallet = false
                     }
                     .padding(horizontal = 21.dp),
                 contentAlignment = Alignment.Center
@@ -480,6 +496,24 @@ fun Navigation(
                         modifier = Modifier.clickable(enabled = false) {},
                         onExit = {
                             isSuccessNewOrder = false
+                        }
+                    )
+                }
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Black20Transparent)
+                    .clickable {
+                        isTopUpWallet = false
+                    },
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                if (isTopUpWallet) {
+                    TopUpWallet(
+                        modifier = Modifier.clickable(enabled = false) {},
+                        onExit = {
+                            isTopUpWallet = false
                         }
                     )
                 }

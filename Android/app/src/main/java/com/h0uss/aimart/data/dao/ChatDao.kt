@@ -26,6 +26,13 @@ interface ChatDao {
     fun getAll(): Flow<List<ChatEntity>>
 
     @Query("""
+        SELECT * 
+        FROM chats
+        WHERE id = :chatId
+    """)
+    fun getChatById(chatId: Long): Flow<ChatEntity?>
+
+    @Query("""
         SELECT
             c.id AS id,
             COALESCE(p.images, 

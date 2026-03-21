@@ -5,10 +5,15 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.h0uss.aimart.Graph.authUserIdLong
+import com.h0uss.aimart.Graph.chatRepository
 import com.h0uss.aimart.Graph.messageRepository
+import com.h0uss.aimart.Graph.orderRepository
 import com.h0uss.aimart.Graph.userRepository
+import com.h0uss.aimart.data.emun.OrderStatus
 import com.h0uss.aimart.data.model.ChatUserData
 import com.h0uss.aimart.data.model.MessageData
+import com.h0uss.aimart.data.model.OrderData
+import com.h0uss.aimart.data.model.UserData
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -38,6 +43,22 @@ class ChatUserViewModel(
                 state.update { it.copy(userData = user) }
             }
         }
+
+        viewModelScope.launch {
+            val chat = chatRepository.getChatById(chatId).first()
+
+            if (chat != null && chat.orderId != null) {
+                orderRepository.getOrderById(chat.orderId).collect { order ->
+                    state.update { it.copy(orderData = order) }
+
+                    launch {
+                        userRepository.getUserByIdFlow(order.buyerId).collect { user ->
+                            state.update { it.copy(buyer = user) }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun onEvent(event: ChatUserEvent) {
@@ -61,6 +82,26 @@ class ChatUserViewModel(
                     messageRepository.addMessageToChat(chatId, authUserIdLong, event.value)
                 }
             }
+            is ChatUserEvent.PayClick -> {
+                viewModelScope.launch {
+                    val order = state.value.orderData
+                    val buyer = state.value.buyer
+
+                    if (buyer.balance < order.price) {
+                        return@launch
+                    }
+
+                    val success = userRepository.transferFunds(
+                        fromUserId = order.buyerId,
+                        toUserId = order.sellerId,
+                        amount = order.price
+                    )
+
+                    if (success) {
+                        orderRepository.updateStatus(order.id, OrderStatus.COMPLETE)
+                    }
+                }
+            }
         }
     }
 }
@@ -68,10 +109,13 @@ class ChatUserViewModel(
 data class ChatUserState(
     val messages: List<MessageData> = listOf(),
     val userData: ChatUserData = ChatUserData(),
+    val buyer: UserData = UserData(),
+    val orderData: OrderData = OrderData(),
 )
 
 sealed class ChatUserEvent {
     object ToListClick : ChatUserEvent()
+    object PayClick : ChatUserEvent()
     data class UserClick(val value: Long) : ChatUserEvent()
     data class SendMessage(val value: String) : ChatUserEvent()
 }

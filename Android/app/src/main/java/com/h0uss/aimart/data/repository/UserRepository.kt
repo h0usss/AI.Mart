@@ -22,38 +22,38 @@ class UserRepository(
     private val userDao: UserDao,
 ) {
     @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun createUser(newUser: UserRegistrationData): Long{
+    suspend fun createUser(newUser: UserRegistrationData): Long {
         val user = toUserEntity(newUser)
         return userDao.create(user)
     }
 
-    suspend fun getUserIsSeller(userId: Long): Boolean{
+    suspend fun getUserIsSeller(userId: Long): Boolean {
         return userDao.getUserIsSeller(userId)
     }
 
-    fun getUserByIdFlow(userId: Long): Flow<UserData>{
+    fun getUserByIdFlow(userId: Long): Flow<UserData> {
         return userDao.getUserByIdFlow(userId)
     }
 
-    fun getUserByProductId(productId: Long): Flow<UserData>{
+    fun getUserByProductId(productId: Long): Flow<UserData> {
         return userDao.getUserByProductId(productId)
     }
 
-    fun getOtherUserByChatId(chatId: Long, myUserId: Long): Flow<ChatUserData>{
+    fun getOtherUserByChatId(chatId: Long, myUserId: Long): Flow<ChatUserData> {
         return userDao.getUsersByChatId(chatId).map { list ->
             list.firstOrNull { it.id != myUserId } ?: ChatUserData()
         }
     }
 
-    fun getUserCountBuyFlow(userId: Long): Flow<Int?>{
+    fun getUserCountBuyFlow(userId: Long): Flow<Int?> {
         return userDao.getUserCountBuyFlow(userId)
     }
 
-    fun getUserCountSellFlow(userId: Long): Flow<Int>{
+    fun getUserCountSellFlow(userId: Long): Flow<Int> {
         return userDao.getUserCountSellFlow(userId)
     }
 
-    fun getSellerByIdFlow(userId: Long): Flow<SellerData?>{
+    fun getSellerByIdFlow(userId: Long): Flow<SellerData?> {
         return userDao.getSellerByIdFlow(userId)
     }
 
@@ -65,8 +65,8 @@ class UserRepository(
         return userDao.getSellerLimit(limit).map { userList ->
             userList.filter { userEntity -> userEntity.id != authUserIdLong }
                 .map { userEntity ->
-                userEntity.toUserHomeData()
-            }
+                    userEntity.toUserHomeData()
+                }
 
         }
     }
@@ -75,22 +75,41 @@ class UserRepository(
         return userDao.getBalance(userId)
     }
 
-    fun getUsersByStringInside(string: String): Flow<List<UserHomeData>>{
-        return userDao.getUsersByStringInside(string).map{ list ->
+    suspend fun addBalance(userId: Long, amount: Float) {
+        val currentBalance = getBalance(userId) ?: 0f
+        userDao.updateBalance(userId, currentBalance + amount)
+    }
+
+    fun getUsersByStringInside(string: String): Flow<List<UserHomeData>> {
+        return userDao.getUsersByStringInside(string).map { list ->
             list.filter { userEntity -> userEntity.id != authUserIdLong }
-                .map{
-                it.toUserHomeData()
-            }
+                .map {
+                    it.toUserHomeData()
+                }
         }
     }
 
     @Transaction
-    suspend fun updateSeller(user: SellerData){
+    suspend fun updateSeller(user: SellerData) {
         userDao.updateUserInfo(user.id, user.name, user.nick, user.imageId)
         userDao.updateSellerSellInfo(user.id, user.profession, user.about, user.skills)
     }
 
-    suspend fun deleteUser(userId: Long){
+
+    @Transaction
+    suspend fun transferFunds(fromUserId: Long, toUserId: Long, amount: Float): Boolean {
+        val fromBalance = getBalance(fromUserId) ?: 0f
+        if (fromBalance < amount) return false
+
+        val toBalance = getBalance(toUserId) ?: 0f
+
+        userDao.updateBalance(fromUserId, fromBalance - amount)
+        userDao.updateBalance(toUserId, toBalance + amount)
+
+        return true
+    }
+
+    suspend fun deleteUser(userId: Long) {
         userDao.deleteById(userId)
     }
 }
