@@ -38,9 +38,10 @@ interface ChatDao {
             END AS userName,
             p.price AS price
         FROM chats AS c
-        LEFT JOIN product AS p ON c.product_id = p.id
+        LEFT JOIN orders AS o ON c.order_id = o.id
         JOIN user AS u1 ON c.f_user_id = u1.id
         JOIN user AS u2 ON c.s_user_id = u2.id
+        JOIN product AS p ON o.product_id = p.id
         WHERE c.f_user_id = :userId OR c.s_user_id = :userId
         ORDER BY c.created_at DESC
     """)
@@ -57,13 +58,14 @@ interface ChatDao {
             END AS userName,
             p.price AS price
         FROM chats AS c
-        JOIN product AS p ON c.product_id = p.id
+        LEFT JOIN orders AS o ON c.order_id = o.id
         JOIN user AS u1 ON c.f_user_id = u1.id
         JOIN user AS u2 ON c.s_user_id = u2.id
-        WHERE p.id = :productId
+        JOIN product AS p ON o.product_id = p.id
+        WHERE o.id = :orderId
         ORDER BY c.created_at DESC
     """)
-    fun getChatByProductId(productId: Long, myId: Long): Flow<List<ChatData>>
+    fun getChatByOrderId(orderId: Long, myId: Long): Flow<List<ChatData>>
 
     @Query("""
         SELECT 
@@ -77,8 +79,8 @@ interface ChatDao {
         JOIN user u2 ON c.s_user_id = u2.id
         WHERE ((c.f_user_id = :myId AND c.s_user_id = :sUserId) 
            OR (c.f_user_id = :sUserId AND c.s_user_id = :myId))
-           AND c.product_id IS NULL
+           AND c.order_id IS NULL
         LIMIT 1
     """)
-    fun getChatNoProduct(myId: Long, sUserId: Long): Flow<ChatData?>
+    fun getChatNoOrder(myId: Long, sUserId: Long): Flow<ChatData?>
 }

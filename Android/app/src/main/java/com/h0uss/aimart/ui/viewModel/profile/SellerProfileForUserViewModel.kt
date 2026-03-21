@@ -92,7 +92,7 @@ class SellerProfileForUserViewModel(
                             ChatEntity(
                                 fUserId = authUserIdLong,
                                 sUserId = sellerId,
-                                productId = null,
+                                orderId = null,
                                 createdAt = LocalDateTime.now(),
                             )
                         )

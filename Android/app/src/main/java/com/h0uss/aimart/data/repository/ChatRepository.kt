@@ -18,10 +18,10 @@ class ChatRepository(
     }
 
     fun getChatNoProduct(myId: Long, sUserId: Long): Flow<ChatData?> {
-        return chatDao.getChatNoProduct(myId, sUserId)
+        return chatDao.getChatNoOrder(myId, sUserId)
     }
 
-    fun getChatByProductId(productId: Long, myId: Long): Flow<List<ChatData>> {
-        return chatDao.getChatByProductId(productId, myId)
+    fun getChatByOrderId(orderId: Long, myId: Long): Flow<List<ChatData>> {
+        return chatDao.getChatByOrderId(orderId, myId)
     }
 }

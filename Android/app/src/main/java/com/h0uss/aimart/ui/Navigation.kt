@@ -209,6 +209,9 @@ fun Navigation(
                                         navController.navigate(ChatList)
                                     },
                                     navToUser = { userId ->
+                                        navController.navigate(User(userId))
+                                    },
+                                    navToSeller = { userId ->
                                         navController.navigate(Seller(userId))
                                     },
                                 )

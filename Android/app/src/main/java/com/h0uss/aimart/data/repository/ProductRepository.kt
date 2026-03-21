@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.data.dao.ProductDao
 import com.h0uss.aimart.data.mapper.toUserProductCardData
 import com.h0uss.aimart.data.model.ProductCardData
@@ -25,7 +26,7 @@ class ProductRepository(
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                productDao.getProductsPagingSource()
+                productDao.getProductsPagingSource(authUserIdLong)
             }
         ).flow
     }

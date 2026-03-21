@@ -58,7 +58,8 @@ interface UserDao {
         u.nick_name AS nick,
         u.avatar AS imageId,
         u.rate AS rate,
-        u.balance AS balance
+        u.balance AS balance,
+        u.is_seller AS isSeller
         FROM user AS u
         LEFT JOIN orders AS o ON u.id = o.buyer_id 
         WHERE u.id = :userId
@@ -72,7 +73,8 @@ interface UserDao {
         u.nick_name AS nick,
         u.avatar AS imageId,
         u.rate AS rate,
-        u.balance AS balance
+        u.balance AS balance,
+        u.is_seller AS isSeller
         FROM user AS u
         LEFT JOIN product AS p ON u.id = p.user_id 
         WHERE p.id = :productId
@@ -86,7 +88,8 @@ interface UserDao {
             COALESCE(p.images, u.avatar) AS imagesId
         FROM user AS u
         LEFT JOIN chats AS c ON u.id = c.f_user_id OR u.id = c.s_user_id 
-        LEFT JOIN product AS p ON c.product_id = p.id
+        LEFT JOIN orders AS o ON c.order_id = o.id
+        LEFT JOIN product AS p ON o.product_id = p.id
         WHERE c.id = :chatId
         GROUP BY u.id
     """)

@@ -9,4 +9,5 @@ data class UserData(
     var imageId: Int = R.drawable.base_avatar,
     var rate: Float = -1f,
     var balance: String = "0.00",
+    var isSeller: Boolean = false,
 )

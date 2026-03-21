@@ -27,10 +27,10 @@ interface ProductDao {
             p.description AS description
         FROM product AS p
         JOIN user AS u ON p.user_id = u.id
-        WHERE p.product_status = 'ACTIVE'
+        WHERE p.product_status = 'ACTIVE' and u.id != :withoutUserId
         ORDER BY p.create_date DESC
     """)
-    fun getProductsPagingSource(): PagingSource<Int, ProductCardData>
+    fun getProductsPagingSource(withoutUserId: Long): PagingSource<Int, ProductCardData>
 
     @Query("""
         SELECT * 

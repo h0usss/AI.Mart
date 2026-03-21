@@ -11,6 +11,7 @@ import com.h0uss.aimart.data.model.ChatUserData
 import com.h0uss.aimart.data.model.MessageData
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -48,7 +49,11 @@ class ChatUserViewModel(
             }
             is ChatUserEvent.UserClick -> {
                 viewModelScope.launch {
-                    navigationEvents.send(ChatUserNavigationEvent.User(event.value))
+                    val user = userRepository.getUserByIdFlow(event.value).first()
+                    if (user.isSeller)
+                        navigationEvents.send(ChatUserNavigationEvent.Seller(event.value))
+                    else
+                        navigationEvents.send(ChatUserNavigationEvent.User(event.value))
                 }
             }
             is ChatUserEvent.SendMessage -> {
@@ -73,5 +78,6 @@ sealed class ChatUserEvent {
 
 sealed class ChatUserNavigationEvent {
     object ChatList : ChatUserNavigationEvent()
+    data class Seller(val value: Long) : ChatUserNavigationEvent()
     data class User(val value: Long) : ChatUserNavigationEvent()
 }

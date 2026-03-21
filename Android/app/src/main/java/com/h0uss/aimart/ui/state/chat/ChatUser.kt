@@ -19,6 +19,7 @@ fun ChatUser(
     chatId: Long,
     navToChatList: () -> Unit,
     navToUser: (Long) -> Unit,
+    navToSeller: (Long) -> Unit,
 ) {
     val viewModel: ChatUserViewModel = viewModel(
         factory = ChatUserViewModelFactory(chatId)
@@ -31,6 +32,9 @@ fun ChatUser(
             when(event) {
                 is ChatUserNavigationEvent.ChatList -> {
                     navToChatList()
+                }
+                is ChatUserNavigationEvent.Seller -> {
+                    navToSeller(event.value)
                 }
                 is ChatUserNavigationEvent.User -> {
                     navToUser(event.value)

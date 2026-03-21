@@ -152,7 +152,7 @@ suspend fun populateDatabase(
     fillPortfolio(portfolioDao, usersIds)
     val o = fillOrders(orderDao = orderDao, usersIds, p)
     fillFeedback(feedbackDao, o)
-    feelChat(chatDao, messageDao, p, productDao)
+    feelChat(chatDao, messageDao, p, orderDao)
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -418,28 +418,24 @@ suspend fun fillFeedback(feedbackDao: FeedbackDao, orderIds: List<Long>) {
 suspend fun feelChat(
     chatDao: ChatDao,
     messageDao: MessageDao,
-    products: List<Long>,
-    productsDao: ProductDao
+    orders: List<Long>,
+    ordersDao: OrderDao
 ) {
     val initialChats: List<ChatEntity> = buildList {
-        var c = 0
-        var i = 0
-        while (c != 10) {
-            val sUId = productsDao.getProductById(products[i]).first().userId
-            if (sUId == 1L){
-                i++
-                continue
-            }
+        for (i in 0 until 10) {
+            val order = ordersDao.getOrderById(orders[i]).first()
+
+            val myId = if (i % 2 == 0) order.buyerId else order.sellerId
+            val otherId = if (i % 2 == 0) order.sellerId else order.buyerId
+
             add(
                 ChatEntity(
-                    fUserId = 1,
-                    sUserId = sUId,
-                    productId = products[i],
+                    fUserId = myId,
+                    sUserId = otherId,
+                    orderId = orders[i],
                     createdAt = LocalDateTime.now(),
                 )
             )
-            c++
-            i++
         }
     }
 
