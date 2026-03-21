@@ -1,3 +1,5 @@
+//import jdk.tools.jlink.resources.plugins
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -42,6 +44,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.android.coil.compose)
+    implementation(libs.android.coil.network)
 
     implementation(libs.android.splash.screen)
     implementation(libs.android.navigation)
@@ -58,7 +62,7 @@ dependencies {
 
     implementation(libs.android.datastore.core)
     implementation(libs.android.datastore)
-    
+
     implementation(libs.android.paging)
 
     implementation(libs.android.material)

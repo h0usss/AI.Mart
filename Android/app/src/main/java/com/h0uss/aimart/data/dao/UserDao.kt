@@ -30,11 +30,11 @@ interface UserDao {
         SET
             name = :name,
             nick_name = :nick,
-            avatar = :imageId
+            avatar = :imageUrl
         WHERE id = :id
     """
     )
-    suspend fun updateUserInfo(id: Long, name: String, nick: String, imageId: Int)
+    suspend fun updateUserInfo(id: Long, name: String, nick: String, imageUrl: String)
 
     @Query(
         """
@@ -66,7 +66,7 @@ interface UserDao {
         u.id AS id,
         u.name AS name,
         u.nick_name AS nick,
-        u.avatar AS imageId,
+        u.avatar AS imageUrl,
         u.rate AS rate,
         u.balance AS balance,
         u.is_seller AS isSeller
@@ -83,7 +83,7 @@ interface UserDao {
         u.id AS id,
         u.name AS name,
         u.nick_name AS nick,
-        u.avatar AS imageId,
+        u.avatar AS imageUrl,
         u.rate AS rate,
         u.balance AS balance,
         u.is_seller AS isSeller
@@ -99,7 +99,7 @@ interface UserDao {
         SELECT
             u.id AS id,
             u.name AS userName,
-            COALESCE(p.images, u.avatar) AS imagesId
+            COALESCE(p.images, u.avatar) AS imagesUrl
         FROM user AS u
         LEFT JOIN chats AS c ON u.id = c.f_user_id OR u.id = c.s_user_id 
         LEFT JOIN orders AS o ON c.order_id = o.id
@@ -146,7 +146,7 @@ interface UserDao {
             u.name AS name,
             u.balance AS balance,
             u.nick_name AS nick,
-            u.avatar AS imageId,
+            u.avatar AS imageUrl,
             u.rate AS rate,
             COUNT(o.id) AS countSell,
             usi.profession AS profession,

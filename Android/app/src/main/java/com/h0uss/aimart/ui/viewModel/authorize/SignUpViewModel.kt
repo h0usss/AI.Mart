@@ -100,6 +100,9 @@ class SignUpViewModel : ViewModel(){
                         FormField.EMAIL -> currentState.copy(emailError = "")
                         FormField.PASSWORD -> currentState.copy(passwordError = "")
                         FormField.DATE -> currentState.copy(dateError = "")
+                        FormField.IMAGE -> currentState.copy(dateError = "")
+                        FormField.PRICE -> currentState.copy(dateError = "")
+                        FormField.DESCRIPTION -> currentState.copy(dateError = "")
                     }
                 }
             }

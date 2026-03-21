@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.model.UserHomeData
 import com.h0uss.aimart.ui.theme.Black100
@@ -68,11 +69,11 @@ fun Sellers(
                     },
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    Image(
+                    AsyncImage(
                         modifier = Modifier
                             .size(76.dp)
                             .clip(CircleShape),
-                        painter = painterResource(item.imageId),
+                        model = item.imageUrl,
                         contentDescription = "Seller ${item.id}",
                         contentScale = ContentScale.Crop
                     )
@@ -97,32 +98,32 @@ private fun Preview() {
             UserHomeData(
                 id = 0,
                 name = "Пипка",
-                imageId = R.drawable.seller
+                imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}"
             ),
             UserHomeData(
                 id = 0,
                 name = "Пипка",
-                imageId = R.drawable.seller
+                imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}"
             ),
             UserHomeData(
                 id = 0,
                 name = "Пипка",
-                imageId = R.drawable.seller
+                imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}"
             ),
             UserHomeData(
                 id = 0,
                 name = "Пипка",
-                imageId = R.drawable.seller
+                imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}"
             ),
             UserHomeData(
                 id = 0,
                 name = "Пипка",
-                imageId = R.drawable.seller
+                imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}"
             ),
             UserHomeData(
                 id = 0,
                 name = "Пипка",
-                imageId = R.drawable.seller
+                imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}"
             ),
         )
     )

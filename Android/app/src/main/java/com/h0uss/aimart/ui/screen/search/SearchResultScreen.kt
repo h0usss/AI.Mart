@@ -255,7 +255,7 @@ private fun Preview_fill() {
             authorName = "Бильбо",
             name = "AI Кольцо всевластия",
             price = 0.09f,
-            imagesId = List(4) { R.drawable.background },
+            imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
             description = "Ты не пройдёшь"
         )
     }))
@@ -268,7 +268,7 @@ private fun Preview_fill() {
                 UserHomeData(
                     id = 0,
                     name = "Артур",
-                    imageId = R.drawable.seller
+                    imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}"
                 )
             },
             hints = List(10) { item -> "Подсказка" }
@@ -287,7 +287,7 @@ private fun Preview_empty() {
                 UserHomeData(
                     id = 0,
                     name = "Пипка",
-                    imageId = R.drawable.seller
+                    imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}"
                 )
             },
             hints = List(10) { item -> "Подсказка" }

@@ -7,7 +7,7 @@ data class SellerData(
     var name: String = "",
     var balance: String = "0.00",
     var nick: String = "",
-    var imageId: Int = R.drawable.base_avatar,
+    var imageUrl: String = "android.resource://com.h0uss.aimart/${R.drawable.base_avatar}",
     var rate: Float = 0f,
     var profession: String = "",
     var about: String = "",

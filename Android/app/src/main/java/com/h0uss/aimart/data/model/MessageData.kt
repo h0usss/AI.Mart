@@ -5,6 +5,6 @@ import java.time.LocalDateTime
 class MessageData (
     val text: String,
     val date: LocalDateTime,
-    val avatarId: Int = -1,
+    val avatarUrl: String = "",
     val userId: Long = -1L,
 )

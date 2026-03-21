@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.h0uss.aimart.data.factory.ChatUserViewModelFactory
+import com.h0uss.aimart.data.model.OrderData
 import com.h0uss.aimart.ui.screen.chat.ChatUserScreen
 import com.h0uss.aimart.ui.viewModel.chat.ChatUserNavigationEvent
 import com.h0uss.aimart.ui.viewModel.chat.ChatUserViewModel
@@ -20,6 +21,7 @@ fun ChatUser(
     navToChatList: () -> Unit,
     navToUser: (Long) -> Unit,
     navToSeller: (Long) -> Unit,
+    onTaskBarClick: (OrderData) -> Unit,
 ) {
     val viewModel: ChatUserViewModel = viewModel(
         factory = ChatUserViewModelFactory(chatId)
@@ -38,6 +40,9 @@ fun ChatUser(
                 }
                 is ChatUserNavigationEvent.User -> {
                     navToUser(event.value)
+                }
+                is ChatUserNavigationEvent.TaskBar -> {
+                    onTaskBarClick(event.value)
                 }
             }
         }

@@ -7,6 +7,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.data.dao.ProductDao
+import com.h0uss.aimart.data.entity.ProductEntity
 import com.h0uss.aimart.data.mapper.toUserProductCardData
 import com.h0uss.aimart.data.model.ProductCardData
 import com.h0uss.aimart.data.model.ProductData
@@ -18,6 +19,10 @@ import kotlinx.coroutines.flow.map
 class ProductRepository(
     private val productDao: ProductDao
 ) {
+
+    suspend fun insert(product: ProductEntity): Long{
+        return productDao.insert(product)
+    }
 
     fun getProductsPagingData(): Flow<PagingData<ProductCardData>> {
         return Pager(

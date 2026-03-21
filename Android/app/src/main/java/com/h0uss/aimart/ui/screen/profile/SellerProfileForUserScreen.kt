@@ -35,11 +35,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.model.FeedbackData
 import com.h0uss.aimart.data.model.PortfolioItemData
@@ -129,13 +131,15 @@ fun SellerProfileForUserScreen(
                             ),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Image(
+
+                        AsyncImage(
                             modifier = Modifier
                                 .padding(top = 16.dp)
                                 .size(96.dp)
                                 .clip(CircleShape),
-                            painter = painterResource(state.user.imageId),
+                            model = state.user.imageUrl,
                             contentDescription = state.user.nick,
+                            contentScale = ContentScale.Crop
                         )
                         Text(
                             modifier = Modifier.padding(top = 16.dp),
@@ -404,7 +408,7 @@ private fun Preview() {
             user = SellerData(
                 name = "Артур",
                 nick = "@bibo",
-                imageId = R.drawable.seller,
+                imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}",
                 rate = 5.0f,
                 profession = "Художник",
                 about = "Описание описание описание описание описание описание описание описание ",
@@ -426,7 +430,7 @@ private fun Preview() {
                     user = UserData(
                         name = "Гена",
                         nick = "@df",
-                        imageId = R.drawable.seller,
+                        imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}",
                         rate = 5.0f,
                     ),
                     text = "Отзыв отзыв",

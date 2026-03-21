@@ -6,7 +6,7 @@ data class UserProductCardData(
     val id: Long,
     val name: String,
     val price: Float,
-    val imagesId: List<Int>,
+    val imagesUrl: List<String>,
     val description: String,
     val status: ProductStatus,
 )

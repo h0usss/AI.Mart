@@ -1,6 +1,5 @@
 package com.h0uss.aimart.ui.assets.card
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -15,10 +14,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.emun.OrderStatus
 import com.h0uss.aimart.data.model.OrderCardData
@@ -46,12 +45,12 @@ fun OrderCard(
             modifier = modifier,
             contentAlignment = Alignment.TopEnd
         ){
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .size(164.dp)
                     .clip(RoundedCornerShape(5))
                 ,
-                painter = painterResource(order.imagesId[0]),
+                model = order.imagesUrl[0],
                 contentDescription = "Product image",
                 contentScale = ContentScale.Crop
             )
@@ -91,7 +90,7 @@ private fun Preview() {
                 id = 1L,
                 name = "ProductName",
                 price = 10.99f,
-                imagesId = List(4) { R.drawable.background },
+                imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                 status = OrderStatus.COMPLETE
             )
         )
@@ -100,7 +99,7 @@ private fun Preview() {
                 id = 1L,
                 name = "ProductName",
                 price = 10.99f,
-                imagesId = List(4) { R.drawable.background },
+                imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                 status = OrderStatus.COMPLETE
             )
         )

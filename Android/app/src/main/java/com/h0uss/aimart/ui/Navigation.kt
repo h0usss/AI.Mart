@@ -34,15 +34,18 @@ import androidx.navigation.toRoute
 import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.Graph.userRepository
 import com.h0uss.aimart.data.model.AlertData
+import com.h0uss.aimart.data.model.OrderData
 import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.ui.assets.Alert
 import com.h0uss.aimart.ui.assets.ShowPortfolio
 import com.h0uss.aimart.ui.assets.SuccessNewOrder
+import com.h0uss.aimart.ui.assets.chat.TaskBar
 import com.h0uss.aimart.ui.state.authorize.SignIn
 import com.h0uss.aimart.ui.state.authorize.SignUp
 import com.h0uss.aimart.ui.state.chat.ChatUser
 import com.h0uss.aimart.ui.state.chat.Chats
 import com.h0uss.aimart.ui.state.create.NewOrder
+import com.h0uss.aimart.ui.state.create.NewProduct
 import com.h0uss.aimart.ui.state.info.OrderInfo
 import com.h0uss.aimart.ui.state.info.ProductInfo
 import com.h0uss.aimart.ui.state.main.Home
@@ -77,6 +80,7 @@ fun Navigation(
     var productIdForOrder by remember { mutableLongStateOf(-1L) }
     var isSuccessNewOrder by remember { mutableStateOf(false) }
     var isTopUpWallet by remember { mutableStateOf(false) }
+    var taskBarInfo by remember { mutableStateOf<OrderData?>(null) }
 
     LaunchedEffect(authUserIdLong) {
         isSeller = if (authUserIdLong != 0L)
@@ -216,6 +220,9 @@ fun Navigation(
                                     navToSeller = { userId ->
                                         navController.navigate(Seller(userId))
                                     },
+                                    onTaskBarClick = { orderInfo ->
+                                        taskBarInfo = orderInfo
+                                    }
                                 )
                             }
                         }
@@ -275,17 +282,31 @@ fun Navigation(
                             }
                         }
 
-                        composable<MyProducts> {
-                            isBottomNavBarShow = true
+                        navigation<Products>(
+                            startDestination = MyProducts
+                        ) {
+                            composable<MyProducts> {
+                                isBottomNavBarShow = true
 
-                            MyProducts(
-                                navToProduct = { productId ->
-                                    navController.navigate(ProductInfo(productId))
-                                },
-                                navToNewProduct = {
-                                    //                        navController.navigate()
-                                }
-                            )
+                                MyProducts(
+                                    navToProduct = { productId ->
+                                        navController.navigate(ProductInfo(productId))
+                                    },
+                                    navToNewProduct = {
+                                        navController.navigate(NewProduct)
+                                    }
+                                )
+                            }
+
+                            composable<NewProduct> {
+                                isBottomNavBarShow = false
+
+                                NewProduct (
+                                    onExit = {
+                                        navController.navigate(MyProducts)
+                                    }
+                                )
+                            }
                         }
 
 
@@ -436,8 +457,7 @@ fun Navigation(
             visible = alertData != null
                     || portfolioData != null
                     || (sellerIdForOrder != -1L && productIdForOrder != -1L)
-                    || isSuccessNewOrder
-                    || isTopUpWallet,
+                    || isSuccessNewOrder,
             enter = fadeIn(animationSpec = tween(durationMillis = 300)),
             exit = fadeOut(animationSpec = tween(durationMillis = 300))
         ) {
@@ -500,6 +520,12 @@ fun Navigation(
                     )
                 }
             }
+        }
+        AnimatedVisibility(
+            visible = isTopUpWallet,
+            enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+            exit = fadeOut(animationSpec = tween(durationMillis = 300))
+        ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -515,6 +541,31 @@ fun Navigation(
                         onExit = {
                             isTopUpWallet = false
                         }
+                    )
+                }
+            }
+        }
+        AnimatedVisibility(
+            visible = taskBarInfo != null,
+            enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+            exit = fadeOut(animationSpec = tween(durationMillis = 300))
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Black20Transparent)
+                    .clickable {
+                        taskBarInfo = null
+                    },
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                taskBarInfo?.let { order ->
+                    TaskBar(
+                        modifier = Modifier.clickable(enabled = false) {},
+                        onExit = {
+                            taskBarInfo = null
+                        },
+                        orderData = order
                     )
                 }
             }

@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.model.FeedbackData
 import com.h0uss.aimart.data.model.UserData
@@ -45,12 +46,12 @@ fun Feedback(
             .background(White)
     ) {
         Row{
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape),
-                painter = painterResource(feedbackData.user.imageId),
-                contentDescription = feedbackData.user.name
+                model = feedbackData.user.imageUrl,
+                contentDescription =  feedbackData.user.name,
             )
             Column(
                 modifier = Modifier.padding(start = 18.dp, top = 2.dp)
@@ -115,7 +116,7 @@ private fun Preview() {
                 user = UserData(
                     name = "Пип",
                     nick = "@df",
-                    imageId = R.drawable.seller,
+                    imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}",
                     rate = 5.0f,
                 ),
                 text = "Гавна гавной",
@@ -128,7 +129,7 @@ private fun Preview() {
                 user = UserData(
                     name = "Пипиня",
                     nick = "@df",
-                    imageId = R.drawable.seller,
+                    imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}",
                     rate = 5.0f,
                 ),
                 text = "Вакцин хийлгэсэн хүмүүс нь илүү үхсэн байгаа шүү дээ.өвчин дээр нь нэмээд вакцин... бүгд хүн шулмууд",
@@ -141,7 +142,7 @@ private fun Preview() {
                 user = UserData(
                     name = "Пипиня",
                     nick = "@df",
-                    imageId = R.drawable.seller,
+                    imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}",
                     rate = 5.0f,
                 ),
                 text = "2 л бол 2 шүү дээ, зурхайгаа дагаж амарцгаасан нь дээр шүү, дараа нь яах ч юм билээ, араа бодож зурх",
@@ -154,7 +155,7 @@ private fun Preview() {
                 user = UserData(
                     name = "Пипиня",
                     nick = "@df",
-                    imageId = R.drawable.seller,
+                    imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}",
                     rate = 5.0f,
                 ),
                 text = "2 л бол 2 шүү дээ, зурхайгаа дагаж амарцгаасан нь дээр шүү, дараа нь яах ч юм билээ, араа бодож зурх",
@@ -167,7 +168,7 @@ private fun Preview() {
                 user = UserData(
                     name = "Пипиня",
                     nick = "@df",
-                    imageId = R.drawable.seller,
+                    imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}",
                     rate = 5.0f,
                 ),
                 text = "Чупапиназо",

@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.emun.ProductStatus
 import com.h0uss.aimart.data.model.FeedbackData
@@ -118,12 +119,12 @@ fun ProductInfoScreen(
                     contentPadding = PaddingValues(bottom = 14.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(state.product.imagesId) { imageId ->
-                        Image(
+                    items(state.product.imagesUrl) { imageId ->
+                        AsyncImage(
                             modifier = Modifier
                                 .size(240.dp)
                                 .clip(RoundedCornerShape(8.dp)),
-                            painter = painterResource(imageId),
+                            model = imageId,
                             contentDescription = "Product image $imageId",
                             contentScale = ContentScale.Crop
                         )
@@ -254,7 +255,7 @@ private fun Preview() {
                 author = "popo",
                 name = "productname",
                 price = 10.1f,
-                imagesId = List(4) { R.drawable.background },
+                imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                 status = ProductStatus.ACTIVE,
             ),
             filteredFeedback = List(10) { item ->
@@ -262,7 +263,7 @@ private fun Preview() {
                     user = UserData(
                         name = "Гена",
                         nick = "@df",
-                        imageId = R.drawable.seller,
+                        imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}",
                         rate = 5.0f,
                     ),
                     text = "Отзыв отзыв",

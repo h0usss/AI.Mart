@@ -21,8 +21,7 @@ object Register: ScreensRoutes
 object Main: ScreensRoutes
 @Serializable
 object Home: ScreensRoutes
-@Serializable
-object MyProducts: ScreensRoutes
+
 @Serializable
 data class Seller(
     val id: Long
@@ -66,3 +65,11 @@ object OrderList: ScreensRoutes
 data class Order(
     val orderId: Long
 ): ScreensRoutes
+
+
+@Serializable
+object Products: ScreensRoutes
+@Serializable
+object MyProducts: ScreensRoutes
+@Serializable
+object NewProduct: ScreensRoutes

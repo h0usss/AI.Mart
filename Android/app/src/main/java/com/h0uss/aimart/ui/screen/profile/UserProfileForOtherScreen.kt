@@ -1,6 +1,5 @@
 package com.h0uss.aimart.ui.screen.profile
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -19,11 +18,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.model.UserData
 import com.h0uss.aimart.ui.assets.Dropdown
@@ -92,12 +91,12 @@ fun UserProfileForOtherScreen(
                     ),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(
+                AsyncImage(
                     modifier = Modifier
                         .padding(top = 16.dp)
                         .size(96.dp)
                         .clip(CircleShape),
-                    painter = painterResource(state.user.imageId),
+                    model = state.user.imageUrl,
                     contentDescription = state.user.nick,
                 )
                 Text(
@@ -148,7 +147,7 @@ private fun Preview() {
             user = UserData(
                 name = "Алиса",
                 nick = "@al1s",
-                imageId = R.drawable.avatar_0,
+                imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.avatar_0}",
                 rate = 5.0f,
             )
         )

@@ -22,7 +22,7 @@ interface MessageDao {
         SELECT
             m.message AS text,
             m.created_at AS date,
-            u.avatar AS avatarId,
+            u.avatar AS avatarUrl,
             u.id AS userId
         FROM messages AS m
         JOIN user AS u ON m.sender_id = u.id

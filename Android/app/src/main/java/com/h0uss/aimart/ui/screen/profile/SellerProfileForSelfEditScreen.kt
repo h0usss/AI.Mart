@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.model.AlertData
 import com.h0uss.aimart.data.model.PortfolioItemData
@@ -108,12 +109,12 @@ fun SellerProfileForSelfEditScreen(
                             ),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Image(
+                        AsyncImage(
                             modifier = Modifier
                                 .padding(top = 16.dp)
                                 .size(96.dp)
                                 .clip(CircleShape),
-                            painter = painterResource(state.user.imageId),
+                            model = state.user.imageUrl,
                             contentDescription = state.user.nick,
                         )
                         Text(
@@ -414,7 +415,7 @@ private fun Preview() {
             user = SellerData(
                 name = "Артур",
                 nick = "@bibo",
-                imageId = R.drawable.seller,
+                imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}",
                 rate = 5.0f,
                 profession = "Художник",
                 about = "Описание описание описание описание описание описание описание описание ",

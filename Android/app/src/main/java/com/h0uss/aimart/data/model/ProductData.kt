@@ -8,6 +8,6 @@ data class ProductData(
     val author: String = "",
     val name: String = "",
     val price: Float = 0f,
-    val imagesId: List<Int> = listOf(),
+    val imagesUrl: List<String> = listOf(),
     val status: ProductStatus = ProductStatus.ACTIVE
 )

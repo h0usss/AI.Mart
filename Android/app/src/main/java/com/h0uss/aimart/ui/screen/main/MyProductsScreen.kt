@@ -317,7 +317,7 @@ private fun Preview() {
                     id = 1L,
                     name = "Товар",
                     price = 100.01f,
-                    imagesId = List(4) { R.drawable.background },
+                    imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                     status = ProductStatus.MODERATING_FAILED,
                     description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
@@ -325,7 +325,7 @@ private fun Preview() {
                     id = 1L,
                     name = "Товар",
                     price = 100.01f,
-                    imagesId = List(4) { R.drawable.background },
+                    imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                     status = ProductStatus.MODERATING_FAILED,
                     description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
@@ -333,7 +333,7 @@ private fun Preview() {
                     id = 1L,
                     name = "Товар",
                     price = 100.01f,
-                    imagesId = List(4) { R.drawable.background },
+                    imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                     status = ProductStatus.IN_MODERATING_PROCESS,
                     description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
@@ -341,7 +341,7 @@ private fun Preview() {
                     id = 1L,
                     name = "Товар",
                     price = 100.01f,
-                    imagesId = List(4) { R.drawable.background },
+                    imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                     status = ProductStatus.ACTIVE,
                     description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
@@ -349,7 +349,7 @@ private fun Preview() {
                     id = 1L,
                     name = "Товар",
                     price = 100.01f,
-                    imagesId = List(4) { R.drawable.background },
+                    imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                     status = ProductStatus.ACTIVE,
                     description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
@@ -357,7 +357,7 @@ private fun Preview() {
                     id = 1L,
                     name = "Товар",
                     price = 100.01f,
-                    imagesId = List(4) { R.drawable.background },
+                    imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                     status = ProductStatus.ACTIVE,
                     description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
@@ -365,7 +365,7 @@ private fun Preview() {
                     id = 1L,
                     name = "Товар",
                     price = 100.01f,
-                    imagesId = List(4) { R.drawable.background },
+                    imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                     status = ProductStatus.ACTIVE,
                     description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
@@ -373,7 +373,7 @@ private fun Preview() {
                     id = 1L,
                     name = "Товар",
                     price = 100.01f,
-                    imagesId = List(4) { R.drawable.background },
+                    imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                     status = ProductStatus.ACTIVE,
                     description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
@@ -381,7 +381,7 @@ private fun Preview() {
                     id = 1L,
                     name = "Товар",
                     price = 100.01f,
-                    imagesId = List(4) { R.drawable.background },
+                    imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                     status = ProductStatus.ACTIVE,
                     description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
@@ -389,7 +389,7 @@ private fun Preview() {
                     id = 1L,
                     name = "Товар",
                     price = 100.01f,
-                    imagesId = List(4) { R.drawable.background },
+                    imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                     status = ProductStatus.ACTIVE,
                     description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
@@ -397,7 +397,7 @@ private fun Preview() {
                     id = 1L,
                     name = "Товар",
                     price = 100.01f,
-                    imagesId = List(4) { R.drawable.background },
+                    imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                     status = ProductStatus.ACTIVE,
                     description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),
@@ -405,7 +405,7 @@ private fun Preview() {
                     id = 1L,
                     name = "Товар",
                     price = 100.01f,
-                    imagesId = List(4) { R.drawable.background },
+                    imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                     status = ProductStatus.MODERATING_FAILED,
                     description = "Описание товара описание товара описание товара описание товара описание товара описание товара"
                 ),

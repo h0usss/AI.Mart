@@ -1,6 +1,5 @@
 package com.h0uss.aimart.ui.assets.card
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,11 +14,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.model.ChatData
 import com.h0uss.aimart.ui.theme.Black100
@@ -47,12 +46,12 @@ fun ChatRowCard(
         Row(
             modifier = Modifier.weight(.8f)
         ){
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .size(80.dp)
                     .clip(RoundedCornerShape(10))
                 ,
-                painter = painterResource(chat.imagesId[0]),
+                model = chat.imagesUrl[0],
                 contentDescription = chat.productName,
                 contentScale = ContentScale.Crop
             )
@@ -101,7 +100,7 @@ private fun Preview_v1() {
             id = 1L,
             userName = "Пипипу",
             price = 100.00f,
-            imagesId = List(4) { R.drawable.background },
+            imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
             productName = "3d Модель",
         )
     )
@@ -114,7 +113,7 @@ private fun Preview_V2() {
         chat = ChatData(
             id = 1L,
             userName = "Пипипу",
-            imagesId = List(4) { R.drawable.background },
+            imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
         )
     )
 }

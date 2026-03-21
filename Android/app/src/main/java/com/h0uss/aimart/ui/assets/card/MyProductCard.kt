@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.emun.ProductStatus
 import com.h0uss.aimart.data.model.UserProductCardData
@@ -50,13 +51,12 @@ fun MyProductCard(
         Row(
             modifier = Modifier.weight(.8f)
         ){
-            Image(
+            AsyncImage(
+                model = product.imagesUrl[0],
+                contentDescription = product.name,
                 modifier = Modifier
                     .size(100.dp)
-                    .clip(RoundedCornerShape(10))
-                ,
-                painter = painterResource(product.imagesId[0]),
-                contentDescription = product.name,
+                    .clip(RoundedCornerShape(10)),
                 contentScale = ContentScale.Crop
             )
             Column(
@@ -115,7 +115,7 @@ private fun Preview() {
             id = 1L,
             name = "Пипипу",
             price = 100.00f,
-            imagesId = List(4) { R.drawable.background },
+            imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
             status = ProductStatus.ACTIVE,
             description = "Бяки буки для запуки Бяки буки для запуки Бяки буки для запуки Бяки буки для запуки Бяки буки для запуки Бяки буки для запуки Бяки буки для запуки Бяки буки для запуки Бяки буки для запуки"
         )

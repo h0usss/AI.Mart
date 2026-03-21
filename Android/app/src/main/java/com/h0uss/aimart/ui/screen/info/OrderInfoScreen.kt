@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.emun.OrderStatus
 import com.h0uss.aimart.data.emun.ProductStatus
@@ -106,12 +107,12 @@ fun OrderInfoScreen(
                     contentPadding = PaddingValues(bottom = 14.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(state.product.imagesId) { imageId ->
-                        Image(
+                    items(state.product.imagesUrl) { imageId ->
+                        AsyncImage(
                             modifier = Modifier
                                 .size(240.dp)
                                 .clip(RoundedCornerShape(8.dp)),
-                            painter = painterResource(imageId),
+                            model = imageId,
                             contentDescription = "Product image $imageId",
                             contentScale = ContentScale.Crop
                         )
@@ -282,7 +283,7 @@ private fun Preview_v1() {
                 author = "popo",
                 name = "productname",
                 price = 10.1f,
-                imagesId = List(4) { R.drawable.background },
+                imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                 status = ProductStatus.ACTIVE,
             ),
             order = OrderData(
@@ -305,7 +306,7 @@ private fun Preview_v2() {
                 author = "popo",
                 name = "productname",
                 price = 10.1f,
-                imagesId = List(4) { R.drawable.background },
+                imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                 status = ProductStatus.ACTIVE,
             ),
             order = OrderData(
@@ -328,7 +329,7 @@ private fun Preview_v3() {
                 author = "popo",
                 name = "productname",
                 price = 10.1f,
-                imagesId = List(4) { R.drawable.background },
+                imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                 status = ProductStatus.ACTIVE,
             ),
             order = OrderData(

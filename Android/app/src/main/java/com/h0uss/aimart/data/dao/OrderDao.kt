@@ -25,7 +25,7 @@ interface OrderDao {
         p.name AS name,
         o.price AS price,
         o.status AS status,
-        p.images AS imagesId
+        p.images AS imagesUrl
         FROM orders AS o
         JOIN product AS p ON o.product_id = p.id
         WHERE o.seller_id = :userId AND o.status != 'DELETED'

@@ -12,6 +12,7 @@ val Pink40 = Color(0xFF7D5260)
 
 val White = Color(0xffffffff)
 
+val Black3 = Color(0xfff7f7f7)
 val Black5 = Color(0xfff2f2f2)
 val Black10 = Color(0xffe6e6e6)
 val Black20 = Color(0xffb6b9b8)
@@ -26,6 +27,7 @@ val BlackProfileAdd = Color(0xff888c93)
 
 val ErrorText = Color(0xffdc2626)
 val ErrorBG = Color(0xfffef2f2)
+val ErrorDarkBG = Color(0xfff6eaea)
 
 val Teal = Color(0xff2dd4bf)
 val TealCounterBg = Color(0xfff0fdfa)

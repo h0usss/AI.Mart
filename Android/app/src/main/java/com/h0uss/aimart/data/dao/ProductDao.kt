@@ -15,6 +15,8 @@ interface ProductDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(products: List<ProductEntity>): List<Long>
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(product: ProductEntity): Long
 
     @Query("""
         SELECT 
@@ -22,7 +24,7 @@ interface ProductDao {
             u.name AS authorName,
             p.name AS name,
             p.price AS price,
-            p.images AS imagesId,
+            p.images AS imagesUrl,
             p.product_status AS status,
             p.description AS description
         FROM product AS p
@@ -47,7 +49,7 @@ interface ProductDao {
             u.name AS author,
             p.name AS name,
             p.price AS price,
-            p.images AS imagesId,
+            p.images AS imagesUrl,
             p.product_status AS status
         FROM product AS p
         JOIN user AS u ON p.user_id = u.id
@@ -61,12 +63,13 @@ interface ProductDao {
             u.name AS authorName,
             p.name AS name,
             p.price AS price,
-            p.images AS imagesId,
+            p.images AS imagesUrl,
             p.product_status AS status,
             p.description AS description
         FROM product AS p
         LEFT JOIN user AS u ON p.user_id = u.id
-        WHERE COALESCE(p.name, '') LIKE '%' || :string || '%' OR COALESCE(u.name, '') LIKE '%' || :string || '%'
+        WHERE p.product_status = 'ACTIVE' AND 
+            (COALESCE(p.name, '') LIKE '%' || :string || '%' OR COALESCE(u.name, '') LIKE '%' || :string || '%')
         ORDER BY p.create_date DESC
     """)
     fun getProductByStringInside(string: String):  PagingSource<Int, ProductCardData>

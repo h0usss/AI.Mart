@@ -33,11 +33,12 @@ interface ChatDao {
     fun getChatById(chatId: Long): Flow<ChatEntity?>
 
     @Query("""
+        
         SELECT
             c.id AS id,
             COALESCE(p.images, 
                 CASE WHEN c.f_user_id = :userId THEN u2.avatar ELSE u1.avatar END
-            ) AS imagesId,
+            ) AS imagesUrl,
             p.name AS productName,
             CASE 
                 WHEN c.f_user_id = :userId THEN u2.name 
@@ -46,9 +47,9 @@ interface ChatDao {
             p.price AS price
         FROM chats AS c
         LEFT JOIN orders AS o ON c.order_id = o.id
+        LEFT JOIN product AS p ON o.product_id = p.id    
         JOIN user AS u1 ON c.f_user_id = u1.id
         JOIN user AS u2 ON c.s_user_id = u2.id
-        JOIN product AS p ON o.product_id = p.id
         WHERE c.f_user_id = :userId OR c.s_user_id = :userId
         ORDER BY c.created_at DESC
     """)
@@ -57,7 +58,7 @@ interface ChatDao {
     @Query("""
         SELECT
             c.id AS id,
-            p.images AS imagesId,
+            p.images AS imagesUrl,
             p.name AS productName,
             CASE 
                 WHEN c.f_user_id = :myId THEN u2.name 
@@ -77,7 +78,7 @@ interface ChatDao {
     @Query("""
         SELECT 
             c.id,
-            CASE WHEN c.f_user_id = :myId THEN u2.avatar ELSE u1.avatar END AS imagesId,
+            CASE WHEN c.f_user_id = :myId THEN u2.avatar ELSE u1.avatar END AS imagesUrl,
             CASE WHEN c.f_user_id = :myId THEN u2.name ELSE u1.name END AS userName,
             '' AS productName,
             0.0 AS price

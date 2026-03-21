@@ -10,6 +10,28 @@ fun String.validateName(): String{
     return if (this.length > 1) return "" else "Слишком короткое имя"
 }
 
+fun String.validateProductName(): String{
+    return if (this.length > 5) return "" else "Слишком короткое название"
+}
+
+fun String.validateProductDesc(): String{
+    return if (this.length > 10) return "" else "Слишком короткое описание"
+}
+
+fun String.validateProductPrice(): String{
+    try{
+        this.toFloat()
+        return ""
+    }
+    catch (_: NumberFormatException){
+        return "Введите корректно цену"
+    }
+}
+
+fun List<String>.validateProductImages(): String{
+    return if (this.isNotEmpty()) return "" else "Добавьте хотя бы одно изображение"
+}
+
 fun String.validateMail(): String{
     val emailRegex = Regex("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}")
     return if (emailRegex.matches(this)) "" else "Некорректный email"
@@ -25,7 +47,7 @@ fun String.validateDate(): String{
         val formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu").withResolverStyle(ResolverStyle.STRICT)
         formatter.parse(this)
         ""
-    } catch (e: DateTimeParseException) {
+    } catch (_: DateTimeParseException) {
         "Неверная дата рождения"
     }
 }

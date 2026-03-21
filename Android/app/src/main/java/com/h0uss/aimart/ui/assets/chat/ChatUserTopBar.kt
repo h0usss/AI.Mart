@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.model.ChatUserData
 import com.h0uss.aimart.ui.theme.Black50
@@ -55,15 +56,15 @@ fun ChatUserTopBar(
                 .padding(start = 20.dp)
                 .fillMaxWidth(),
         ){
-            if (userData.imagesId.isNotEmpty()) {
-                Image(
+            if (userData.imagesUrl.isNotEmpty()) {
+                AsyncImage(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .clickable {
                             onUserClick(userData.id)
                         },
-                    painter = painterResource(userData.imagesId[0]),
+                    model = userData.imagesUrl[0],
                     contentDescription = "ToUser",
                     contentScale = ContentScale.Crop
                 )
@@ -108,7 +109,7 @@ private fun Preview() {
     ChatUserTopBar(
         userData = ChatUserData(
             id = 1L,
-            imagesId = List(4) { R.drawable.background },
+            imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
             userName = "Детка геймер",
         )
     )

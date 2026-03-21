@@ -13,7 +13,7 @@ data class UserEntity(
     @ColumnInfo(name = "id")            val id: Long = 0L,
 
     @ColumnInfo(name = "rate")          val rate: Float,
-    @ColumnInfo(name = "avatar")        val avatar: Int,
+    @ColumnInfo(name = "avatar")        val avatar: String,
     @ColumnInfo(name = "name")          val name: String,
     @ColumnInfo(name = "email")         val email: String,
     @ColumnInfo(name = "balance")       val balance: Float,

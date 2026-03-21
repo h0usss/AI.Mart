@@ -153,7 +153,7 @@ private fun Preview_data() {
             authorName = "Бильбо",
             name = "AI Кольцо всевластия",
             price = 0.09f,
-            imagesId = List(4) { R.drawable.background },
+            imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
             description = "Ты не пройдёшь"
         )
     }))
@@ -171,7 +171,7 @@ private fun Preview_data() {
                 UserHomeData(
                     id = 0,
                     name = "Артур",
-                    imageId = R.drawable.seller
+                    imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}"
                 )
             },
         ),

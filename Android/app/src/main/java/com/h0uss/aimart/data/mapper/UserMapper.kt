@@ -15,7 +15,7 @@ import java.time.LocalDateTime
 fun toUserEntity(user: UserRegistrationData): UserEntity{
 
     return UserEntity(
-        avatar = R.drawable.base_avatar,
+        avatar = "android.resource://com.h0uss.aimart/${R.drawable.base_avatar}",
         name = user.name,
         email = user.email,
         nickName = "user_${System.currentTimeMillis()}",
@@ -43,7 +43,7 @@ fun UserEntity.toUserHomeData(): UserHomeData{
     return UserHomeData(
         id = this.id,
         name = this.name,
-        imageId = this.avatar
+        imageUrl = this.avatar
     )
 }
 
@@ -52,7 +52,7 @@ fun UserEntity.toUserData(): UserData{
         id = this.id,
         name = this.name,
         nick = this.nickName,
-        imageId = this.avatar,
+        imageUrl = this.avatar,
         rate = this.rate,
         balance = this.balance,
     )

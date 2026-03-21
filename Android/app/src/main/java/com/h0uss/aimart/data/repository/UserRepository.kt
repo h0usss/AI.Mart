@@ -91,7 +91,7 @@ class UserRepository(
 
     @Transaction
     suspend fun updateSeller(user: SellerData) {
-        userDao.updateUserInfo(user.id, user.name, user.nick, user.imageId)
+        userDao.updateUserInfo(user.id, user.name, user.nick, user.imageUrl)
         userDao.updateSellerSellInfo(user.id, user.profession, user.about, user.skills)
     }
 

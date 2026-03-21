@@ -2,7 +2,6 @@ package com.h0uss.aimart.ui.assets.chat
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -20,10 +19,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.model.MessageData
 import com.h0uss.aimart.ui.theme.Black10
@@ -58,7 +57,8 @@ fun OtherMessage(
             ,
             verticalAlignment = Alignment.Bottom
         ) {
-            Image(
+
+            AsyncImage(
                 modifier = Modifier
                     .size(32.dp)
                     .clip(CircleShape)
@@ -71,8 +71,8 @@ fun OtherMessage(
                         width = 1.dp,
                         shape = CircleShape
                     ),
-                painter = painterResource(messageData.avatarId),
-                contentDescription = "ToUser"
+                model = messageData.avatarUrl,
+                contentDescription = "ToUser",
             )
             Box(
                 modifier = Modifier
@@ -118,7 +118,7 @@ private fun Preview_v1() {
         messageData = MessageData(
             text = "Hello! Copying to the cloud does not work for me, help",
             date = LocalDateTime.now(),
-            avatarId = R.drawable.avatar_0
+            avatarUrl = "android.resource://com.h0uss.aimart/${R.drawable.avatar_0}"
         )
     )
 }
@@ -132,7 +132,7 @@ private fun Preview_v2() {
         messageData = MessageData(
             text = "Hello! Copying to the cloud does not work for me, help",
             date = LocalDateTime.now(),
-            avatarId = R.drawable.avatar_0
+            avatarUrl = "android.resource://com.h0uss.aimart/${R.drawable.avatar_0}"
         )
     )
 }
@@ -146,7 +146,7 @@ private fun Preview_v3() {
         messageData = MessageData(
             text = "Hello",
             date = LocalDateTime.now(),
-            avatarId = R.drawable.avatar_0
+            avatarUrl = "android.resource://com.h0uss.aimart/${R.drawable.avatar_0}"
         )
     )
 }

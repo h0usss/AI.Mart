@@ -166,16 +166,16 @@ suspend fun fillUsers(
         0.1f, 0.2f, 3.1f, 4.4f, 5f,
     )
     val avatars = listOf(
-        R.drawable.avatar_10,
-        R.drawable.avatar_1,
-        R.drawable.avatar_2,
-        R.drawable.avatar_3,
-        R.drawable.seller,
-        R.drawable.avatar_0,
-        R.drawable.avatar_1,
-        R.drawable.avatar_2,
-        R.drawable.avatar_3,
-        R.drawable.seller
+        "android.resource://com.h0uss.aimart/${R.drawable.avatar_10}",
+        "android.resource://com.h0uss.aimart/${R.drawable.avatar_1}",
+        "android.resource://com.h0uss.aimart/${R.drawable.avatar_2}",
+        "android.resource://com.h0uss.aimart/${R.drawable.avatar_3}",
+        "android.resource://com.h0uss.aimart/${R.drawable.seller}",
+        "android.resource://com.h0uss.aimart/${R.drawable.avatar_0}",
+        "android.resource://com.h0uss.aimart/${R.drawable.avatar_1}",
+        "android.resource://com.h0uss.aimart/${R.drawable.avatar_2}",
+        "android.resource://com.h0uss.aimart/${R.drawable.avatar_3}",
+        "android.resource://com.h0uss.aimart/${R.drawable.seller}"
     )
     val names = listOf(
         "im", "Комбуча", "Няшка", "Дураша", "Нюша",
@@ -285,7 +285,7 @@ suspend fun fillProduct(productDao: ProductDao, users: List<Long>): List<Long> {
             add(
                 ProductEntity(
                     name = names[i],
-                    imagesId = List(4) { productImageIds.random() },
+                    imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${productImageIds.random()}" },
                     price = prices[i],
                     description = descriptions[i],
                     createDate = createDates[i],

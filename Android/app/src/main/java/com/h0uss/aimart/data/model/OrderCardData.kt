@@ -7,5 +7,5 @@ data class OrderCardData(
     val name: String,
     val price: Float,
     val status: OrderStatus,
-    val imagesId: List<Int>,
+    val imagesUrl: List<String>,
 )

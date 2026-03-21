@@ -20,6 +20,7 @@ jbcrypt = "0.4"
 datastore = "1.2.0"
 paging = "3.3.6"
 material = "1.13.0"
+coil = "3.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,6 +58,8 @@ android-paging = { group = "androidx.paging", name = "paging-compose", version.r
 
 android-material = { group = "com.google.android.material", name = "material", version.ref = "material"}
 
+android-coil-compose = {group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil"}
+android-coil-network = {group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

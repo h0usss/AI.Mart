@@ -72,7 +72,7 @@ fun ChatUserScreen(
                     .padding(bottom = 14.dp),
                 orderData = state.orderData,
                 onClick = {
-
+                    onEvent(ChatUserEvent.TaskBar)
                 }
             )
 
@@ -145,14 +145,14 @@ private fun Preview_Full() {
         state = ChatUserState(
             userData = ChatUserData(
                 id = -1L,
-                imagesId = List(4) { R.drawable.background },
+                imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${"android.resource://com.h0uss.aimart/${R.drawable.background}"}" },
                 userName = "Pipipupu"
             ),
             messages = List(20) {
                 MessageData(
                     text = "1 test my msg",
                     date = LocalDateTime.now(),
-                    avatarId = R.drawable.base_avatar,
+                    avatarUrl = "android.resource://com.h0uss.aimart/${R.drawable.base_avatar}",
                     userId = authUserIdLong,
                 )
             }
@@ -169,20 +169,20 @@ private fun Preview_Full_V2() {
         state = ChatUserState(
             userData = ChatUserData(
                 id = -1L,
-                imagesId = List(4) { R.drawable.background },
+                imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                 userName = "Pipipupu"
             ),
             messages = listOf(
                 MessageData(
                     text = "test my msg asd as das dasd as d da sdas da sdas dasd ",
                     date = LocalDateTime.now(),
-                    avatarId = R.drawable.base_avatar,
+                    avatarUrl = "android.resource://com.h0uss.aimart/${R.drawable.base_avatar}",
                     userId = authUserIdLong,
                 ),
                 MessageData(
                     text = "test otasdasdasd as das as das das das das das das dasher msg",
                     date = LocalDateTime.now(),
-                    avatarId = R.drawable.avatar_0,
+                    avatarUrl = "android.resource://com.h0uss.aimart/${R.drawable.avatar_0}",
                     userId = 2,
                 ),
             )
@@ -198,7 +198,7 @@ private fun Preview_Empty() {
         state = ChatUserState(
             userData = ChatUserData(
                 id = -1L,
-                imagesId = List(4) { R.drawable.background },
+                imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                 userName = "Pipipupu"
             ),
             messages = listOf(),
@@ -218,20 +218,20 @@ private fun Preview_V4() {
         state = ChatUserState(
             userData = ChatUserData(
                 id = -1L,
-                imagesId = List(4) { R.drawable.background },
+                imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                 userName = "Pipipupu"
             ),
             messages = listOf(
                 MessageData(
                     text = "test my msg asd as das dasd as d da sdas da sdas dasd ",
                     date = LocalDateTime.now(),
-                    avatarId = R.drawable.base_avatar,
+                    avatarUrl = "android.resource://com.h0uss.aimart/${R.drawable.base_avatar}",
                     userId = authUserIdLong,
                 ),
                 MessageData(
                     text = "test otasdasdasd as das as das das das das das das dasher msg",
                     date = LocalDateTime.now(),
-                    avatarId = R.drawable.avatar_0,
+                    avatarUrl = "android.resource://com.h0uss.aimart/${R.drawable.avatar_0}",
                     userId = 2,
                 ),
             ),
@@ -255,20 +255,20 @@ private fun Preview_V5() {
         state = ChatUserState(
             userData = ChatUserData(
                 id = -1L,
-                imagesId = List(4) { R.drawable.background },
+                imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                 userName = "Pipipupu"
             ),
             messages = listOf(
                 MessageData(
                     text = "test my msg asd as das dasd as d da sdas da sdas dasd ",
                     date = LocalDateTime.now(),
-                    avatarId = R.drawable.base_avatar,
+                    avatarUrl = "android.resource://com.h0uss.aimart/${R.drawable.base_avatar}",
                     userId = authUserIdLong,
                 ),
                 MessageData(
                     text = "test otasdasdasd as das as das das das das das das dasher msg",
                     date = LocalDateTime.now(),
-                    avatarId = R.drawable.avatar_0,
+                    avatarUrl = "android.resource://com.h0uss.aimart/${R.drawable.avatar_0}",
                     userId = 2,
                 ),
             ),
