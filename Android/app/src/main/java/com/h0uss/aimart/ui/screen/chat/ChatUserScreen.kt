@@ -60,12 +60,16 @@ fun ChatUserScreen(
             },
             onUserClick = {
                 onEvent(ChatUserEvent.UserClick(it))
+            },
+            onProductClick = {
+                onEvent(ChatUserEvent.ProductClick(it))
             }
         )
 
         if (state.orderData.sellerId == authUserIdLong
             && (state.orderData.status == OrderStatus.IN_WORK
-            || state.orderData.status == OrderStatus.WAIT_PAY))
+                    || state.orderData.status == OrderStatus.WAIT_PAY)
+        )
             MiniTaskBar(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -110,7 +114,8 @@ fun ChatUserScreen(
             }
 
             if (state.orderData.buyerId == authUserIdLong
-                && state.orderData.status == OrderStatus.WAIT_PAY)
+                && state.orderData.status == OrderStatus.WAIT_PAY
+            )
                 OrderEnd(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -144,7 +149,7 @@ private fun Preview_Full() {
     ChatUserScreen(
         state = ChatUserState(
             userData = ChatUserData(
-                id = -1L,
+                userId = -1L,
                 imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${"android.resource://com.h0uss.aimart/${R.drawable.background}"}" },
                 userName = "Pipipupu"
             ),
@@ -168,7 +173,7 @@ private fun Preview_Full_V2() {
     ChatUserScreen(
         state = ChatUserState(
             userData = ChatUserData(
-                id = -1L,
+                userId = -1L,
                 imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                 userName = "Pipipupu"
             ),
@@ -197,7 +202,7 @@ private fun Preview_Empty() {
     ChatUserScreen(
         state = ChatUserState(
             userData = ChatUserData(
-                id = -1L,
+                userId = -1L,
                 imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                 userName = "Pipipupu"
             ),
@@ -217,7 +222,7 @@ private fun Preview_V4() {
     ChatUserScreen(
         state = ChatUserState(
             userData = ChatUserData(
-                id = -1L,
+                userId = -1L,
                 imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                 userName = "Pipipupu"
             ),
@@ -254,7 +259,7 @@ private fun Preview_V5() {
     ChatUserScreen(
         state = ChatUserState(
             userData = ChatUserData(
-                id = -1L,
+                userId = -1L,
                 imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                 userName = "Pipipupu"
             ),

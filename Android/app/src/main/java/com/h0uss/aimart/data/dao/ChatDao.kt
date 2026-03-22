@@ -44,7 +44,7 @@ interface ChatDao {
                 WHEN c.f_user_id = :userId THEN u2.name 
                 ELSE u1.name 
             END AS userName,
-            p.price AS price
+            o.price AS price
         FROM chats AS c
         LEFT JOIN orders AS o ON c.order_id = o.id
         LEFT JOIN product AS p ON o.product_id = p.id    

@@ -20,6 +20,7 @@ fun ChatUser(
     chatId: Long,
     navToChatList: () -> Unit,
     navToUser: (Long) -> Unit,
+    navToProduct: (Long) -> Unit,
     navToSeller: (Long) -> Unit,
     onTaskBarClick: (OrderData) -> Unit,
 ) {
@@ -40,6 +41,9 @@ fun ChatUser(
                 }
                 is ChatUserNavigationEvent.User -> {
                     navToUser(event.value)
+                }
+                is ChatUserNavigationEvent.Product -> {
+                    navToProduct(event.value)
                 }
                 is ChatUserNavigationEvent.TaskBar -> {
                     onTaskBarClick(event.value)

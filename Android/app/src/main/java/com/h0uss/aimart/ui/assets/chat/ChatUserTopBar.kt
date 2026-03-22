@@ -35,6 +35,7 @@ fun ChatUserTopBar(
     userData: ChatUserData,
     onBackClick: () -> Unit = {},
     onUserClick: (Long) -> Unit = {},
+    onProductClick: (Long) -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -62,7 +63,10 @@ fun ChatUserTopBar(
                         .size(40.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .clickable {
-                            onUserClick(userData.id)
+                            if (userData.productId != null)
+                                onProductClick(userData.productId)
+                            else
+                                onUserClick(userData.userId)
                         },
                     model = userData.imagesUrl[0],
                     contentDescription = "ToUser",
@@ -81,7 +85,10 @@ fun ChatUserTopBar(
                 modifier = Modifier
                     .padding(start = 16.dp, top = 2.dp)
                     .clickable {
-                        onUserClick(userData.id)
+                        if (userData.productId != null)
+                            onProductClick(userData.productId)
+                        else
+                            onUserClick(userData.userId)
                     },
             ) {
                 Text(
@@ -108,7 +115,7 @@ fun ChatUserTopBar(
 private fun Preview() {
     ChatUserTopBar(
         userData = ChatUserData(
-            id = 1L,
+            userId = 1L,
             imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
             userName = "Детка геймер",
         )

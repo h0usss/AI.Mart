@@ -222,7 +222,10 @@ fun Navigation(
                                     },
                                     onTaskBarClick = { orderInfo ->
                                         taskBarInfo = orderInfo
-                                    }
+                                    },
+                                    navToProduct = { productId ->
+                                        navController.navigate(ProductInfo(productId))
+                                    },
                                 )
                             }
                         }

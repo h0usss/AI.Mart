@@ -97,7 +97,8 @@ interface UserDao {
     @Query(
         """
         SELECT
-            u.id AS id,
+            u.id AS userId,
+            p.id AS productId,
             u.name AS userName,
             COALESCE(p.images, u.avatar) AS imagesUrl
         FROM user AS u

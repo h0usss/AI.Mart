@@ -77,6 +77,11 @@ class ChatUserViewModel(
                         navigationEvents.send(ChatUserNavigationEvent.User(event.value))
                 }
             }
+            is ChatUserEvent.ProductClick -> {
+                viewModelScope.launch {
+                    navigationEvents.send(ChatUserNavigationEvent.Product(event.value))
+                }
+            }
             is ChatUserEvent.SendMessage -> {
                 viewModelScope.launch {
                     messageRepository.addMessageToChat(chatId, authUserIdLong, event.value)
@@ -123,6 +128,7 @@ sealed class ChatUserEvent {
     object PayClick : ChatUserEvent()
     object TaskBar : ChatUserEvent()
     data class UserClick(val value: Long) : ChatUserEvent()
+    data class ProductClick(val value: Long) : ChatUserEvent()
     data class SendMessage(val value: String) : ChatUserEvent()
 }
 
@@ -130,5 +136,6 @@ sealed class ChatUserNavigationEvent {
     object ChatList : ChatUserNavigationEvent()
     data class Seller(val value: Long) : ChatUserNavigationEvent()
     data class User(val value: Long) : ChatUserNavigationEvent()
+    data class Product(val value: Long) : ChatUserNavigationEvent()
     data class TaskBar(val value: OrderData) : ChatUserNavigationEvent()
 }

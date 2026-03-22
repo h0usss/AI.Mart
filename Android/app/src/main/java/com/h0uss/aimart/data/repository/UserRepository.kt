@@ -41,7 +41,7 @@ class UserRepository(
 
     fun getOtherUserByChatId(chatId: Long, myUserId: Long): Flow<ChatUserData> {
         return userDao.getUsersByChatId(chatId).map { list ->
-            list.firstOrNull { it.id != myUserId } ?: ChatUserData()
+            list.firstOrNull { it.userId != myUserId } ?: ChatUserData()
         }
     }
 
