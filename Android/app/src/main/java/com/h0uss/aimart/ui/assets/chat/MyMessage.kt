@@ -1,5 +1,6 @@
 package com.h0uss.aimart.ui.assets.chat
 
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -10,8 +11,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -57,40 +61,59 @@ fun MyMessage(
                 .padding(horizontal = 8.dp, vertical = 8.dp)
         ) {
             if (messageData.attachments.isNotEmpty()) {
+                val chunks = messageData.attachments.chunked(2)
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    messageData.attachments.chunked(2).forEach { rowItems ->
+                    chunks.forEachIndexed { index, rowItems ->
+                        val isLastSingle = index == chunks.lastIndex && rowItems.size == 1
                         Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             rowItems.forEach { url ->
+                                val itemModifier = if (isLastSingle) {
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .height(200.dp)
+                                } else {
+                                    Modifier
+                                        .weight(1f)
+                                        .aspectRatio(1f)
+                                }
                                 if (url.contains("/video/")) {
                                     Box(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .aspectRatio(1f)
+                                        modifier = itemModifier
                                             .clip(RoundedCornerShape(8.dp))
                                             .background(Color.Black)
                                             .clickable { onVideoClick(url) },
-                                        contentAlignment = Alignment.Center
                                     ) {
-                                        Text(
-                                            text = "\u25B6",
-                                            color = White,
-                                            fontSize = 32.sp,
+                                        VideoThumbnail(
+                                            uri = Uri.parse(url),
+                                            modifier = Modifier.fillMaxSize(),
                                         )
+                                        Box(
+                                            modifier = Modifier
+                                                .align(Alignment.Center)
+                                                .size(36.dp)
+                                                .clip(RoundedCornerShape(8.dp))
+                                                .background(Color.Black.copy(alpha = 0.5f)),
+                                            contentAlignment = Alignment.Center,
+                                        ) {
+                                            Text(
+                                                text = "\u25B6",
+                                                color = White,
+                                                fontSize = 24.sp,
+                                            )
+                                        }
                                     }
                                 } else {
                                     AsyncImage(
                                         model = url,
                                         contentDescription = null,
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .aspectRatio(1f)
+                                        modifier = itemModifier
                                             .clip(RoundedCornerShape(8.dp))
                                             .clickable { onImageClick(url) },
                                         contentScale = ContentScale.Crop,
                                     )
                                 }
                             }
-                            if (rowItems.size == 1 && messageData.attachments.size > 1) {
+                            if (rowItems.size == 1 && !isLastSingle) {
                                 Spacer(modifier = Modifier.weight(1f))
                             }
                         }

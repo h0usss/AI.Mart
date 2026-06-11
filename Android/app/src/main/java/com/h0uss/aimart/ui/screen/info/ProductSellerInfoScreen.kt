@@ -129,25 +129,47 @@ fun ProductSellerInfoScreen(
                     }
                     Row(
                         modifier = Modifier
-                            .padding(start = 16.dp, bottom = 14.dp),
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, bottom = 14.dp, end = 16.dp),
                         verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Image(
-                            painter = painterResource(R.drawable.eye),
-                            contentDescription = "Просмотры",
-                            modifier = Modifier.padding(end = 10.dp),
-                        )
-                        val displayViews = if (state.todayViews > 0) {
-                            "${state.totalViews - state.todayViews} +${state.todayViews}"
-                        } else {
-                            state.totalViews.toString()
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                        ){
+                            Image(
+                                painter = painterResource(R.drawable.eye),
+                                contentDescription = "Просмотры",
+                                modifier = Modifier.padding(end = 10.dp),
+                            )
+                            val displayViews = if (state.todayViews > 0) {
+                                "${state.totalViews - state.todayViews} +${state.todayViews}"
+                            } else {
+                                state.totalViews.toString()
+                            }
+                            Text(
+                                text = displayViews,
+                                style = regularStyle,
+                                fontSize = 14.sp,
+                                color = Black45,
+                            )
                         }
-                        Text(
-                            text = displayViews,
-                            style = regularStyle,
-                            fontSize = 14.sp,
-                            color = Black45,
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                        ){
+                            Image(
+                                painter = painterResource(R.drawable.cart),
+                                contentDescription = "Покупки",
+                                modifier = Modifier.padding(end = 10.dp),
+                            )
+                            val displayBuy = "0"
+                            Text(
+                                text = displayBuy,
+                                style = regularStyle,
+                                fontSize = 14.sp,
+                                color = Black45,
+                            )
+                        }
                     }
                 }
             }

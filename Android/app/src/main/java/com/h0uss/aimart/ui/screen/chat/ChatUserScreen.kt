@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.widget.VideoView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -49,6 +51,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -56,6 +59,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
 import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.R
@@ -89,6 +95,9 @@ fun ChatUserScreen(
     state: ChatUserState = ChatUserState(),
     onEvent: (ChatUserEvent) -> Unit = {},
 ) {
+    var previewUrl by remember { mutableStateOf<String?>(null) }
+    var previewIsVideo by remember { mutableStateOf(false) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -144,14 +153,30 @@ fun ChatUserScreen(
                 items(state.messages) { message ->
                     if (message.userId == authUserIdLong) {
                         MyMessage(
-                            messageData = message
+                            messageData = message,
+                            onImageClick = { url ->
+                                previewUrl = url
+                                previewIsVideo = false
+                            },
+                            onVideoClick = { url ->
+                                previewUrl = url
+                                previewIsVideo = true
+                            },
                         )
                     } else {
                         OtherMessage(
                             messageData = message,
                             onUserClick = { id ->
                                 onEvent(ChatUserEvent.UserClick(id))
-                            }
+                            },
+                            onImageClick = { url ->
+                                previewUrl = url
+                                previewIsVideo = false
+                            },
+                            onVideoClick = { url ->
+                                previewUrl = url
+                                previewIsVideo = true
+                            },
                         )
                     }
                 }
@@ -200,6 +225,80 @@ fun ChatUserScreen(
             onSend = { onEvent(ChatUserEvent.SendAttachments) },
             onDismiss = { onEvent(ChatUserEvent.HideAttachmentSheet) },
         )
+    }
+
+    previewUrl?.let { url ->
+        if (previewIsVideo) {
+            VideoPreviewDialog(
+                url = url,
+                onDismiss = { previewUrl = null },
+            )
+        } else {
+            ImagePreviewDialog(
+                url = url,
+                onDismiss = { previewUrl = null },
+            )
+        }
+    }
+}
+
+@Composable
+private fun ImagePreviewDialog(
+    url: String,
+    onDismiss: () -> Unit,
+) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.9f))
+                .clickable(onClick = onDismiss),
+            contentAlignment = Alignment.Center,
+        ) {
+            AsyncImage(
+                model = url,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                contentScale = ContentScale.Fit,
+            )
+        }
+    }
+}
+
+@Composable
+private fun VideoPreviewDialog(
+    url: String,
+    onDismiss: () -> Unit,
+) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.9f))
+                .clickable(onClick = onDismiss),
+            contentAlignment = Alignment.Center,
+        ) {
+            AndroidView(
+                factory = { ctx ->
+                    VideoView(ctx).apply {
+                        setVideoURI(Uri.parse(url))
+                        setOnPreparedListener { it.isLooping = true }
+                        start()
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.6f),
+            )
+        }
     }
 }
 

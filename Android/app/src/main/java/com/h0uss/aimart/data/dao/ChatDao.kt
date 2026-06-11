@@ -33,7 +33,6 @@ interface ChatDao {
     fun getChatById(chatId: Long): Flow<ChatEntity?>
 
     @Query("""
-        
         SELECT
             c.id AS id,
             COALESCE(p.images, 
@@ -50,8 +49,13 @@ interface ChatDao {
         LEFT JOIN product AS p ON o.product_id = p.id    
         JOIN user AS u1 ON c.f_user_id = u1.id
         JOIN user AS u2 ON c.s_user_id = u2.id
+        LEFT JOIN (
+            SELECT chat_id, MAX(created_at) AS last_message_at
+            FROM messages
+            GROUP BY chat_id
+        ) AS m ON c.id = m.chat_id
         WHERE c.f_user_id = :userId OR c.s_user_id = :userId
-        ORDER BY c.created_at DESC
+        ORDER BY COALESCE(m.last_message_at, c.created_at) DESC
     """)
     fun getAllUserChats(userId: Long): Flow<List<ChatData>>
 
