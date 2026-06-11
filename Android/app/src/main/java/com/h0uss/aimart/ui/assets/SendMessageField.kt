@@ -47,6 +47,7 @@ fun SendMessageField(
     placeHolder: String = "Send a message…",
     state: TextFieldState = remember { TextFieldState("") },
     onClickEnter: (String) -> Unit = {},
+    onAttachmentClick: () -> Unit = {},
 ){
 
     val focusManager = LocalFocusManager.current
@@ -118,10 +119,17 @@ fun SendMessageField(
                             innerTextField()
                         }
 
+                        Image(
+                            modifier = Modifier
+                                .padding(start = 12.dp)
+                                .clickable { onAttachmentClick() },
+                            painter = painterResource(R.drawable.papperclip_32),
+                            contentDescription = "Attachment"
+                        )
                         if (!state.text.isEmpty())
                             Image(
                                 modifier = Modifier
-                                    .padding(start = 16.dp)
+                                    .padding(start = 12.dp)
                                     .clickable {
                                         onClickEnter(state.text.toString())
                                         state.clearText()

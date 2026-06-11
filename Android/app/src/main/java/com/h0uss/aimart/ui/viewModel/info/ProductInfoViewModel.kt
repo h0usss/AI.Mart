@@ -7,9 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.Graph.feedbackRepository
 import com.h0uss.aimart.Graph.productRepository
-import com.h0uss.aimart.Graph.productViewDao
 import com.h0uss.aimart.Graph.userRepository
-import com.h0uss.aimart.data.entity.ProductViewEntity
 import com.h0uss.aimart.data.model.FeedbackData
 import com.h0uss.aimart.data.model.ProductData
 import com.h0uss.aimart.data.model.UserData
@@ -21,7 +19,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -39,14 +36,7 @@ class ProductInfoViewModel(
         viewModelScope.launch {
             val product = productRepository.getProductEntityById(productId)
             if (product != null && product.userId != authUserIdLong) {
-                productRepository.incrementViewCount(productId)
-                productViewDao.insert(
-                    ProductViewEntity(
-                        productId = productId,
-                        userId = authUserIdLong,
-                        viewedAt = LocalDateTime.now(),
-                    )
-                )
+                productRepository.incrementViewCountAndInsertView(productId, authUserIdLong)
             }
         }
 

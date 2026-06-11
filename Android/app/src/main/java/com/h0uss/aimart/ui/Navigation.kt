@@ -171,8 +171,8 @@ fun Navigation(
                                 navToSeller = { sellerId ->
                                     navController.navigate(Seller(sellerId))
                                 },
-                                navToProduct = { productId ->
-                                    if (isSeller == true)
+                                navToProduct = { productId, authorId ->
+                                    if (authorId == authUserIdLong)
                                         navController.navigate(ProductSellerInfo(productId))
                                     else
                                         navController.navigate(ProductInfo(productId))
@@ -350,6 +350,9 @@ fun Navigation(
                                         navController.navigate(MyProducts) {
                                             popUpTo(navController.graph.startDestinationId) { inclusive = true }
                                         }
+                                    },
+                                    navToBack = {
+                                        navController.popBackStack()
                                     }
                                 )
                             }
@@ -418,6 +421,9 @@ fun Navigation(
                                     },
                                     showPortfolio = { data ->
                                         portfolioData = data
+                                    },
+                                    navToProduct = { productId ->
+                                        navController.navigate(ProductInfo(productId))
                                     },
                                 )
                         }

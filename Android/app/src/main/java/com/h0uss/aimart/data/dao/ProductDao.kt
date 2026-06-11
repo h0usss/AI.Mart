@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.h0uss.aimart.data.entity.ProductEntity
+import com.h0uss.aimart.data.enum.ProductStatus
 import com.h0uss.aimart.data.model.ProductCardData
 import com.h0uss.aimart.data.model.ProductData
 import kotlinx.coroutines.flow.Flow
@@ -91,4 +92,7 @@ interface ProductDao {
 
     @Query("UPDATE product SET view_count = view_count + 1 WHERE id = :productId")
     suspend fun incrementViewCount(productId: Long)
+
+    @Query("UPDATE product SET product_status = :status WHERE id = :productId")
+    suspend fun updateProductStatus(productId: Long, status: ProductStatus)
 }

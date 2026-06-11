@@ -8,11 +8,14 @@ import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.Graph.chatRepository
 import com.h0uss.aimart.Graph.feedbackRepository
 import com.h0uss.aimart.Graph.portfolioRepository
+import com.h0uss.aimart.Graph.productRepository
 import com.h0uss.aimart.Graph.userRepository
 import com.h0uss.aimart.data.entity.ChatEntity
+import com.h0uss.aimart.data.enum.ProductStatus
 import com.h0uss.aimart.data.model.FeedbackData
 import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.data.model.SellerData
+import com.h0uss.aimart.data.model.UserProductCardData
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -39,8 +42,9 @@ class SellerProfileForUserViewModel(
             userRepository.getSellerByIdFlow(userId),
             userRepository.getUserCountSellFlow(userId),
             portfolioRepository.getPortfolioBySellerIdFlow(userId),
-            feedbackRepository.getFeedbackBySellerIdFlow(userId)
-        ) { seller, countSell, portfolio, feedback ->
+            feedbackRepository.getFeedbackBySellerIdFlow(userId),
+            productRepository.getProductsByUserId(userId),
+        ) { seller, countSell, portfolio, feedback, products ->
             val allTags = listOf("Все") + portfolio.flatMap { it.tags }.distinct()
             val initialFilteredFeedback = feedback.sortedBy { it.starCount }
             if (seller != null)
@@ -53,7 +57,8 @@ class SellerProfileForUserViewModel(
                         originalFeedback = feedback,
                         filteredFeedback = initialFilteredFeedback,
                         allPortfolioTags = allTags,
-                        portfolioTagFilter = List(allTags.size) { index -> index == 0 }
+                        portfolioTagFilter = List(allTags.size) { index -> index == 0 },
+                        products = products.filter { it.status == ProductStatus.ACTIVE },
                     )
                 }
         }.launchIn(viewModelScope)
@@ -113,6 +118,11 @@ class SellerProfileForUserViewModel(
                         .first()
 
                     sendNavEvent(SellerProfileForUserNavigationEvent.ShowPortfolioItem(portfolioItem))
+                }
+            }
+            is SellerProfileForUserEvent.ProductClick -> {
+                viewModelScope.launch {
+                    navigationEvents.send(SellerProfileForUserNavigationEvent.ShowProduct(event.productId))
                 }
             }
         }
@@ -206,6 +216,8 @@ data class SellerProfileForUserState(
 
     val filteredFeedback: List<FeedbackData> = listOf(),
     val originalFeedback: List<FeedbackData> = listOf(),
+
+    val products: List<UserProductCardData> = listOf(),
 )
 
 sealed class SellerProfileForUserEvent {
@@ -218,10 +230,12 @@ sealed class SellerProfileForUserEvent {
     data class PortfolioTagClick(val name: String) : SellerProfileForUserEvent()
     data class FeedbackTagClick(val index: Int) : SellerProfileForUserEvent()
     data class ShowPortfolioItem(val portfolioId: Long) : SellerProfileForUserEvent()
+    data class ProductClick(val productId: Long) : SellerProfileForUserEvent()
 }
 
 sealed class SellerProfileForUserNavigationEvent {
     object BackClick : SellerProfileForUserNavigationEvent()
     data class WriteClick(val id: Long) : SellerProfileForUserNavigationEvent()
     data class ShowPortfolioItem(val portfolioItem: PortfolioItemData) : SellerProfileForUserNavigationEvent()
+    data class ShowProduct(val productId: Long) : SellerProfileForUserNavigationEvent()
 }

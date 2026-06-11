@@ -6,14 +6,18 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.h0uss.aimart.Graph.authUserIdLong
+import com.h0uss.aimart.Graph.productViewDao
 import com.h0uss.aimart.data.dao.ProductDao
 import com.h0uss.aimart.data.entity.ProductEntity
+import com.h0uss.aimart.data.entity.ProductViewEntity
+import com.h0uss.aimart.data.enum.ProductStatus
 import com.h0uss.aimart.data.mapper.toUserProductCardData
 import com.h0uss.aimart.data.model.ProductCardData
 import com.h0uss.aimart.data.model.ProductData
 import com.h0uss.aimart.data.model.UserProductCardData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 class ProductRepository(
@@ -72,5 +76,20 @@ class ProductRepository(
 
     suspend fun incrementViewCount(productId: Long) {
         productDao.incrementViewCount(productId)
+    }
+
+    suspend fun incrementViewCountAndInsertView(productId: Long, userId: Long) {
+        productDao.incrementViewCount(productId)
+        productViewDao.insert(
+            ProductViewEntity(
+                productId = productId,
+                userId = userId,
+                viewedAt = LocalDateTime.now(),
+            )
+        )
+    }
+
+    suspend fun updateProductStatus(productId: Long, status: ProductStatus) {
+        productDao.updateProductStatus(productId, status)
     }
 }

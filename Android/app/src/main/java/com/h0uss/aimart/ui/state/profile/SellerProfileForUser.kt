@@ -21,6 +21,7 @@ fun SellerProfileForUser(
     navToBack: () -> Unit,
     navToChat: (Long) -> Unit,
     showPortfolio: (PortfolioItemData?) -> Unit,
+    navToProduct: (Long) -> Unit,
 ) {
 
     val viewModel: SellerProfileForUserViewModel = viewModel(
@@ -40,6 +41,9 @@ fun SellerProfileForUser(
                 }
                 is SellerProfileForUserNavigationEvent.ShowPortfolioItem -> {
                     showPortfolio(event.portfolioItem)
+                }
+                is SellerProfileForUserNavigationEvent.ShowProduct -> {
+                    navToProduct(event.productId)
                 }
             }
         }

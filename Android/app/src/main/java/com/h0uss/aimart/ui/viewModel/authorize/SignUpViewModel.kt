@@ -71,7 +71,8 @@ class SignUpViewModel : ViewModel(){
                                 name = currentState.nameState.text.toString(),
                                 email = currentState.emailState.text.toString(),
                                 password = currentState.passwordState.text.toString(),
-                                dateOfBirth = currentState.dateState.text.toString().toLocalDateTime()
+                                dateOfBirth = currentState.dateState.text.toString().toLocalDateTime(),
+                                isSeller = currentState.isSeller,
                             )
                         )
                         saveUserId(id)
@@ -109,6 +110,9 @@ class SignUpViewModel : ViewModel(){
             is SignUpEvent.GoogleSignUpClicked -> {}
             is SignUpEvent.AgreementClicked -> {}
             is SignUpEvent.PrivacyPolicyClicked -> {}
+            is SignUpEvent.ToggleSeller -> {
+                state.update { it.copy(isSeller = !it.isSeller) }
+            }
         }
     }
 }
@@ -123,6 +127,8 @@ data class SignUpState(
     val emailError: String? = null,
     val passwordError: String? = null,
     val dateError: String? = null,
+
+    val isSeller: Boolean = false,
 )
 
 sealed class SignUpEvent {
@@ -133,6 +139,7 @@ sealed class SignUpEvent {
     object LoginClicked : SignUpEvent()
     object AgreementClicked : SignUpEvent()
     object PrivacyPolicyClicked : SignUpEvent()
+    object ToggleSeller : SignUpEvent()
 }
 
 sealed class SignUpNavigationEvent {

@@ -50,7 +50,7 @@ class HomeViewModel: ViewModel() {
             }
             is HomeEvent.ProductClick -> {
                 viewModelScope.launch {
-                    navigationEvents.send(HomeNavigationEvent.Product(event.id))
+                    navigationEvents.send(HomeNavigationEvent.Product(event.id, event.authorId))
                 }
             }
         }
@@ -76,11 +76,11 @@ data class HomeState(
 sealed class HomeEvent{
     object SearchClick: HomeEvent()
     data class SellerClick(val id: Long): HomeEvent()
-    data class ProductClick(val id: Long): HomeEvent()
+    data class ProductClick(val id: Long, val authorId: Long): HomeEvent()
 }
 
 sealed class HomeNavigationEvent{
     object Search: HomeNavigationEvent()
     data class Seller(val id: Long): HomeNavigationEvent()
-    data class Product(val id: Long): HomeNavigationEvent()
+    data class Product(val id: Long, val authorId: Long): HomeNavigationEvent()
 }

@@ -16,6 +16,7 @@ data class MessageEntity(
     @ColumnInfo( name = "sender_id" )     val senderId: Long,
 
     @ColumnInfo( name = "message" )     val message: String,
+    @ColumnInfo( name = "attachments" ) val attachments: List<String> = emptyList(),
 
     @ColumnInfo(name = "created_at") val createdAt: LocalDateTime,
 )

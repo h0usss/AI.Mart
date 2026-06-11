@@ -20,6 +20,7 @@ fun NewProduct(
     productId: Long = -1L,
     viewModel: NewProductViewModel = viewModel<NewProductViewModel>(),
     onExit: () -> Unit,
+    navToBack: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -34,6 +35,9 @@ fun NewProduct(
             when (event) {
                 is NewProductNavigationEvent.Exit -> {
                     onExit()
+                }
+                is NewProductNavigationEvent.BackClick -> {
+                    navToBack()
                 }
             }
         }

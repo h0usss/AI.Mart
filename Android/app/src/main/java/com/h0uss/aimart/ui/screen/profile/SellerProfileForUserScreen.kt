@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -64,6 +65,7 @@ import com.h0uss.aimart.ui.theme.regularStyle
 import com.h0uss.aimart.ui.theme.semiboldStyle
 import com.h0uss.aimart.ui.viewModel.profile.SellerProfileForUserEvent
 import com.h0uss.aimart.ui.viewModel.profile.SellerProfileForUserState
+import com.h0uss.aimart.util.formatPrice
 import java.time.LocalDateTime
 import kotlin.math.min
 
@@ -328,6 +330,82 @@ fun SellerProfileForUserScreen(
                                 countPortfolioRowItem += 2
                             }
                         )
+                }
+            }
+            item {
+                val productList = state.products
+                if (productList.isNotEmpty()) {
+                    val chunkedProducts = productList.chunked(2)
+                    var countProductRow by remember { mutableIntStateOf(2) }
+
+                    Column(
+                        modifier = Modifier.padding(start = 32.dp, top = 16.dp, end = 32.dp),
+                    ) {
+                        Text(
+                            text = "Товары",
+                            style = semiboldStyle,
+                            fontSize = 18.sp,
+                            color = Black80
+                        )
+                        for (i in 0..min(countProductRow - 1, chunkedProducts.size - 1)) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                chunkedProducts[i].forEach { product ->
+                                    Column(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .clip(RoundedCornerShape(5))
+                                            .background(White)
+                                            .clickable {
+                                                onEvent(SellerProfileForUserEvent.ProductClick(product.id))
+                                            }
+                                    ) {
+                                        AsyncImage(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .aspectRatio(1f)
+                                                .clip(RoundedCornerShape(5)),
+                                            model = product.imagesUrl.firstOrNull().orEmpty(),
+                                            contentDescription = null,
+                                            contentScale = ContentScale.Crop
+                                        )
+                                        Text(
+                                            modifier = Modifier.padding(top = 8.dp),
+                                            text = product.name,
+                                            style = regularStyle,
+                                            fontSize = 14.sp,
+                                            color = Black80
+                                        )
+                                        Text(
+                                            text = "${product.price.formatPrice()}₽",
+                                            style = semiboldStyle,
+                                            fontSize = 16.sp,
+                                            color = Black80
+                                        )
+                                    }
+                                }
+                                if (chunkedProducts[i].size < 2) {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                }
+                            }
+                        }
+                        if (chunkedProducts.size > countProductRow) {
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 16.dp),
+                                text = "Показать еще",
+                                isGray = true,
+                                onClick = {
+                                    countProductRow += 2
+                                }
+                            )
+                        }
+                    }
                 }
             }
             item {

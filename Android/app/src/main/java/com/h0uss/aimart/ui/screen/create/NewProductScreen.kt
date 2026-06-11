@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.enum.FormField
+import com.h0uss.aimart.data.enum.ProductStatus
 import com.h0uss.aimart.ui.assets.Button
 import com.h0uss.aimart.ui.assets.TextField
 import com.h0uss.aimart.ui.assets.TextFieldNewProduct
@@ -80,7 +81,7 @@ fun NewProductScreen(
         modifier = modifier
             .fillMaxSize()
             .background(White)
-            .padding(start = 16.dp, top = 66.dp, end = 16.dp)
+            .padding(start = 16.dp, top = 40.dp, end = 16.dp)
             .systemBarsPadding(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -88,28 +89,51 @@ fun NewProductScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 26.dp)
-                ,
+                    .padding(bottom = 26.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Image(
+                    modifier = Modifier.clickable {
+                        onEvent(NewProductEvent.BackClick)
+                    },
                     painter = painterResource(R.drawable.back),
                     contentDescription = "Back",
                 )
                 Text(
                     modifier = Modifier,
-                    text = if (state.existingProductId != -1L) "Редактировать объявление" else "Новое объявление",
+                    text = if (state.existingProductId == -1L)
+                            "Новое объявление"
+                        else if (state.existingProductStatus == ProductStatus.IN_MODERATING_PROCESS ||
+                                 state.existingProductStatus == ProductStatus.MODERATING_FAILED)
+                            "Редактирование объявления"
+                        else if (state.existingProductStatus == ProductStatus.ACTIVE)
+                            "Активно"
+                        else "Архив",
                     style = semiboldStyle,
                     fontSize = 16.sp,
                     color = Black80
                 )
-                Text(
-                    text = "",
-                    style = semiboldStyle,
-                    fontSize = 16.sp,
-                    color = Black80
-                )
+                if (state.existingProductId != -1L
+                    || state.existingProductStatus in setOf(
+                        ProductStatus.IN_MODERATING_PROCESS,
+                        ProductStatus.MODERATING_FAILED
+                    )){
+                    Image(
+                        modifier = Modifier.clickable {
+                            onEvent(NewProductEvent.AddProduct)
+                        },
+                        painter = painterResource(R.drawable.success_32),
+                        contentDescription = "Save",
+                    )
+                } else {
+                    Text(
+                        text = "",
+                        style = semiboldStyle,
+                        fontSize = 16.sp,
+                        color = Black80
+                    )
+                }
             }
 
             if (state.images.isEmpty())
@@ -117,10 +141,9 @@ fun NewProductScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(6.dp))
-                        .background(Black5)
-                    ,
+                        .background(Black5),
                     contentAlignment = Alignment.Center
-                ){
+                ) {
                     Image(
                         modifier = Modifier
                             .clickable {
@@ -140,7 +163,7 @@ fun NewProductScreen(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items( state.images ){ imageUrl ->
+                    items(state.images) { imageUrl ->
                         AsyncImage(
                             model = imageUrl,
                             contentDescription = null,
@@ -151,7 +174,7 @@ fun NewProductScreen(
                         )
                     }
                     if (state.images.size < 5)
-                        item{
+                        item {
                             Image(
                                 modifier = Modifier
                                     .clickable {
@@ -170,9 +193,9 @@ fun NewProductScreen(
                 Row(
                     modifier = Modifier.padding(top = 6.dp),
                     verticalAlignment = Alignment.CenterVertically
-                ){
+                ) {
                     Image(
-                        painter = painterResource( R.drawable.error_status ),
+                        painter = painterResource(R.drawable.error_status),
                         contentDescription = "Error"
                     )
                     Text(
@@ -239,7 +262,9 @@ fun NewProductScreen(
                 color = Black80
             )
             TextField(
-                modifier = Modifier.height(150.dp).padding(bottom = 16.dp),
+                modifier = Modifier
+                    .height(150.dp)
+                    .padding(bottom = 16.dp),
                 placeHolder = "Опишите товар, его характеристики, условия выполнения и т.д.",
                 state = state.desc,
                 errorMessage = state.descError ?: "",
@@ -247,16 +272,53 @@ fun NewProductScreen(
             )
         }
 
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 24.dp)
-            ,
-            text = if (state.existingProductId != -1L) "Сохранить изменения" else "Разместить объявление",
-            onClick = {
-                onEvent(NewProductEvent.AddProduct)
+        Column {
+            if (state.existingProductId != -1L) {
+                if (state.existingProductStatus == ProductStatus.IN_MODERATING_PROCESS ||
+                    state.existingProductStatus == ProductStatus.MODERATING_FAILED) {
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 24.dp),
+                        text = "Сохранить объявление",
+                        onClick = {
+                            onEvent(NewProductEvent.AddProduct)
+                        }
+                    )
+                } else if (state.existingProductStatus == ProductStatus.ACTIVE) {
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 24.dp),
+                        text = "Архив",
+                        isGray = true,
+                        onClick = {
+                            onEvent(NewProductEvent.ArchiveProduct)
+                        }
+                    )
+                } else {
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 24.dp),
+                        text = "Восстановить",
+                        onClick = {
+                            onEvent(NewProductEvent.RestoreProduct)
+                        }
+                    )
+                }
+            } else {
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 24.dp),
+                    text = "Разместить объявление",
+                    onClick = {
+                        onEvent(NewProductEvent.AddProduct)
+                    }
+                )
             }
-        )
+        }
     }
 }
 
@@ -279,7 +341,8 @@ private fun Preview_v2() {
         state = NewProductState(
             images = listOf(
                 "android.resource://com.h0uss.aimart/${R.drawable.background}",
-                "android.resource://com.h0uss.aimart/${R.drawable.base_avatar}",)
+                "android.resource://com.h0uss.aimart/${R.drawable.base_avatar}",
+            )
         )
     )
 }

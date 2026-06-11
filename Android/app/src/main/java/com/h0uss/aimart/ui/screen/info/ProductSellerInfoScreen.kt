@@ -187,64 +187,66 @@ fun ProductSellerInfoScreen(
                     )
                 }
             }
-            item {
-                Column(
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                ) {
-                    Text(
-                        text = "Отзывы",
-                        style = semiboldStyle,
-                        fontSize = 18.sp,
-                        color = Black80
-                    )
-                    FlowRow(
-                        modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        SellerHint(
-                            modifier = Modifier.clickable {
-                                onEvent(ProductSellerInfoEvent.FeedbackTagClick(0))
-                            },
-                            text = "Все",
-                            isActive = state.feedbackFilter[0]
-                        )
-                        SellerHint(
-                            modifier = Modifier.clickable {
-                                onEvent(ProductSellerInfoEvent.FeedbackTagClick(1))
-                            },
-                            text = "Высокий рейтинг",
-                            leftImageId = R.drawable.high_rating,
-                            isActive = state.feedbackFilter[1]
-                        )
-                        SellerHint(
-                            modifier = Modifier.clickable {
-                                onEvent(ProductSellerInfoEvent.FeedbackTagClick(2))
-                            },
-                            text = "Низкий рейтинг",
-                            leftImageId = R.drawable.low_rating,
-                            isActive = state.feedbackFilter[2]
-                        )
-                    }
+            if (state.product.status == ProductStatus.ACTIVE || state.product.status == ProductStatus.ARCHIVE) {
+                item {
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
                     ) {
-                        for (i in 0..min(countFeedbackItem - 1, state.filteredFeedback.size - 1))
-                            Feedback(
-                                feedbackData = state.filteredFeedback[i]
+                        Text(
+                            text = "Отзывы",
+                            style = semiboldStyle,
+                            fontSize = 18.sp,
+                            color = Black80
+                        )
+                        FlowRow(
+                            modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            SellerHint(
+                                modifier = Modifier.clickable {
+                                    onEvent(ProductSellerInfoEvent.FeedbackTagClick(0))
+                                },
+                                text = "Все",
+                                isActive = state.feedbackFilter[0]
+                            )
+                            SellerHint(
+                                modifier = Modifier.clickable {
+                                    onEvent(ProductSellerInfoEvent.FeedbackTagClick(1))
+                                },
+                                text = "Высокий рейтинг",
+                                leftImageId = R.drawable.high_rating,
+                                isActive = state.feedbackFilter[1]
+                            )
+                            SellerHint(
+                                modifier = Modifier.clickable {
+                                    onEvent(ProductSellerInfoEvent.FeedbackTagClick(2))
+                                },
+                                text = "Низкий рейтинг",
+                                leftImageId = R.drawable.low_rating,
+                                isActive = state.feedbackFilter[2]
+                            )
+                        }
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            for (i in 0..min(countFeedbackItem - 1, state.filteredFeedback.size - 1))
+                                Feedback(
+                                    feedbackData = state.filteredFeedback[i]
+                                )
+                        }
+                        if (state.filteredFeedback.size > countFeedbackItem)
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 24.dp),
+                                text = "Показать еще",
+                                isGray = true,
+                                onClick = {
+                                    countFeedbackItem += 3
+                                }
                             )
                     }
-                    if (state.filteredFeedback.size > countFeedbackItem)
-                        Button(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 24.dp),
-                            text = "Показать еще",
-                            isGray = true,
-                            onClick = {
-                                countFeedbackItem += 3
-                            }
-                        )
                 }
             }
             item {

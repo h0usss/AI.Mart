@@ -135,15 +135,19 @@ class AnalyticsRepository(
         orders: List<OrderEntity>,
         now: LocalDate,
     ): Pair<List<AnalyticBar>, Int> {
-        val years = orders
+        val yearsFromOrders = orders
             .mapNotNull { it.completionDate?.toLocalDate()?.year }
+            .distinct()
+            .sortedDescending()
+
+        val allYears = (yearsFromOrders + listOf(now.year))
             .distinct()
             .sortedDescending()
             .take(7)
 
-        if (years.isEmpty()) return emptyList<AnalyticBar>() to 0
+        if (allYears.isEmpty()) return emptyList<AnalyticBar>() to 0
 
-        val bars = years.map { year ->
+        val bars = allYears.map { year ->
             val revenue = orders
                 .filter { it.completionDate?.toLocalDate()?.year == year }
                 .sumOf { it.price.toDouble() }
@@ -154,7 +158,8 @@ class AnalyticsRepository(
                 subtitle = "$year год",
             )
         }
-        val selectedIndex = bars.lastIndex
+        val selectedIndex = bars.indexOfFirst { it.label == now.year.toString().takeLast(2) }
+            .coerceAtLeast(0)
         return bars to selectedIndex
     }
 }

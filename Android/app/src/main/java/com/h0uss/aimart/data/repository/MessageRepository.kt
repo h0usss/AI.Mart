@@ -23,6 +23,18 @@ class MessageRepository(
         messageDao.insertMessage(newMessage)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun addMessageToChat(chatId: Long, senderId: Long, text: String, attachments: List<String>) {
+        val newMessage = MessageEntity(
+            chatId = chatId,
+            senderId = senderId,
+            message = text,
+            attachments = attachments,
+            createdAt = LocalDateTime.now()
+        )
+        messageDao.insertMessage(newMessage)
+    }
+
     fun getMessagesByChatId(chatId: Long): Flow<List<MessageData>> {
         return messageDao.getMessagesByChatId(chatId)
     }

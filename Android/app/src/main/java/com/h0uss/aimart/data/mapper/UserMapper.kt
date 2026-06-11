@@ -19,9 +19,9 @@ fun toUserEntity(user: UserRegistrationData): UserEntity{
         name = user.name,
         email = user.email,
         nickName = "user_${System.currentTimeMillis()}",
-        isSeller = false,
+        isSeller = user.isSeller,
         balance = 0.0f,
-        rate = 0f,
+        rate = 1f,
         registerTime = LocalDateTime.now(),
         passwordHash = BCrypt.hashpw(
             user.password,

@@ -38,6 +38,7 @@ class NewProductViewModel : ViewModel() {
                 state.update {
                     it.copy(
                         existingProductId = product.id,
+                        existingProductStatus = product.productStatus,
                         images = product.imagesUrl,
                         price = TextFieldState(product.price.toString()),
                         name = TextFieldState(product.name),
@@ -133,12 +134,32 @@ class NewProductViewModel : ViewModel() {
             is NewProductEvent.RemoveImage -> {
                 state.update { it.copy(images = it.images.filterIndexed { index, _ -> index != event.index }) }
             }
+            is NewProductEvent.ArchiveProduct -> {
+                viewModelScope.launch {
+                    val current = state.value
+                    productRepository.updateProductStatus(current.existingProductId, ProductStatus.ARCHIVE)
+                    state.update { it.copy(existingProductStatus = ProductStatus.ARCHIVE) }
+                }
+            }
+            is NewProductEvent.RestoreProduct -> {
+                viewModelScope.launch {
+                    val current = state.value
+                    productRepository.updateProductStatus(current.existingProductId, ProductStatus.ACTIVE)
+                    state.update { it.copy(existingProductStatus = ProductStatus.ACTIVE) }
+                }
+            }
+            is NewProductEvent.BackClick -> {
+                viewModelScope.launch {
+                    navigationEvents.send(NewProductNavigationEvent.BackClick)
+                }
+            }
         }
     }
 }
 
 data class NewProductState(
     val existingProductId: Long = -1L,
+    val existingProductStatus: ProductStatus = ProductStatus.ACTIVE,
     val images: List<String> = listOf(),
     val price: TextFieldState = TextFieldState(""),
     val name: TextFieldState = TextFieldState(""),
@@ -155,8 +176,12 @@ sealed class NewProductEvent {
     data class RemoveImage(val index: Int) : NewProductEvent()
     object AddProduct : NewProductEvent()
     data class ClearError(val field: FormField) : NewProductEvent()
+    object ArchiveProduct : NewProductEvent()
+    object RestoreProduct : NewProductEvent()
+    object BackClick : NewProductEvent()
 }
 
 sealed class NewProductNavigationEvent {
     object Exit : NewProductNavigationEvent()
+    object BackClick : NewProductNavigationEvent()
 }

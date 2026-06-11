@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 fun Home(
     viewModel: HomeViewModel = viewModel<HomeViewModel>(),
     navToSeller: (Long) -> Unit,
-    navToProduct: (Long) -> Unit,
+    navToProduct: (Long, Long) -> Unit,
     navToSearch: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -31,7 +31,7 @@ fun Home(
                     navToSeller(event.id)
                 }
                 is HomeNavigationEvent.Product -> {
-                    navToProduct(event.id)
+                    navToProduct(event.id, event.authorId)
                 }
                 is HomeNavigationEvent.Search -> navToSearch()
             }

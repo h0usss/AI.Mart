@@ -7,7 +7,7 @@ data class UserData(
     var name: String = "",
     var nick: String = "",
     var imageUrl: String = "android.resource://com.h0uss.aimart/${R.drawable.base_avatar}",
-    var rate: Float = -1f,
+    var rate: Float = 1f,
     var balance: Float = 0f,
     var isSeller: Boolean = false,
 )

@@ -111,6 +111,38 @@ class ChatUserViewModel(
                     }
                 }
             }
+            is ChatUserEvent.ShowAttachmentSheet -> {
+                state.update { it.copy(isAttachmentSheetVisible = true) }
+            }
+            is ChatUserEvent.HideAttachmentSheet -> {
+                state.update { it.copy(isAttachmentSheetVisible = false) }
+            }
+            is ChatUserEvent.ToggleProtect -> {
+                state.update { it.copy(isProtectEnabled = !it.isProtectEnabled) }
+            }
+            is ChatUserEvent.ToggleAttachment -> {
+                val current = state.value.selectedAttachments.toMutableList()
+                if (event.uri in current) {
+                    current.remove(event.uri)
+                } else if (current.size < 10) {
+                    current.add(event.uri)
+                }
+                state.update { it.copy(selectedAttachments = current) }
+            }
+            is ChatUserEvent.SendAttachments -> {
+                viewModelScope.launch {
+                    val current = state.value.selectedAttachments
+                    if (current.isNotEmpty()) {
+                        messageRepository.addMessageToChat(chatId, authUserIdLong, "", current)
+                    }
+                    state.update {
+                        it.copy(
+                            selectedAttachments = emptyList(),
+                            isAttachmentSheetVisible = false,
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -120,6 +152,10 @@ data class ChatUserState(
     val userData: ChatUserData = ChatUserData(),
     val buyer: UserData = UserData(),
     val orderData: OrderData = OrderData(),
+
+    val isAttachmentSheetVisible: Boolean = false,
+    val selectedAttachments: List<String> = listOf(),
+    val isProtectEnabled: Boolean = false,
 )
 
 sealed class ChatUserEvent {
@@ -129,6 +165,11 @@ sealed class ChatUserEvent {
     data class UserClick(val value: Long) : ChatUserEvent()
     data class ProductClick(val value: Long) : ChatUserEvent()
     data class SendMessage(val value: String) : ChatUserEvent()
+    object ShowAttachmentSheet : ChatUserEvent()
+    object HideAttachmentSheet : ChatUserEvent()
+    object ToggleProtect : ChatUserEvent()
+    data class ToggleAttachment(val uri: String) : ChatUserEvent()
+    object SendAttachments : ChatUserEvent()
 }
 
 sealed class ChatUserNavigationEvent {

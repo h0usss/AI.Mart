@@ -7,4 +7,5 @@ data class UserRegistrationData(
     val email: String,
     val password: String,
     val dateOfBirth: LocalDateTime,
+    val isSeller: Boolean = false,
 )

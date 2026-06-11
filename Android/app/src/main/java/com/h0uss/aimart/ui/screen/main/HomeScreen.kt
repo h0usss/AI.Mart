@@ -99,7 +99,7 @@ fun HomeScreen(
                         ProductCard(
                             product = product1,
                             onClick = { productId ->
-                                onEvent(HomeEvent.ProductClick(productId))
+                                onEvent(HomeEvent.ProductClick(productId, product1.authorId))
                             }
                         )
                     }
@@ -115,7 +115,7 @@ fun HomeScreen(
                             ProductCard(
                                 product = product2,
                                 onClick = { productId ->
-                                    onEvent(HomeEvent.ProductClick(productId))
+                                    onEvent(HomeEvent.ProductClick(productId, product2.authorId))
                                 }
                             )
                         }

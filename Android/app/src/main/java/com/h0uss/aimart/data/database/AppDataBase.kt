@@ -167,7 +167,7 @@ suspend fun fillUsers(
 
     val rates = listOf(
         1f, 2f, 3f, 4f, 5f,
-        0.1f, 0.2f, 3.1f, 4.4f, 5f,
+        1f, 1.5f, 3.1f, 4.4f, 5f,
     )
     val avatars = listOf(
         "android.resource://com.h0uss.aimart/${R.drawable.avatar_10}",
@@ -302,8 +302,8 @@ suspend fun fillProduct(productDao: ProductDao, users: List<Long>): List<Long> {
 
     val productIds = productDao.insertAll(initialProduct)
 
-    val archiveNames = List(10) { "Архив: ${productArtTypes.random()} #${it + 1}" }
-    val moderationNames = List(10) { "Модерация: ${productArtTypes.random()} #${it + 1}" }
+    val archiveNames = List(10) { "${productArtTypes.random()} #${it + 11}" }
+    val moderationNames = List(10) { "${productArtTypes.random()} #${it + 21}" }
     val extraProducts: List<ProductEntity> = buildList {
         for (s in 0..4) {
             for (a in 0..1) {
@@ -312,7 +312,7 @@ suspend fun fillProduct(productDao: ProductDao, users: List<Long>): List<Long> {
                         name = archiveNames[s * 2 + a],
                         imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${productImageIds.random()}" },
                         price = Random.nextInt(5, 500).toFloat(),
-                        description = "Архивный товар: ${productArtTypes.random()}.",
+                        description = "Высококачественное цифровое изображение, созданное с помощью нейронных сетей.",
                         createDate = LocalDateTime.now().minusDays(Random.nextLong(0, 365)),
                         productStatus = ProductStatus.ARCHIVE,
                         viewCount = Random.nextLong(0, 100),
@@ -326,7 +326,7 @@ suspend fun fillProduct(productDao: ProductDao, users: List<Long>): List<Long> {
                         name = moderationNames[s * 2 + m],
                         imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${productImageIds.random()}" },
                         price = Random.nextInt(5, 500).toFloat(),
-                        description = "Товар на модерации: ${productArtTypes.random()}.",
+                        description = "Высококачественное цифровое изображение, созданное с помощью нейронных сетей.",
                         createDate = LocalDateTime.now().minusDays(Random.nextLong(0, 365)),
                         productStatus = if (m == 0) ProductStatus.IN_MODERATING_PROCESS else ProductStatus.MODERATING_FAILED,
                         viewCount = 0L,

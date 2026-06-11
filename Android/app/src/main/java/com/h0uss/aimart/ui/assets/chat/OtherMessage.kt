@@ -5,8 +5,11 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,6 +38,7 @@ import com.h0uss.aimart.ui.theme.regularStyle
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalLayoutApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun OtherMessage(
@@ -74,27 +79,49 @@ fun OtherMessage(
                 model = messageData.avatarUrl,
                 contentDescription = "ToUser",
             )
-            Box(
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .clip(
-                        RoundedCornerShape(
-                            topStart = 6.dp,
-                            topEnd = 6.dp,
-                            bottomEnd = 6.dp,
-                        )
-                    )
-                    .background(Black5)
-                    .padding(vertical = 8.dp, horizontal = 16.dp),
-                ) {
-                Text(
+
+            Column {
+                if (messageData.attachments.isNotEmpty()) {
+                    FlowRow(
+                        modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        messageData.attachments.forEach { url ->
+                            AsyncImage(
+                                model = url,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(60.dp)
+                                    .clip(RoundedCornerShape(4.dp)),
+                                contentScale = ContentScale.Crop,
+                            )
+                        }
+                    }
+                }
+
+                Box(
                     modifier = Modifier
-                        .padding(bottom = 2.dp),
-                    text = messageData.text,
-                    style = regularStyle,
-                    fontSize = 14.sp,
-                    color = Black80
-                )
+                        .padding(start = 8.dp)
+                        .clip(
+                            RoundedCornerShape(
+                                topStart = 6.dp,
+                                topEnd = 6.dp,
+                                bottomEnd = 6.dp,
+                            )
+                        )
+                        .background(Black5)
+                        .padding(vertical = 8.dp, horizontal = 16.dp),
+                    ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(bottom = 2.dp),
+                        text = messageData.text,
+                        style = regularStyle,
+                        fontSize = 14.sp,
+                        color = Black80
+                    )
+                }
             }
         }
 

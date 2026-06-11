@@ -13,12 +13,12 @@ interface ProductViewDao {
     @Insert
     suspend fun insert(view: ProductViewEntity)
 
-    @Query("SELECT COUNT(DISTINCT user_id) FROM product_view WHERE viewed_at >= :startDate AND viewed_at < :endDate AND product_id IN (SELECT id FROM product WHERE user_id = :sellerId)")
+    @Query("SELECT COUNT(*) FROM (SELECT 1 FROM product_view WHERE viewed_at >= :startDate AND viewed_at < :endDate AND product_id IN (SELECT id FROM product WHERE user_id = :sellerId) GROUP BY product_id, user_id)")
     suspend fun getUniqueViewsBySellerIdBetween(sellerId: Long, startDate: LocalDateTime, endDate: LocalDateTime): Long
 
-    @Query("SELECT COUNT(DISTINCT user_id) FROM product_view WHERE product_id = :productId AND viewed_at >= :startDate AND viewed_at < :endDate")
+    @Query("SELECT COUNT(*) FROM (SELECT 1 FROM product_view WHERE product_id = :productId AND viewed_at >= :startDate AND viewed_at < :endDate GROUP BY product_id, user_id)")
     fun getUniqueViewsByProductIdBetween(productId: Long, startDate: LocalDateTime, endDate: LocalDateTime): Flow<Long>
 
-    @Query("SELECT COUNT(DISTINCT user_id) FROM product_view WHERE product_id = :productId")
+    @Query("SELECT COUNT(*) FROM (SELECT 1 FROM product_view WHERE product_id = :productId GROUP BY product_id, user_id)")
     fun getTotalUniqueViewsByProductId(productId: Long): Flow<Long>
 }

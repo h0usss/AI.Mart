@@ -7,4 +7,5 @@ class MessageData (
     val date: LocalDateTime,
     val avatarUrl: String = "",
     val userId: Long = -1L,
+    val attachments: List<String> = emptyList(),
 )
