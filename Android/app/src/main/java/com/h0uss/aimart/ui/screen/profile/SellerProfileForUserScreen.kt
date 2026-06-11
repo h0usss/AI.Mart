@@ -224,76 +224,84 @@ fun SellerProfileForUserScreen(
                     )
                 }
             }
-            item {
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .clip(RoundedCornerShape(15.dp))
-                        .border(
-                            width = 1.dp,
-                            color = Black10,
-                            shape = RoundedCornerShape(15.dp)
-                        )
-                        .background(White)
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = "О себе",
-                        style = semiboldStyle,
-                        fontSize = 18.sp,
-                        color = Black80
-                    )
-                    Text(
-                        modifier = Modifier.padding(top = 18.dp),
-                        text = state.user.about,
-                        style = regularStyle,
-                        fontSize = 14.sp,
-                        color = Black80
-                    )
-                    Text(
-                        modifier = Modifier.padding(top = 18.dp, bottom = 18.dp),
-                        text = "Навыки",
-                        style = semiboldStyle,
-                        fontSize = 18.sp,
-                        color = Black80
-                    )
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+            if (state.user.about.isNotEmpty() || state.user.skills.isNotEmpty()) {
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .clip(RoundedCornerShape(15.dp))
+                            .border(
+                                width = 1.dp,
+                                color = Black10,
+                                shape = RoundedCornerShape(15.dp)
+                            )
+                            .background(White)
+                            .padding(16.dp)
                     ) {
-                        state.user.skills.forEach { skill ->
-                            Hint( text = skill )
+                        if (state.user.about.isNotEmpty()) {
+                            Text(
+                                text = "О себе",
+                                style = semiboldStyle,
+                                fontSize = 18.sp,
+                                color = Black80
+                            )
+                            Text(
+                                modifier = Modifier.padding(top = 18.dp),
+                                text = state.user.about,
+                                style = regularStyle,
+                                fontSize = 14.sp,
+                                color = Black80
+                            )
+                        }
+                        if (state.user.skills.isNotEmpty()) {
+                            Text(
+                                modifier = Modifier.padding(top = 18.dp, bottom = 18.dp),
+                                text = "Навыки",
+                                style = semiboldStyle,
+                                fontSize = 18.sp,
+                                color = Black80
+                            )
+                            FlowRow(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                state.user.skills.forEach { skill ->
+                                    Hint(text = skill)
+                                }
+                            }
                         }
                     }
                 }
             }
-            item{
-                Column{
-                    Text(
-                        modifier = Modifier.padding(horizontal = 32.dp),
-                        text = "Портфолио",
-                        style = semiboldStyle,
-                        fontSize = 18.sp,
-                        color = Black80
-                    )
+            if (state.originalPortfolio.isNotEmpty()) {
+                item {
+                    Column {
+                        Text(
+                            modifier = Modifier.padding(horizontal = 32.dp),
+                            text = "Портфолио",
+                            style = semiboldStyle,
+                            fontSize = 18.sp,
+                            color = Black80
+                        )
 
-                    LazyRow(
-                        modifier = Modifier.padding(top = 16.dp),
-                        contentPadding = PaddingValues(horizontal = 32.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ){
-                        itemsIndexed(state.allPortfolioTags){ index, item ->
-                            SellerHint(
-                                modifier = Modifier.clickable{
-                                    onEvent(SellerProfileForUserEvent.PortfolioTagClick(item))
-                                },
-                                text = item,
-                                isActive = state.portfolioTagFilter[index]
-                            )
+                        LazyRow(
+                            modifier = Modifier.padding(top = 16.dp),
+                            contentPadding = PaddingValues(horizontal = 32.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            itemsIndexed(state.allPortfolioTags) { index, item ->
+                                SellerHint(
+                                    modifier = Modifier.clickable {
+                                        onEvent(SellerProfileForUserEvent.PortfolioTagClick(item))
+                                    },
+                                    text = item,
+                                    isActive = state.portfolioTagFilter[index]
+                                )
+                            }
                         }
-                    }
 
-                    for (i in 0..min(countPortfolioRowItem - 1, chunkedProducts.size - 1)){
+                        for (i in 0..min(countPortfolioRowItem - 1, chunkedProducts.size - 1)) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -331,6 +339,7 @@ fun SellerProfileForUserScreen(
                             }
                         )
                 }
+            }
             }
             item {
                 val productList = state.products
@@ -408,65 +417,66 @@ fun SellerProfileForUserScreen(
                     }
                 }
             }
-            item {
-                Column(
-                    modifier = Modifier.padding(start = 32.dp, top = 16.dp, end = 32.dp),
-                ){
-                    Text(
-                        text = "Отзывы",
-                        style = semiboldStyle,
-                        fontSize = 18.sp,
-                        color = Black80
-                    )
-                    FlowRow(
-                        modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ){
-                        SellerHint(
-                            modifier = Modifier.clickable{
-                                onEvent(SellerProfileForUserEvent.FeedbackTagClick(0))
-                            },
-                            text = "Все",
-                            isActive = state.feedbackTagFilter[0]
-                        )
-                        SellerHint(
-                            modifier = Modifier.clickable{
-                                onEvent(SellerProfileForUserEvent.FeedbackTagClick(1))
-                            },
-                            text = "Высокий рейтинг",
-                            leftImageId = R.drawable.high_rating,
-                            isActive = state.feedbackTagFilter[1]
-                        )
-                        SellerHint(
-                            modifier = Modifier.clickable{
-                                onEvent(SellerProfileForUserEvent.FeedbackTagClick(2))
-                            },
-                            text = "Низкий рейтинг",
-                            leftImageId = R.drawable.low_rating,
-                            isActive = state.feedbackTagFilter[2]
-                        )
-                    }
+            if (state.originalFeedback.isNotEmpty()) {
+                item {
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ){
-                        for (i in 0..min(countFeedbackItem - 1, state.filteredFeedback.size - 1))
-                            Feedback(
-                                feedbackData = state.filteredFeedback[i]
+                        modifier = Modifier.padding(start = 32.dp, top = 16.dp, end = 32.dp),
+                    ) {
+                        Text(
+                            text = "Отзывы",
+                            style = semiboldStyle,
+                            fontSize = 18.sp,
+                            color = Black80
+                        )
+                        FlowRow(
+                            modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            SellerHint(
+                                modifier = Modifier.clickable {
+                                    onEvent(SellerProfileForUserEvent.FeedbackTagClick(0))
+                                },
+                                text = "Все",
+                                isActive = state.feedbackTagFilter[0]
+                            )
+                            SellerHint(
+                                modifier = Modifier.clickable {
+                                    onEvent(SellerProfileForUserEvent.FeedbackTagClick(1))
+                                },
+                                text = "Высокий рейтинг",
+                                leftImageId = R.drawable.high_rating,
+                                isActive = state.feedbackTagFilter[1]
+                            )
+                            SellerHint(
+                                modifier = Modifier.clickable {
+                                    onEvent(SellerProfileForUserEvent.FeedbackTagClick(2))
+                                },
+                                text = "Низкий рейтинг",
+                                leftImageId = R.drawable.low_rating,
+                                isActive = state.feedbackTagFilter[2]
+                            )
+                        }
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            for (i in 0..min(countFeedbackItem - 1, state.filteredFeedback.size - 1))
+                                Feedback(
+                                    feedbackData = state.filteredFeedback[i]
+                                )
+                        }
+                        if (state.filteredFeedback.size > countFeedbackItem)
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 24.dp),
+                                text = "Показать еще",
+                                isGray = true,
+                                onClick = {
+                                    countFeedbackItem += 3
+                                }
                             )
                     }
-                    if ( state.filteredFeedback.size > countFeedbackItem )
-                        Button(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 24.dp)
-                            ,
-                            text = "Показать еще",
-                            isGray = true,
-                            onClick = {
-                                countFeedbackItem += 3
-                            }
-                        )
                 }
             }
             item{
@@ -489,8 +499,8 @@ private fun Preview() {
                 imageUrl = "android.resource://com.h0uss.aimart/${R.drawable.seller}",
                 rate = 5.0f,
                 profession = "Художник",
-                about = "Описание описание описание описание описание описание описание описание ",
-                skills = List(7) {item -> "Подсказка"},
+                about = "Описание ",
+                skills = List(1) {item -> "Подсказка"},
             ),
             portfolio = List(11) {
                 PortfolioItemData(

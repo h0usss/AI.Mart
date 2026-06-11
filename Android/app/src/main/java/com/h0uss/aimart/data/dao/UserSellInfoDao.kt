@@ -9,4 +9,7 @@ import com.h0uss.aimart.data.entity.UserSellInfoEntity
 interface UserSellInfoDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(users: List<UserSellInfoEntity>): List<Long>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(user: UserSellInfoEntity): Long
 }

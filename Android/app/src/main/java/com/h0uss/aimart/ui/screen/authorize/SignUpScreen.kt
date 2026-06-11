@@ -91,7 +91,7 @@ fun SignUpScreen(
         modifier = modifier
             .fillMaxSize()
             .background(White)
-            .padding(start = 24.dp, top = 72.dp, end = 24.dp )
+            .padding(start = 24.dp, top = 60.dp, end = 24.dp )
         ,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
@@ -103,7 +103,7 @@ fun SignUpScreen(
         )
         Text(
             modifier = Modifier
-                .padding(top = 48.dp)
+                .padding(top = 25.dp)
             ,
             text = "Регистрация",
             color = Black100,
@@ -216,7 +216,7 @@ fun SignUpScreen(
                     .width(48.dp)
                     .height(24.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(if (state.isSeller) Teal else Black10)
+                    .background(Teal)
                     .clickable { onEvent(SignUpEvent.ToggleSeller) },
                 contentAlignment = if (state.isSeller) Alignment.CenterEnd else Alignment.CenterStart,
             ) {

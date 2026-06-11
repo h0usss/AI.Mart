@@ -2,10 +2,12 @@ package com.h0uss.aimart.data.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "user_sell_info"
+    tableName = "user_sell_info",
+    indices = [Index(value = ["user_id"], unique = true)]
 )
 data class UserSellInfoEntity(
     @PrimaryKey(autoGenerate = true)

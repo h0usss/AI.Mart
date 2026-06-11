@@ -5,6 +5,8 @@ import androidx.annotation.RequiresApi
 import androidx.room.Transaction
 import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.data.dao.UserDao
+import com.h0uss.aimart.data.dao.UserSellInfoDao
+import com.h0uss.aimart.data.entity.UserSellInfoEntity
 import com.h0uss.aimart.data.mapper.toUserEntity
 import com.h0uss.aimart.data.mapper.toUserHomeData
 import com.h0uss.aimart.data.mapper.toUserLoginData
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.map
 @RequiresApi(Build.VERSION_CODES.O)
 class UserRepository(
     private val userDao: UserDao,
+    private val userSellInfoDao: UserSellInfoDao,
 ) {
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun createUser(newUser: UserRegistrationData): Long {
@@ -92,7 +95,17 @@ class UserRepository(
     @Transaction
     suspend fun updateSeller(user: SellerData) {
         userDao.updateUserInfo(user.id, user.name, user.nick, user.imageUrl)
-        userDao.updateSellerSellInfo(user.id, user.profession, user.about, user.skills)
+        val affected = userDao.updateSellerSellInfo(user.id, user.profession, user.about, user.skills)
+        if (affected == 0) {
+            userSellInfoDao.upsert(
+                UserSellInfoEntity(
+                    about = user.about,
+                    skills = user.skills,
+                    profession = user.profession,
+                    userId = user.id,
+                )
+            )
+        }
     }
 
 

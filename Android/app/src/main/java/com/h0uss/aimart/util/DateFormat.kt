@@ -9,7 +9,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
-val customFormatter: DateTimeFormatter? = DateTimeFormatter.ofPattern("dd.MM.yy")
+val customFormatter: DateTimeFormatter? = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun String.toLocalDate(): LocalDate {

@@ -51,7 +51,7 @@ interface UserDao {
         profession: String,
         about: String,
         skills: List<String>
-    )
+    ): Int
 
     @Delete
     suspend fun delete(user: UserEntity)

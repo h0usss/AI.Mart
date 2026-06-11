@@ -95,7 +95,7 @@ class NewProductViewModel : ViewModel() {
                                 price = state.value.price.text.toString().toFloat(),
                                 description = state.value.desc.text.toString(),
                                 createDate = LocalDateTime.now(),
-                                productStatus = ProductStatus.ACTIVE,
+                                productStatus = currentState.existingProductStatus,
                                 userId = authUserIdLong,
                             )
                         )
@@ -137,15 +137,21 @@ class NewProductViewModel : ViewModel() {
             is NewProductEvent.ArchiveProduct -> {
                 viewModelScope.launch {
                     val current = state.value
-                    productRepository.updateProductStatus(current.existingProductId, ProductStatus.ARCHIVE)
-                    state.update { it.copy(existingProductStatus = ProductStatus.ARCHIVE) }
+                    val product = productRepository.getProductEntityById(current.existingProductId)
+                    if (product != null) {
+                        productRepository.update(product.copy(productStatus = ProductStatus.ARCHIVE))
+                        state.update { it.copy(existingProductStatus = ProductStatus.ARCHIVE) }
+                    }
                 }
             }
             is NewProductEvent.RestoreProduct -> {
                 viewModelScope.launch {
                     val current = state.value
-                    productRepository.updateProductStatus(current.existingProductId, ProductStatus.ACTIVE)
-                    state.update { it.copy(existingProductStatus = ProductStatus.ACTIVE) }
+                    val product = productRepository.getProductEntityById(current.existingProductId)
+                    if (product != null) {
+                        productRepository.update(product.copy(productStatus = ProductStatus.ACTIVE))
+                        state.update { it.copy(existingProductStatus = ProductStatus.ACTIVE) }
+                    }
                 }
             }
             is NewProductEvent.BackClick -> {

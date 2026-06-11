@@ -39,6 +39,7 @@ object Graph {
     val userRepository by lazy {
         UserRepository(
             userDao = db.userDao(),
+            userSellInfoDao = db.userSellInfoDao(),
         )
     }
     val productRepository by lazy {

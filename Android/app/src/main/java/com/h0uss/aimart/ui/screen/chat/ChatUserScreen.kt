@@ -1,6 +1,11 @@
 package com.h0uss.aimart.ui.screen.chat
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
+import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -11,15 +16,19 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,13 +39,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
@@ -56,7 +71,6 @@ import com.h0uss.aimart.ui.assets.chat.MyMessage
 import com.h0uss.aimart.ui.assets.chat.OrderEnd
 import com.h0uss.aimart.ui.assets.chat.OtherMessage
 import com.h0uss.aimart.ui.theme.Black10
-import com.h0uss.aimart.ui.theme.Black20
 import com.h0uss.aimart.ui.theme.Black80
 import com.h0uss.aimart.ui.theme.Teal
 import com.h0uss.aimart.ui.theme.White
@@ -64,6 +78,8 @@ import com.h0uss.aimart.ui.theme.regularStyle
 import com.h0uss.aimart.ui.theme.semiboldStyle
 import com.h0uss.aimart.ui.viewModel.chat.ChatUserEvent
 import com.h0uss.aimart.ui.viewModel.chat.ChatUserState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -344,21 +360,124 @@ fun AttachmentSheet(
     onSend: () -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val context = LocalContext.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val showPicker = remember { mutableStateOf(true) }
 
-    val photoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetMultipleContents()
-    ) { uris ->
-        showPicker.value = false
-        uris.forEach { uri ->
-            onToggleAttachment(uri.toString())
+    val permImages = if (Build.VERSION.SDK_INT >= 33)
+        Manifest.permission.READ_MEDIA_IMAGES else Manifest.permission.READ_EXTERNAL_STORAGE
+    val permVideos = if (Build.VERSION.SDK_INT >= 33)
+        Manifest.permission.READ_MEDIA_VIDEO else Manifest.permission.READ_EXTERNAL_STORAGE
+
+    val hasPermission = remember {
+        mutableStateOf(
+            context.checkSelfPermission(permImages) == PackageManager.PERMISSION_GRANTED &&
+            context.checkSelfPermission(permVideos) == PackageManager.PERMISSION_GRANTED
+        )
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { result ->
+        hasPermission.value = result.values.all { it }
+    }
+
+    data class GalleryItem(val uri: Uri, val isVideo: Boolean, val durationMs: Long, val dateAdded: Long, val id: Long)
+
+    val galleryItems = remember { mutableStateOf<List<GalleryItem>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(false) }
+    var hasMoreImages by remember { mutableStateOf(true) }
+    var hasMoreVideos by remember { mutableStateOf(true) }
+    var lastImageDate by remember { mutableLongStateOf(Long.MAX_VALUE) }
+    var lastImageId by remember { mutableLongStateOf(Long.MAX_VALUE) }
+    var lastVideoDate by remember { mutableLongStateOf(Long.MAX_VALUE) }
+    var lastVideoId by remember { mutableLongStateOf(Long.MAX_VALUE) }
+
+    fun loadNextBatch() {
+        if (isLoading) return
+        if (!hasMoreImages && !hasMoreVideos) return
+        isLoading = true
+
+        val newItems = mutableListOf<GalleryItem>()
+
+        if (hasMoreImages) {
+            val imageSelection = if (lastImageDate == Long.MAX_VALUE) null
+                else "${MediaStore.Images.Media.DATE_ADDED} < ? OR (${MediaStore.Images.Media.DATE_ADDED} = ? AND ${MediaStore.Images.Media._ID} < ?)"
+            val imageArgs = if (lastImageDate == Long.MAX_VALUE) null
+                else arrayOf(lastImageDate.toString(), lastImageDate.toString(), lastImageId.toString())
+            context.contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_ADDED),
+                imageSelection, imageArgs,
+                "${MediaStore.Images.Media.DATE_ADDED} DESC, ${MediaStore.Images.Media._ID} DESC"
+            )?.use { cursor ->
+                var count = 0
+                while (cursor.moveToNext() && count < 20) {
+                    val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
+                    val dateAdded = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED))
+                    newItems.add(GalleryItem(
+                        uri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id.toString()),
+                        isVideo = false, durationMs = 0L, dateAdded = dateAdded, id = id,
+                    ))
+                    lastImageDate = dateAdded
+                    lastImageId = id
+                    count++
+                }
+                hasMoreImages = count == 20
+            }
+        }
+
+        if (hasMoreVideos) {
+            val videoSelection = if (lastVideoDate == Long.MAX_VALUE) null
+                else "${MediaStore.Video.Media.DATE_ADDED} < ? OR (${MediaStore.Video.Media.DATE_ADDED} = ? AND ${MediaStore.Video.Media._ID} < ?)"
+            val videoArgs = if (lastVideoDate == Long.MAX_VALUE) null
+                else arrayOf(lastVideoDate.toString(), lastVideoDate.toString(), lastVideoId.toString())
+            context.contentResolver.query(
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                arrayOf(MediaStore.Video.Media._ID, MediaStore.Video.Media.DURATION, MediaStore.Video.Media.DATE_ADDED),
+                videoSelection, videoArgs,
+                "${MediaStore.Video.Media.DATE_ADDED} DESC, ${MediaStore.Video.Media._ID} DESC"
+            )?.use { cursor ->
+                var count = 0
+                while (cursor.moveToNext() && count < 20) {
+                    val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID))
+                    val duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION))
+                    val dateAdded = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED))
+                    newItems.add(GalleryItem(
+                        uri = Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id.toString()),
+                        isVideo = true, durationMs = duration, dateAdded = dateAdded, id = id,
+                    ))
+                    lastVideoDate = dateAdded
+                    lastVideoId = id
+                    count++
+                }
+                hasMoreVideos = count == 20
+            }
+        }
+
+        newItems.sortByDescending { it.dateAdded }
+        galleryItems.value = galleryItems.value + newItems
+        isLoading = false
+    }
+
+    LaunchedEffect(hasPermission.value) {
+        if (hasPermission.value && galleryItems.value.isEmpty()) {
+            loadNextBatch()
+        } else if (!hasPermission.value) {
+            permissionLauncher.launch(arrayOf(permImages, permVideos))
         }
     }
 
-    LaunchedEffect(showPicker.value) {
-        if (showPicker.value) {
-            photoPickerLauncher.launch("image/*")
+    val gridState = rememberLazyGridState()
+
+    LaunchedEffect(gridState) {
+        snapshotFlow {
+            val layoutInfo = gridState.layoutInfo
+            val lastVisible = layoutInfo.visibleItemsInfo.lastOrNull() ?: return@snapshotFlow false
+            lastVisible.index >= layoutInfo.totalItemsCount - 4
+        }.collect { nearEnd ->
+            if (nearEnd && !isLoading && (hasMoreImages || hasMoreVideos)) {
+                loadNextBatch()
+            }
         }
     }
 
@@ -370,12 +489,12 @@ fun AttachmentSheet(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 16.dp),
+                .fillMaxSize()
+                .padding(horizontal = 2.dp, vertical = 16.dp),
         ) {
             if (selectedAttachments.isNotEmpty()) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -396,57 +515,104 @@ fun AttachmentSheet(
                         )
                     )
                 }
-
                 Spacer(modifier = Modifier.height(12.dp))
             }
 
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                selectedAttachments.forEach { uri ->
-                    val isSelected = true
-                    Box(
-                        modifier = Modifier
-                            .size(80.dp)
-                            .clip(RoundedCornerShape(6.dp))
-                            .border(
-                                width = if (isSelected) 2.dp else 1.dp,
-                                color = if (isSelected) Teal else Black20,
-                                shape = RoundedCornerShape(6.dp),
-                            )
-                            .background(White)
-                            .clickable { onToggleAttachment(uri) },
-                    ) {
-                        AsyncImage(
-                            model = uri,
-                            contentDescription = null,
+            if (hasPermission.value && galleryItems.value.isNotEmpty()) {
+                LazyVerticalGrid(
+                    state = gridState,
+                    columns = GridCells.Fixed(3),
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                ) {
+                    items(galleryItems.value) { item ->
+                        val uriStr = item.uri.toString()
+                        val isSelected = selectedAttachments.contains(uriStr)
+                        Box(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .clip(RoundedCornerShape(5.dp)),
-                            contentScale = ContentScale.Crop,
-                        )
+                                .aspectRatio(1f)
+                                .clip(RoundedCornerShape(6.dp))
+                                .border(
+                                    width = if (isSelected) 2.dp else 0.dp,
+                                    color = Teal,
+                                    shape = RoundedCornerShape(6.dp),
+                                )
+                                .clickable {
+                                    onToggleAttachment(uriStr)
+                                },
+                        ) {
+                            if (item.isVideo) {
+                                Box {
+                                    VideoThumbnail(
+                                        uri = item.uri,
+                                        context = context,
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .clip(RoundedCornerShape(if (isSelected) 5.dp else 6.dp)),
+                                    )
+                                    Box(
+                                        modifier = Modifier
+                                            .align(Alignment.Center)
+                                            .size(32.dp)
+                                            .clip(RoundedCornerShape(6.dp))
+                                            .background(Black80.copy(alpha = 0.6f)),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        Text(
+                                            text = "\u25B6",
+                                            color = White,
+                                            fontSize = 18.sp,
+                                        )
+                                    }
+                                }
+                            } else {
+                                AsyncImage(
+                                    model = item.uri,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .clip(RoundedCornerShape(if (isSelected) 5.dp else 6.dp)),
+                                    contentScale = ContentScale.Crop,
+                                )
+                            }
+                            if (item.isVideo) {
+                                Box(
+                                    modifier = Modifier
+                                        .align(Alignment.BottomEnd)
+                                        .padding(4.dp)
+                                        .background(
+                                            Black80.copy(alpha = 0.7f),
+                                            RoundedCornerShape(4.dp)
+                                        )
+                                        .padding(horizontal = 4.dp, vertical = 2.dp),
+                                ) {
+                                    Text(
+                                        text = formatDuration(item.durationMs),
+                                        color = White,
+                                        fontSize = 11.sp,
+                                        style = regularStyle,
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
-
-                if (selectedAttachments.size < 10) {
-                    Box(
-                        modifier = Modifier
-                            .size(80.dp)
-                            .clip(RoundedCornerShape(6.dp))
-                            .border(1.dp, Black20, RoundedCornerShape(6.dp))
-                            .background(White)
-                            .clickable {
-                                showPicker.value = true
-                            },
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.plus),
-                            contentDescription = "Add",
-                            modifier = Modifier.size(32.dp),
-                        )
-                    }
+            } else if (!hasPermission.value) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = "Разрешите доступ к галерее",
+                        style = regularStyle,
+                        fontSize = 14.sp,
+                        color = Black80,
+                    )
                 }
             }
 
@@ -473,4 +639,36 @@ fun AttachmentSheet(
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
+}
+
+@Composable
+private fun VideoThumbnail(uri: Uri, context: android.content.Context, modifier: Modifier = Modifier) {
+    val bitmap by produceState<Bitmap?>(null, uri) {
+        value = withContext(Dispatchers.IO) {
+            try {
+                val retriever = android.media.MediaMetadataRetriever()
+                retriever.setDataSource(context, uri)
+                val frame = retriever.frameAtTime
+                retriever.release()
+                frame
+            } catch (e: Exception) {
+                null
+            }
+        }
+    }
+    bitmap?.let { bmp ->
+        Image(
+            bitmap = bmp.asImageBitmap(),
+            contentDescription = null,
+            modifier = modifier,
+            contentScale = ContentScale.Crop,
+        )
+    }
+}
+
+private fun formatDuration(ms: Long): String {
+    val totalSeconds = ms / 1000
+    val minutes = totalSeconds / 60
+    val seconds = totalSeconds % 60
+    return "%d:%02d".format(minutes, seconds)
 }
