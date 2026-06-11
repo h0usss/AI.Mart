@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.h0uss.aimart.Graph.authUserIdLong
+import com.h0uss.aimart.Graph.deleteUserId
 import com.h0uss.aimart.Graph.feedbackRepository
 import com.h0uss.aimart.Graph.portfolioRepository
 import com.h0uss.aimart.Graph.userRepository
@@ -59,6 +60,17 @@ class SellerProfileForSelfViewModel : ViewModel(){
             is SellerProfileForSelfEvent.ShowSettingsMenu -> {
                 state.update {
                     it.copy(isVisibleSettings = true)
+                }
+            }
+            is SellerProfileForSelfEvent.SettingsItemClick -> {
+                state.update { it.copy(isVisibleSettings = false) }
+                when (event.id) {
+                    "exit" -> {
+                        viewModelScope.launch {
+                            navigationEvents.send(SellerProfileForSelfNavigationEvent.ExitClick)
+                            deleteUserId()
+                        }
+                    }
                 }
             }
             is SellerProfileForSelfEvent.DismissSettingsMenu -> {
@@ -202,6 +214,7 @@ sealed class SellerProfileForSelfEvent {
     object EmptiedAccountClick : SellerProfileForSelfEvent()
     object AddCaseClick : SellerProfileForSelfEvent()
     object DeleteAlert : SellerProfileForSelfEvent()
+    data class SettingsItemClick(val id: String) : SellerProfileForSelfEvent()
     data class DeleteCaseClick(val id: Long) : SellerProfileForSelfEvent()
     data class ShowAlert(val alert: AlertData) : SellerProfileForSelfEvent()
     data class ShowPortfolioItem(val portfolioId: Long) : SellerProfileForSelfEvent()
@@ -210,6 +223,7 @@ sealed class SellerProfileForSelfEvent {
 }
 
 sealed class SellerProfileForSelfNavigationEvent {
+    object ExitClick : SellerProfileForSelfNavigationEvent()
     object EditClick : SellerProfileForSelfNavigationEvent()
     object ReplenishAccountClick : SellerProfileForSelfNavigationEvent()
     object EmptiedAccountClick : SellerProfileForSelfNavigationEvent()

@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -77,14 +77,12 @@ fun BottomNavBar(
                 route.startsWith(item.route.toString())
             } ?: false
             NavigationBarItem(
-                colors = NavigationBarItemColors(
+                colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = White,
                     selectedTextColor = White,
-                    selectedIndicatorColor = White,
+                    indicatorColor = White,
                     unselectedIconColor = White,
                     unselectedTextColor = White,
-                    disabledIconColor = White,
-                    disabledTextColor = White,
                 ),
                 icon = {
                     Image(

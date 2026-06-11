@@ -170,7 +170,7 @@ fun TextFieldNewProduct(
                                     else Black3
                                 )
                                 .padding(horizontal = 16.dp, vertical = 11.dp),
-                            text = "$"
+                            text = "₽"
                         )
                         VerticalDivider(
                             modifier = Modifier

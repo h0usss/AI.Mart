@@ -3,8 +3,8 @@ package com.h0uss.aimart.data.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.h0uss.aimart.data.emun.TransactionFlowType
-import com.h0uss.aimart.data.emun.TransactionType
+import com.h0uss.aimart.data.enum.TransactionFlowType
+import com.h0uss.aimart.data.enum.TransactionType
 import java.math.BigDecimal
 import java.time.LocalDateTime
 

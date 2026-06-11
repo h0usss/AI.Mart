@@ -3,7 +3,7 @@ package com.h0uss.aimart.data.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.h0uss.aimart.data.emun.OrderStatus
+import com.h0uss.aimart.data.enum.OrderStatus
 import java.time.LocalDateTime
 
 @Entity(

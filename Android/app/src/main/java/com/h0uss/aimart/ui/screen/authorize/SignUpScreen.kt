@@ -31,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.h0uss.aimart.R
-import com.h0uss.aimart.data.emun.FormField
+import com.h0uss.aimart.data.enum.FormField
 import com.h0uss.aimart.ui.assets.Button
 import com.h0uss.aimart.ui.assets.TextField
 import com.h0uss.aimart.ui.theme.Black10

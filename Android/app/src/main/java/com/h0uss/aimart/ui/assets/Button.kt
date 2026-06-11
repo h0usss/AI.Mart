@@ -44,7 +44,6 @@ fun Button(
 ) {
     Box(
         modifier = modifier
-//            .fillMaxWidth()
             .height(40.dp)
             .clip(RoundedCornerShape(20))
             .background(

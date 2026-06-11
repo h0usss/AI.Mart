@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 fun UserProfileForSelf(
     viewModel: UserProfileForSelfViewModel = viewModel<UserProfileForSelfViewModel>(),
     navToEditProfile: (Long) -> Unit,
+    navToCreateOrLogin: () -> Unit = {},
     topUpClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -26,6 +27,9 @@ fun UserProfileForSelf(
             when(event) {
                 is UserProfileForSelfNavigationEvent.EditClick -> {
                     navToEditProfile(event.id)
+                }
+                is UserProfileForSelfNavigationEvent.ExitClick -> {
+                    navToCreateOrLogin()
                 }
                 is UserProfileForSelfNavigationEvent.EmptiedAccount -> {
                 }

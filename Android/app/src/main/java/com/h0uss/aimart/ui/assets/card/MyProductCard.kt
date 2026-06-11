@@ -24,19 +24,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
-import com.h0uss.aimart.data.emun.ProductStatus
+import com.h0uss.aimart.data.enum.ProductStatus
 import com.h0uss.aimart.data.model.UserProductCardData
 import com.h0uss.aimart.ui.theme.Black100
 import com.h0uss.aimart.ui.theme.Black50
 import com.h0uss.aimart.ui.theme.White
 import com.h0uss.aimart.ui.theme.regularStyle
 import com.h0uss.aimart.ui.theme.semiboldStyle
+import com.h0uss.aimart.util.formatPrice
 
 @Composable
 fun MyProductCard(
     modifier: Modifier = Modifier,
     product: UserProductCardData,
-    onClick: (Long) -> Unit = {}
+    onClick: (Long) -> Unit = {},
+    onEditClick: (Long) -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -75,7 +77,7 @@ fun MyProductCard(
                     modifier = Modifier
                         .padding(top = 6.dp)
                     ,
-                    text = "$${product.price}",
+                    text = "${product.price.formatPrice()}₽",
                     style = semiboldStyle,
                     fontSize = 16.sp,
                     color = Black100
@@ -100,6 +102,7 @@ fun MyProductCard(
             contentAlignment = Alignment.TopEnd
         ){
             Image(
+                modifier = Modifier.clickable { onEditClick(product.id) },
                 painter = painterResource(R.drawable.edit),
                 contentDescription = "Edit"
             )

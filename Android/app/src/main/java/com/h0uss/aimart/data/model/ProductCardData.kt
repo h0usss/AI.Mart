@@ -6,5 +6,7 @@ data class ProductCardData(
     val name: String,
     val price: Float,
     val imagesUrl: List<String>,
-    val description: String
+    val description: String,
+    val orderCount: Int = 0,
+    val authorRate: Float = 0f,
 )

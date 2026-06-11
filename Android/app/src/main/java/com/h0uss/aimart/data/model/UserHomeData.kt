@@ -4,4 +4,5 @@ data class UserHomeData(
     val id: Long,
     val name: String,
     val imageUrl: String,
+    val rate: Float = 0f,
 )

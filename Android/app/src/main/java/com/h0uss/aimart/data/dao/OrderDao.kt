@@ -4,8 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.h0uss.aimart.data.emun.OrderStatus
 import com.h0uss.aimart.data.entity.OrderEntity
+import com.h0uss.aimart.data.enum.OrderStatus
 import com.h0uss.aimart.data.model.OrderCardData
 import com.h0uss.aimart.data.model.OrderData
 import kotlinx.coroutines.flow.Flow

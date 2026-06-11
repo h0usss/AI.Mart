@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.h0uss.aimart.R
-import com.h0uss.aimart.data.emun.OrderStatus
+import com.h0uss.aimart.data.enum.OrderStatus
 import com.h0uss.aimart.data.model.OrderCardData
 import com.h0uss.aimart.data.model.StatusData
 import com.h0uss.aimart.ui.assets.Status

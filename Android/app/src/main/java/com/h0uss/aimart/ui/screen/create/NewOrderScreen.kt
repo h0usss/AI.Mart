@@ -151,7 +151,7 @@ fun NewOrderScreen(
             )
             TextField(
                 modifier = Modifier.padding(bottom = 16.dp),
-                placeHolder = "10\$",
+                placeHolder = "100₽",
                 inputTransformation = floatInputTransformation(),
                 state = state.price
             )

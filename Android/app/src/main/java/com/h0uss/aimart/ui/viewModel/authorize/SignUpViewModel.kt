@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.h0uss.aimart.Graph.saveUserId
 import com.h0uss.aimart.Graph.userRepository
-import com.h0uss.aimart.data.emun.FormField
+import com.h0uss.aimart.data.enum.FormField
 import com.h0uss.aimart.data.model.UserRegistrationData
 import com.h0uss.aimart.util.toLocalDateTime
 import com.h0uss.aimart.util.validate.validateDate

@@ -295,8 +295,8 @@ fun SellerProfileForUserScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 32.dp, top = 16.dp, end = 32.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                                .padding(start = 32.dp, top = 8.dp, end = 32.dp, bottom = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             chunkedProducts[i].forEach { portfolio ->
                                 PortfolioCard(

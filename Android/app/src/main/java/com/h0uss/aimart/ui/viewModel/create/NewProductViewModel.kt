@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.Graph.productRepository
-import com.h0uss.aimart.data.emun.FormField
-import com.h0uss.aimart.data.emun.ProductStatus
 import com.h0uss.aimart.data.entity.ProductEntity
+import com.h0uss.aimart.data.enum.FormField
+import com.h0uss.aimart.data.enum.ProductStatus
 import com.h0uss.aimart.util.validate.validateProductDesc
 import com.h0uss.aimart.util.validate.validateProductImages
 import com.h0uss.aimart.util.validate.validateProductName
@@ -30,6 +30,23 @@ class NewProductViewModel : ViewModel() {
 
     var navigationEvents = Channel<NewProductNavigationEvent>()
         private set
+
+    fun loadProduct(productId: Long) {
+        viewModelScope.launch {
+            val product = productRepository.getProductEntityById(productId)
+            if (product != null) {
+                state.update {
+                    it.copy(
+                        existingProductId = product.id,
+                        images = product.imagesUrl,
+                        price = TextFieldState(product.price.toString()),
+                        name = TextFieldState(product.name),
+                        desc = TextFieldState(product.description),
+                    )
+                }
+            }
+        }
+    }
 
     fun onEvent(event: NewProductEvent) {
         when (event) {
@@ -67,6 +84,22 @@ class NewProductViewModel : ViewModel() {
                             descError = descError
                         )
                     }
+                } else if (currentState.existingProductId != -1L) {
+                    viewModelScope.launch {
+                        productRepository.update(
+                            ProductEntity(
+                                id = currentState.existingProductId,
+                                name = state.value.name.text.toString(),
+                                imagesUrl = state.value.images,
+                                price = state.value.price.text.toString().toFloat(),
+                                description = state.value.desc.text.toString(),
+                                createDate = LocalDateTime.now(),
+                                productStatus = ProductStatus.ACTIVE,
+                                userId = authUserIdLong,
+                            )
+                        )
+                        navigationEvents.send(NewProductNavigationEvent.Exit)
+                    }
                 } else {
                     viewModelScope.launch {
                         productRepository.insert(
@@ -96,7 +129,7 @@ class NewProductViewModel : ViewModel() {
                     }
                 }
             }
-            
+
             is NewProductEvent.RemoveImage -> {
                 state.update { it.copy(images = it.images.filterIndexed { index, _ -> index != event.index }) }
             }
@@ -105,6 +138,7 @@ class NewProductViewModel : ViewModel() {
 }
 
 data class NewProductState(
+    val existingProductId: Long = -1L,
     val images: List<String> = listOf(),
     val price: TextFieldState = TextFieldState(""),
     val name: TextFieldState = TextFieldState(""),

@@ -24,6 +24,14 @@ class ProductRepository(
         return productDao.insert(product)
     }
 
+    suspend fun update(product: ProductEntity) {
+        productDao.update(product)
+    }
+
+    suspend fun getProductEntityById(productId: Long): ProductEntity? {
+        return productDao.getProductEntityById(productId)
+    }
+
     fun getProductsPagingData(): Flow<PagingData<ProductCardData>> {
         return Pager(
             config = PagingConfig(

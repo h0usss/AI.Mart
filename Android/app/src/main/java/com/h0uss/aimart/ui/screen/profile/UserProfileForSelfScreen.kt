@@ -40,6 +40,7 @@ import com.h0uss.aimart.ui.theme.regularStyle
 import com.h0uss.aimart.ui.theme.semiboldStyle
 import com.h0uss.aimart.ui.viewModel.profile.UserProfileForSelfEvent
 import com.h0uss.aimart.ui.viewModel.profile.UserProfileForSelfState
+import com.h0uss.aimart.util.formatPrice
 
 @Composable
 fun UserProfileForSelfScreen(
@@ -134,7 +135,7 @@ fun UserProfileForSelfScreen(
             }
         }
         Balance(
-            balance = state.user.balance.toString(),
+            balance = state.user.balance.formatPrice(),
             onEmptiedClick = {
                 onEvent(UserProfileForSelfEvent.EmptiedAccount)
             },

@@ -64,6 +64,7 @@ import com.h0uss.aimart.ui.theme.regularStyle
 import com.h0uss.aimart.ui.theme.semiboldStyle
 import com.h0uss.aimart.ui.viewModel.profile.SellerProfileForSelfEvent
 import com.h0uss.aimart.ui.viewModel.profile.SellerProfileForSelfState
+import com.h0uss.aimart.util.formatPrice
 import java.time.LocalDateTime
 import kotlin.math.min
 
@@ -102,7 +103,7 @@ fun SellerProfileForSelfScreen(
                             y = (0).dp
                         ),
                         onItemClick = { id ->
-                            onEvent(SellerProfileForSelfEvent.ShowSettingsMenu)
+                            onEvent(SellerProfileForSelfEvent.SettingsItemClick(id))
                         },
                         onDismissRequest = {
                             onEvent(SellerProfileForSelfEvent.DismissSettingsMenu)
@@ -202,7 +203,7 @@ fun SellerProfileForSelfScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Balance(
-                        balance = state.user.balance,
+                        balance = state.user.balance.toFloatOrNull()?.let { it.formatPrice() } ?: state.user.balance,
                         onEmptiedClick = {
                             onEvent(SellerProfileForSelfEvent.EmptiedAccountClick)
                         },
@@ -300,8 +301,8 @@ fun SellerProfileForSelfScreen(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(start = 32.dp, top = 16.dp, end = 32.dp),
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                    .padding(start = 32.dp, top = 8.dp, end = 32.dp, bottom = 8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 Box(modifier = Modifier.weight(1f)) {
                                     val portfolio1 = portfolio[0]

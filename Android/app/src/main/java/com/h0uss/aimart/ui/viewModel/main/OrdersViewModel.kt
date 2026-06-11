@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.Graph.orderRepository
-import com.h0uss.aimart.data.emun.OrderStatus
+import com.h0uss.aimart.data.enum.OrderStatus
 import com.h0uss.aimart.data.model.OrderCardData
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -45,26 +45,25 @@ import com.h0uss.aimart.data.model.ProductData
 import com.h0uss.aimart.data.model.UserData
 import com.h0uss.aimart.ui.assets.Button
 import com.h0uss.aimart.ui.assets.Feedback
-import com.h0uss.aimart.ui.assets.PlaceAnOrder
 import com.h0uss.aimart.ui.assets.SellerHint
 import com.h0uss.aimart.ui.theme.Black100
 import com.h0uss.aimart.ui.theme.Black80
 import com.h0uss.aimart.ui.theme.White
 import com.h0uss.aimart.ui.theme.regularStyle
 import com.h0uss.aimart.ui.theme.semiboldStyle
-import com.h0uss.aimart.ui.viewModel.info.ProductInfoEvent
-import com.h0uss.aimart.ui.viewModel.info.ProductInfoState
+import com.h0uss.aimart.ui.viewModel.info.ProductSellerInfoEvent
+import com.h0uss.aimart.ui.viewModel.info.ProductSellerInfoState
 import com.h0uss.aimart.util.formatPrice
 import java.time.LocalDateTime
 import kotlin.math.min
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ProductInfoScreen(
+fun ProductSellerInfoScreen(
     modifier: Modifier = Modifier,
-    state: ProductInfoState = ProductInfoState(),
-    onEvent: (ProductInfoEvent) -> Unit = {},
-    onBuy: (Long, Long) -> Unit = {sellerId, productId -> },
+    state: ProductSellerInfoState = ProductSellerInfoState(),
+    onEvent: (ProductSellerInfoEvent) -> Unit = {},
+    onBuy: (Long, Long) -> Unit = { sellerId, productId -> },
     onBackClick: () -> Unit = {},
 ) {
     var countFeedbackItem by remember { mutableIntStateOf(3) }
@@ -83,7 +82,7 @@ fun ProductInfoScreen(
         ) {
             Image(
                 modifier = Modifier
-                    .clickable{
+                    .clickable {
                         onBackClick()
                     },
                 painter = painterResource(R.drawable.back),
@@ -135,7 +134,7 @@ fun ProductInfoScreen(
                 Column(
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp, bottom = 14.dp)
-                ){
+                ) {
                     Text(
                         modifier = Modifier.padding(bottom = 10.dp),
                         text = "от ${state.product.price.formatPrice()}₽",
@@ -158,6 +157,7 @@ fun ProductInfoScreen(
                         color = Black80
                     )
                     Text(
+                        modifier = Modifier.height(100.dp),
                         text = state.product.description,
                         style = regularStyle,
                         fontSize = 14.sp,
@@ -166,21 +166,9 @@ fun ProductInfoScreen(
                     )
                 }
             }
-            item{
-                PlaceAnOrder(
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
-                    user = state.user,
-                    onUserClick = {
-                        onEvent(ProductInfoEvent.UserClick(state.user.id))
-                    },
-                    onBuyClick = {
-                        onBuy(state.user.id, state.product.productId)
-                    }
-                )
-            }
             item {
                 Column(
-                    modifier = Modifier.padding(start = 32.dp, end = 32.dp),
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp),
                 ) {
                     Text(
                         text = "Отзывы",
@@ -195,14 +183,14 @@ fun ProductInfoScreen(
                     ) {
                         SellerHint(
                             modifier = Modifier.clickable {
-                                onEvent(ProductInfoEvent.FeedbackTagClick(0))
+                                onEvent(ProductSellerInfoEvent.FeedbackTagClick(0))
                             },
                             text = "Все",
                             isActive = state.feedbackFilter[0]
                         )
                         SellerHint(
                             modifier = Modifier.clickable {
-                                onEvent(ProductInfoEvent.FeedbackTagClick(1))
+                                onEvent(ProductSellerInfoEvent.FeedbackTagClick(1))
                             },
                             text = "Высокий рейтинг",
                             leftImageId = R.drawable.high_rating,
@@ -210,7 +198,7 @@ fun ProductInfoScreen(
                         )
                         SellerHint(
                             modifier = Modifier.clickable {
-                                onEvent(ProductInfoEvent.FeedbackTagClick(2))
+                                onEvent(ProductSellerInfoEvent.FeedbackTagClick(2))
                             },
                             text = "Низкий рейтинг",
                             leftImageId = R.drawable.low_rating,
@@ -249,12 +237,11 @@ fun ProductInfoScreen(
 @Preview(heightDp = 2000)
 @Composable
 private fun Preview() {
-    ProductInfoScreen(
-        state = ProductInfoState(
+    ProductSellerInfoScreen(
+        state = ProductSellerInfoState(
             product = ProductData(
                 author = "popo",
                 name = "productname",
-                description = "asdsadasdasd",
                 price = 10.1f,
                 imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
                 status = ProductStatus.ACTIVE,

@@ -85,6 +85,12 @@ val settingsDropdownItems = listOf(
         imageId = R.drawable.question,
         name = "Помощь",
         textColor = Black80
+    ),
+    DropdownItemData(
+        id = "exit",
+        imageId = R.drawable.small_exit,
+        name = "Выход",
+        textColor = ErrorText
     )
 )
 

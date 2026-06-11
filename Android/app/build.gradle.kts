@@ -1,11 +1,9 @@
-//import jdk.tools.jlink.resources.plugins
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.kotlin.serialasion)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -32,6 +30,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -49,7 +48,7 @@ dependencies {
 
     implementation(libs.android.splash.screen)
     implementation(libs.android.navigation)
-    implementation(libs.kotlin.serialasion.json)
+    implementation(libs.kotlin.serialization.json)
     implementation(libs.android.compose.foundation)
     implementation(libs.android.lifecycle)
 
@@ -58,7 +57,7 @@ dependencies {
     implementation(libs.android.room.paging)
     ksp(libs.android.room.compiler)
 
-    implementation(libs.android.jbcrupt)
+    implementation(libs.android.jbcrypt)
 
     implementation(libs.android.datastore.core)
     implementation(libs.android.datastore)
@@ -75,6 +74,8 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    coreLibraryDesugaring(libs.android.desugar)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

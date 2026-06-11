@@ -24,6 +24,7 @@ import com.h0uss.aimart.ui.theme.Black50
 import com.h0uss.aimart.ui.theme.White
 import com.h0uss.aimart.ui.theme.regularStyle
 import com.h0uss.aimart.ui.theme.semiboldStyle
+import com.h0uss.aimart.util.formatPrice
 
 @Composable
 fun ProductCard(
@@ -64,7 +65,7 @@ fun ProductCard(
         )
         Text(
             modifier = Modifier.padding(top = 6.dp),
-            text = "$${product.price}",
+            text = "${product.price.formatPrice()}₽",
             style = semiboldStyle,
             fontSize = 16.sp,
             color = Black100

@@ -36,8 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
-import com.h0uss.aimart.data.emun.OrderStatus
-import com.h0uss.aimart.data.emun.ProductStatus
+import com.h0uss.aimart.data.enum.OrderStatus
+import com.h0uss.aimart.data.enum.ProductStatus
 import com.h0uss.aimart.data.model.OrderData
 import com.h0uss.aimart.data.model.ProductData
 import com.h0uss.aimart.data.model.StatusData
@@ -50,6 +50,7 @@ import com.h0uss.aimart.ui.theme.regularStyle
 import com.h0uss.aimart.ui.theme.semiboldStyle
 import com.h0uss.aimart.ui.viewModel.info.OrderInfoEvent
 import com.h0uss.aimart.ui.viewModel.info.OrderInfoState
+import com.h0uss.aimart.util.formatPrice
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -180,7 +181,7 @@ fun OrderInfoScreen(
                     color = Black80,
                 )
                 Text(
-                    text = "${state.order.price}$",
+                    text = "${state.order.price.formatPrice()}₽",
                     style = regularStyle,
                     fontSize = 14.sp,
                     color = Black80,

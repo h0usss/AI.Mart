@@ -8,8 +8,8 @@ import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.Graph.chatRepository
 import com.h0uss.aimart.Graph.orderRepository
 import com.h0uss.aimart.Graph.productRepository
-import com.h0uss.aimart.data.emun.OrderStatus
 import com.h0uss.aimart.data.entity.ChatEntity
+import com.h0uss.aimart.data.enum.OrderStatus
 import com.h0uss.aimart.data.model.ChatData
 import com.h0uss.aimart.data.model.OrderData
 import com.h0uss.aimart.data.model.ProductData

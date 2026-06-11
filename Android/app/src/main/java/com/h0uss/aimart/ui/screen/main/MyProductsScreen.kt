@@ -38,7 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.h0uss.aimart.R
-import com.h0uss.aimart.data.emun.ProductStatus
+import com.h0uss.aimart.data.enum.ProductStatus
 import com.h0uss.aimart.data.model.UserProductCardData
 import com.h0uss.aimart.ui.assets.Button
 import com.h0uss.aimart.ui.assets.NotificationsCount
@@ -130,7 +130,7 @@ fun MyProductsScreen(
                 color = Black80
             )
             Text(
-                text = "$${state.balance}",
+                text = "${state.balance}₽",
                 style = semiboldStyle,
                 fontSize = 16.sp,
                 color = Black80
@@ -233,10 +233,11 @@ fun MyProductsScreen(
                                 modifier = Modifier
                                     .padding(top = 12.dp)
                                     .clickable{
-                                        onEvent(MyProductsEvent.ProductClick(item.id))
+                                        onEvent(MyProductsEvent.ActiveProductClick(item.id))
                                     }
                                 ,
                                 product = item,
+                                onEditClick = { id -> onEvent(MyProductsEvent.EditProductClick(id)) },
                             )
                         }
                     }
@@ -256,11 +257,27 @@ fun MyProductsScreen(
                                 modifier = Modifier
                                     .padding(top = 12.dp)
                                     .clickable{
-                                        onEvent(MyProductsEvent.ProductClick(item.id))
+                                        onEvent(MyProductsEvent.ActiveProductClick(item.id))
                                     }
                                 ,
-                                product = item)
+                                product = item,
+                                onEditClick = { id -> onEvent(MyProductsEvent.EditProductClick(id)) },
+                            )
                         }
+                    }
+                }
+                else if (index == 1) {
+                    items(productsFiltered[index]) { item ->
+                        MyProductCard(
+                            modifier = Modifier
+                                .padding(top = 16.dp)
+                                .clickable{
+                                    onEvent(MyProductsEvent.ActiveProductClick(item.id))
+                                }
+                            ,
+                            product = item,
+                            onEditClick = { id -> onEvent(MyProductsEvent.EditProductClick(id)) },
+                        )
                     }
                 }
                 else {
@@ -269,10 +286,11 @@ fun MyProductsScreen(
                             modifier = Modifier
                                 .padding(top = 16.dp)
                                 .clickable{
-                                    onEvent(MyProductsEvent.ProductClick(item.id))
+                                    onEvent(MyProductsEvent.ActiveProductClick(item.id))
                                 }
                             ,
-                            product = item
+                            product = item,
+                            onEditClick = { id -> onEvent(MyProductsEvent.EditProductClick(id)) },
                         )
                     }
                 }

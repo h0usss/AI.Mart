@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -34,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
-import com.h0uss.aimart.data.emun.FormField
+import com.h0uss.aimart.data.enum.FormField
 import com.h0uss.aimart.ui.assets.Button
 import com.h0uss.aimart.ui.assets.TextField
 import com.h0uss.aimart.ui.assets.TextFieldNewProduct
@@ -98,7 +99,7 @@ fun NewProductScreen(
                 )
                 Text(
                     modifier = Modifier,
-                    text = "Новое объявление",
+                    text = if (state.existingProductId != -1L) "Редактировать объявление" else "Новое объявление",
                     style = semiboldStyle,
                     fontSize = 16.sp,
                     color = Black80
@@ -238,10 +239,11 @@ fun NewProductScreen(
                 color = Black80
             )
             TextField(
-                modifier = Modifier.padding(bottom = 16.dp),
+                modifier = Modifier.height(100.dp).padding(bottom = 16.dp),
                 placeHolder = "Опишите товар, его характеристики, условия выполнения и т.д.",
                 state = state.desc,
                 errorMessage = state.descError ?: "",
+                isBigTextField = true,
             )
         }
 
@@ -250,7 +252,7 @@ fun NewProductScreen(
                 .fillMaxWidth()
                 .padding(bottom = 24.dp)
             ,
-            text = "Разместить объявление",
+            text = if (state.existingProductId != -1L) "Сохранить изменения" else "Разместить объявление",
             onClick = {
                 onEvent(NewProductEvent.AddProduct)
             }

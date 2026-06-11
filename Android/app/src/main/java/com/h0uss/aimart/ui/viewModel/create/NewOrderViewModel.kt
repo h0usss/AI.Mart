@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.Graph.orderRepository
-import com.h0uss.aimart.data.emun.OrderStatus
 import com.h0uss.aimart.data.entity.OrderEntity
+import com.h0uss.aimart.data.enum.OrderStatus
 import com.h0uss.aimart.util.toLocalDateTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel

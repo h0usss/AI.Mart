@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.h0uss.aimart.data.emun.OrderStatus
+import com.h0uss.aimart.data.enum.OrderStatus
 import com.h0uss.aimart.data.model.StatusData
 import com.h0uss.aimart.ui.theme.Black10
 import com.h0uss.aimart.ui.theme.Black80

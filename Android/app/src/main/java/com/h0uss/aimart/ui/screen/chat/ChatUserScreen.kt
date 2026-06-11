@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.R
-import com.h0uss.aimart.data.emun.OrderStatus
+import com.h0uss.aimart.data.enum.OrderStatus
 import com.h0uss.aimart.data.model.ChatUserData
 import com.h0uss.aimart.data.model.MessageData
 import com.h0uss.aimart.data.model.OrderData

@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
-import com.h0uss.aimart.data.emun.OrderStatus
+import com.h0uss.aimart.data.enum.OrderStatus
 import com.h0uss.aimart.data.model.OrderCardData
 import com.h0uss.aimart.data.model.StatusData
 import com.h0uss.aimart.ui.assets.Status
@@ -27,6 +27,7 @@ import com.h0uss.aimart.ui.theme.Black100
 import com.h0uss.aimart.ui.theme.White
 import com.h0uss.aimart.ui.theme.regularStyle
 import com.h0uss.aimart.ui.theme.semiboldStyle
+import com.h0uss.aimart.util.formatPrice
 
 @Composable
 fun OrderCard(
@@ -72,7 +73,7 @@ fun OrderCard(
         )
         Text(
             modifier = Modifier.padding(top = 6.dp),
-            text = "$${order.price}",
+            text = "${order.price.formatPrice()}₽",
             style = semiboldStyle,
             fontSize = 16.sp,
             color = Black100

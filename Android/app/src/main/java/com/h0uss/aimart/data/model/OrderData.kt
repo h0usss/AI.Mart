@@ -1,6 +1,6 @@
 package com.h0uss.aimart.data.model
 
-import com.h0uss.aimart.data.emun.OrderStatus
+import com.h0uss.aimart.data.enum.OrderStatus
 import java.time.LocalDateTime
 
 class OrderData(

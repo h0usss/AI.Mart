@@ -43,7 +43,8 @@ fun UserEntity.toUserHomeData(): UserHomeData{
     return UserHomeData(
         id = this.id,
         name = this.name,
-        imageUrl = this.avatar
+        imageUrl = this.avatar,
+        rate = this.rate,
     )
 }
 

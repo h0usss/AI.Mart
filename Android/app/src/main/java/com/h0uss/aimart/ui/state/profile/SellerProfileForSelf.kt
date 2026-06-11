@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 fun SellerProfileForSelf(
     viewModel: SellerProfileForSelfViewModel = viewModel<SellerProfileForSelfViewModel>(),
     navToEdit: () -> Unit,
+    navToCreateOrLogin: () -> Unit = {},
     changeAlert: (AlertData?) -> Unit,
     showPortfolio: (PortfolioItemData?) -> Unit,
     topUpClick: () -> Unit,
@@ -30,6 +31,9 @@ fun SellerProfileForSelf(
             when(event) {
                 is SellerProfileForSelfNavigationEvent.EditClick -> {
                     navToEdit()
+                }
+                is SellerProfileForSelfNavigationEvent.ExitClick -> {
+                    navToCreateOrLogin()
                 }
                 is SellerProfileForSelfNavigationEvent.AddCaseClick -> {
 

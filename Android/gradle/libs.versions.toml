@@ -21,6 +21,7 @@ datastore = "1.2.0"
 paging = "3.3.6"
 material = "1.13.0"
 coil = "3.4.0"
+desugar = "2.1.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,7 +41,7 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 
 android-splash-screen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen"}
 android-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation"}
-kotlin-serialasion-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+kotlin-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 android-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation"}
 android-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 
@@ -49,7 +50,7 @@ android-room-runtime = { group = "androidx.room", name = "room-runtime", version
 android-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room"}
 android-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room"}
 
-android-jbcrupt = { group = "org.mindrot", name = "jbcrypt", version.ref = "jbcrypt"}
+android-jbcrypt = { group = "org.mindrot", name = "jbcrypt", version.ref = "jbcrypt"}
 
 android-datastore-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastore"}
 android-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore"}
@@ -61,10 +62,12 @@ android-material = { group = "com.google.android.material", name = "material", v
 android-coil-compose = {group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil"}
 android-coil-network = {group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil"}
 
+android-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
-kotlin-serialasion = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 

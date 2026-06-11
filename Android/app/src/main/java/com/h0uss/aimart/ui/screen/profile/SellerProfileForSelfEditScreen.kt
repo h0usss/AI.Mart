@@ -274,8 +274,8 @@ fun SellerProfileForSelfEditScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 32.dp, top = 16.dp, end = 32.dp),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                .padding(start = 32.dp, top = 8.dp, end = 32.dp, bottom = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Box(modifier = Modifier.weight(1f)) {
                                 val portfolio1 = portfolio[0]
@@ -355,30 +355,6 @@ fun SellerProfileForSelfEditScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 32.dp, top = 18.dp, end = 32.dp)
-                    ,
-                    text = "Выйти",
-                    isRedBorder = true,
-                    onClick = {
-                        onEvent(SellerProfileForSelfEditEvent.ShowAlert(
-                                AlertData(
-                                    title = "Вы уверены, что хотите выйти?",
-                                    leftText = "Выйти",
-                                    rightText = "Отменить",
-                                    rightClick = { onEvent(SellerProfileForSelfEditEvent.DeleteAlert) },
-                                    leftClick = {
-                                        onEvent(SellerProfileForSelfEditEvent.DeleteAlert)
-                                        onEvent(SellerProfileForSelfEditEvent.ExitClick)
-                                    },
-                                )
-                            )
-                        )
-                    },
-                    leftImageId = R.drawable.exit
-                )
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 32.dp, top = 12.dp, end = 32.dp)
                     ,
                     text = "Удалить аккаунт",
                     isRedFill = true,

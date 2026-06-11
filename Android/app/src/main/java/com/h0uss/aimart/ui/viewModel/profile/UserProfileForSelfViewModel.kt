@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.h0uss.aimart.Graph.authUserIdLong
+import com.h0uss.aimart.Graph.deleteUserId
 import com.h0uss.aimart.Graph.userRepository
 import com.h0uss.aimart.data.model.UserData
 import kotlinx.coroutines.channels.Channel
@@ -78,6 +79,12 @@ class UserProfileForSelfViewModel : ViewModel(){
                     "notifications" -> {}
                     "globe" -> {}
                     "question" -> {}
+                    "exit" -> {
+                        viewModelScope.launch {
+                            navigationEvents.send(UserProfileForSelfNavigationEvent.ExitClick)
+                            deleteUserId()
+                        }
+                    }
                     else -> {}
                 }
             }
@@ -101,6 +108,7 @@ sealed class UserProfileForSelfEvent {
 }
 
 sealed class UserProfileForSelfNavigationEvent {
+    object ExitClick : UserProfileForSelfNavigationEvent()
     object ReplenishAccount : UserProfileForSelfNavigationEvent()
     data class EditClick(val id: Long) : UserProfileForSelfNavigationEvent()
     data class EmptiedAccount(val id: Long) : UserProfileForSelfNavigationEvent()

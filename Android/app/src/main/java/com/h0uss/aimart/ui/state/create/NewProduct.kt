@@ -17,10 +17,17 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @Composable
 fun NewProduct(
     modifier: Modifier = Modifier,
+    productId: Long = -1L,
     viewModel: NewProductViewModel = viewModel<NewProductViewModel>(),
     onExit: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(productId) {
+        if (productId != -1L) {
+            viewModel.loadProduct(productId)
+        }
+    }
 
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.receiveAsFlow().collect { event ->

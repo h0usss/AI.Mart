@@ -150,9 +150,9 @@ interface UserDao {
             u.avatar AS imageUrl,
             u.rate AS rate,
             COUNT(o.id) AS countSell,
-            usi.profession AS profession,
-            usi.about AS about,
-            usi.skills AS skills
+            COALESCE(usi.profession, '') AS profession,
+            COALESCE(usi.about, '') AS about,
+            COALESCE(usi.skills, '') AS skills
         FROM user AS u
         LEFT JOIN orders AS o ON u.id = o.seller_id 
         LEFT JOIN user_sell_info AS usi ON u.id = usi.user_id
@@ -176,6 +176,7 @@ interface UserDao {
         SELECT * 
         FROM user 
         WHERE is_seller = 1
+        ORDER BY rate DESC
         LIMIT :limit
     """
     )
@@ -201,6 +202,7 @@ interface UserDao {
            OR COALESCE(usi.about, '') LIKE '%' || :string || '%'
            OR COALESCE(usi.skills, '') LIKE '%' || :string || '%'
            OR COALESCE(usi.profession, '') LIKE '%' || :string || '%'
+        ORDER BY u.rate DESC
     """
     )
     fun getUsersByStringInside(string: String): Flow<List<UserEntity>>

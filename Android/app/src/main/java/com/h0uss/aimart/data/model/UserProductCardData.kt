@@ -1,6 +1,6 @@
 package com.h0uss.aimart.data.model
 
-import com.h0uss.aimart.data.emun.ProductStatus
+import com.h0uss.aimart.data.enum.ProductStatus
 
 data class UserProductCardData(
     val id: Long,

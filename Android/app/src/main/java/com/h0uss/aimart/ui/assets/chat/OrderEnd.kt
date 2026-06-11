@@ -21,6 +21,7 @@ import com.h0uss.aimart.ui.theme.Black80
 import com.h0uss.aimart.ui.theme.White
 import com.h0uss.aimart.ui.theme.regularStyle
 import com.h0uss.aimart.ui.theme.semiboldStyle
+import com.h0uss.aimart.util.formatPrice
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -73,7 +74,7 @@ fun OrderEnd(
                 color = Black80
             )
             Text(
-                text = "${orderData.price}$",
+                text = "${orderData.price.formatPrice()}₽",
                 style = semiboldStyle,
                 fontSize = 18.sp,
                 color = Black80

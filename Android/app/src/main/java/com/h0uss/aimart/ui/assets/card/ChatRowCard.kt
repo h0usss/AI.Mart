@@ -26,6 +26,7 @@ import com.h0uss.aimart.ui.theme.Black50
 import com.h0uss.aimart.ui.theme.White
 import com.h0uss.aimart.ui.theme.regularStyle
 import com.h0uss.aimart.ui.theme.semiboldStyle
+import com.h0uss.aimart.util.formatPrice
 
 @Composable
 fun ChatRowCard(
@@ -82,7 +83,7 @@ fun ChatRowCard(
                     modifier = Modifier
                         .padding(top = 4.dp)
                     ,
-                    text = if (chat.price != null) "$${chat.price}" else "",
+                    text = if (chat.price != null) "${chat.price.formatPrice()}₽" else "",
                     style = regularStyle,
                     fontSize = 16.sp,
                     color = Black100

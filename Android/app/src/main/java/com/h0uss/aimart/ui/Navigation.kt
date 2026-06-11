@@ -48,6 +48,7 @@ import com.h0uss.aimart.ui.state.create.NewOrder
 import com.h0uss.aimart.ui.state.create.NewProduct
 import com.h0uss.aimart.ui.state.info.OrderInfo
 import com.h0uss.aimart.ui.state.info.ProductInfo
+import com.h0uss.aimart.ui.state.info.ProductSellerInfo
 import com.h0uss.aimart.ui.state.main.Home
 import com.h0uss.aimart.ui.state.main.MyProducts
 import com.h0uss.aimart.ui.state.main.Orders
@@ -83,7 +84,7 @@ fun Navigation(
     var taskBarInfo by remember { mutableStateOf<OrderData?>(null) }
 
     LaunchedEffect(authUserIdLong) {
-        isSeller = if (authUserIdLong != 0L)
+        isSeller = if (authUserIdLong > 0L)
             userRepository.getUserIsSeller(authUserIdLong)
         else
             null
@@ -171,7 +172,10 @@ fun Navigation(
                                     navController.navigate(Seller(sellerId))
                                 },
                                 navToProduct = { productId ->
-                                    navController.navigate(ProductInfo(productId))
+                                    if (isSeller == true)
+                                        navController.navigate(ProductSellerInfo(productId))
+                                    else
+                                        navController.navigate(ProductInfo(productId))
                                 },
                                 navToSearch = {
                                     navController.navigate(SearchTextField)
@@ -183,6 +187,23 @@ fun Navigation(
 
                             ProductInfo(
                                 productId = it.toRoute<ProductInfo>().productId,
+                                navToUser = { userId ->
+                                    navController.navigate(Seller(userId))
+                                },
+                                onBuy = { sellerId, productId ->
+                                    sellerIdForOrder = sellerId
+                                    productIdForOrder = productId
+                                },
+                                navToBack = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                        composable<ProductSellerInfo> {
+                            isBottomNavBarShow = false
+
+                            ProductSellerInfo(
+                                productId = it.toRoute<ProductSellerInfo>().productId,
                                 navToUser = { userId ->
                                     navController.navigate(Seller(userId))
                                 },
@@ -224,7 +245,10 @@ fun Navigation(
                                         taskBarInfo = orderInfo
                                     },
                                     navToProduct = { productId ->
-                                        navController.navigate(ProductInfo(productId))
+                                        if (isSeller == true)
+                                            navController.navigate(ProductSellerInfo(productId))
+                                        else
+                                            navController.navigate(ProductInfo(productId))
                                     },
                                 )
                             }
@@ -244,7 +268,10 @@ fun Navigation(
                                         navController.navigate(Seller(sellerId))
                                     },
                                     navToProduct = { productId ->
-                                        navController.navigate(ProductInfo(productId))
+                                        if (isSeller == true)
+                                            navController.navigate(ProductSellerInfo(productId))
+                                        else
+                                            navController.navigate(ProductInfo(productId))
                                     },
                                     navToSearchResult = {
                                         navController.navigate(SearchResult)
@@ -270,7 +297,10 @@ fun Navigation(
                                         navController.navigate(Seller(sellerId))
                                     },
                                     navToProduct = { productId ->
-                                        navController.navigate(ProductInfo(productId))
+                                        if (isSeller == true)
+                                            navController.navigate(ProductSellerInfo(productId))
+                                        else
+                                            navController.navigate(ProductInfo(productId))
                                     },
                                     navToSearchResult = {
                                         navController.navigate(SearchResult)
@@ -295,8 +325,14 @@ fun Navigation(
                                     navToProduct = { productId ->
                                         navController.navigate(ProductInfo(productId))
                                     },
+                                    navToProductSellerInfo = { productId ->
+                                        navController.navigate(ProductSellerInfo(productId))
+                                    },
+                                    navToEditProduct = { productId ->
+                                        navController.navigate(NewProduct(productId))
+                                    },
                                     navToNewProduct = {
-                                        navController.navigate(NewProduct)
+                                        navController.navigate(NewProduct())
                                     }
                                 )
                             }
@@ -304,9 +340,13 @@ fun Navigation(
                             composable<NewProduct> {
                                 isBottomNavBarShow = false
 
+                                val productId = it.toRoute<NewProduct>().productId
                                 NewProduct (
+                                    productId = productId,
                                     onExit = {
-                                        navController.navigate(MyProducts)
+                                        navController.navigate(MyProducts) {
+                                            popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                                        }
                                     }
                                 )
                             }
@@ -348,6 +388,11 @@ fun Navigation(
                                 SellerProfileForSelf(
                                     navToEdit = {
                                         navController.navigate(ProfileEdit)
+                                    },
+                                    navToCreateOrLogin = {
+                                        navController.navigate(Authorise) {
+                                            popUpTo(0) { inclusive = true }
+                                        }
                                     },
                                     changeAlert = { data ->
                                         alertData = data
@@ -395,6 +440,11 @@ fun Navigation(
                                     navToEdit = {
                                         navController.navigate(ProfileEdit)
                                     },
+                                    navToCreateOrLogin = {
+                                        navController.navigate(Authorise) {
+                                            popUpTo(0) { inclusive = true }
+                                        }
+                                    },
                                     changeAlert = { data ->
                                         alertData = data
                                     },
@@ -409,6 +459,11 @@ fun Navigation(
                                 false -> UserProfileForSelf(
                                     navToEditProfile = {
                                         // navController.navigate(ProfileEdit)
+                                    },
+                                    navToCreateOrLogin = {
+                                        navController.navigate(Authorise) {
+                                            popUpTo(0) { inclusive = true }
+                                        }
                                     },
                                     topUpClick = {
                                         isTopUpWallet = true
@@ -430,7 +485,9 @@ fun Navigation(
                                         navController.navigate(Profile)
                                     },
                                     navToCreateOrLogin = {
-                                        navController.navigate(Authorise)
+                                        navController.navigate(Authorise) {
+                                            popUpTo(0) { inclusive = true }
+                                        }
                                     },
                                     changeAlert = { data ->
                                         alertData = data

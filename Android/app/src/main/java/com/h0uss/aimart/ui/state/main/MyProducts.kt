@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 fun MyProducts(
     viewModel: MyProductsViewModel = viewModel<MyProductsViewModel>(),
     navToProduct: (Long) -> Unit,
+    navToProductSellerInfo: (Long) -> Unit = {},
+    navToEditProduct: (Long) -> Unit = {},
     navToNewProduct: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -25,7 +27,13 @@ fun MyProducts(
         viewModel.navigationEvents.receiveAsFlow().collect { event ->
             when(event) {
                 is MyProductsNavigationEvent.Product -> {
-                    navToProduct(event.value)
+                    navToProductSellerInfo(event.value)
+                }
+                is MyProductsNavigationEvent.ActiveProduct -> {
+                    navToProductSellerInfo(event.value)
+                }
+                is MyProductsNavigationEvent.EditProduct -> {
+                    navToEditProduct(event.value)
                 }
                 is MyProductsNavigationEvent.NewProduct -> {
                     navToNewProduct()

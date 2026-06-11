@@ -24,8 +24,6 @@ import com.h0uss.aimart.data.dao.ProductDao
 import com.h0uss.aimart.data.dao.SearchHintDao
 import com.h0uss.aimart.data.dao.UserDao
 import com.h0uss.aimart.data.dao.UserSellInfoDao
-import com.h0uss.aimart.data.emun.OrderStatus
-import com.h0uss.aimart.data.emun.ProductStatus
 import com.h0uss.aimart.data.entity.ChatEntity
 import com.h0uss.aimart.data.entity.FeedbackEntity
 import com.h0uss.aimart.data.entity.FeedbackWithUserReferenceView
@@ -40,6 +38,8 @@ import com.h0uss.aimart.data.entity.TagEntity
 import com.h0uss.aimart.data.entity.TransactionEntity
 import com.h0uss.aimart.data.entity.UserEntity
 import com.h0uss.aimart.data.entity.UserSellInfoEntity
+import com.h0uss.aimart.data.enum.OrderStatus
+import com.h0uss.aimart.data.enum.ProductStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -152,7 +152,7 @@ suspend fun populateDatabase(
     fillPortfolio(portfolioDao, usersIds)
     val o = fillOrders(orderDao = orderDao, usersIds, p)
     fillFeedback(feedbackDao, o)
-    feelChat(chatDao, messageDao, p, orderDao)
+    feelChat(chatDao, messageDao, o, orderDao)
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -278,8 +278,6 @@ suspend fun fillProduct(productDao: ProductDao, users: List<Long>): List<Long> {
     val descriptions =
         List(50) { "Высококачественное цифровое изображение, созданное с помощью нейронных сетей. Идеально подходит для печати или использования в качестве аватара. Стиль: ${productArtTypes.random()}." }
     val createDates = List(50) { LocalDateTime.now().minusDays(Random.nextLong(0, 365)) }
-    val productStatuses = List(50) { ProductStatus.entries.toTypedArray().random() }
-
     val initialProduct: List<ProductEntity> = buildList {
         for (i in 0..49) {
             add(
@@ -289,7 +287,7 @@ suspend fun fillProduct(productDao: ProductDao, users: List<Long>): List<Long> {
                     price = prices[i],
                     description = descriptions[i],
                     createDate = createDates[i],
-                    productStatus = productStatuses[i],
+                    productStatus = ProductStatus.ACTIVE,
                     userId = users[i % 5]
                 )
             )
@@ -346,6 +344,7 @@ suspend fun fillOrders(
 
     val initialOrder: List<OrderEntity> = buildList {
         for (i in 0..49) {
+            val sellerIndex = Random.nextInt(5)
             val status = statuses[i % statuses.size]
             val startDate = LocalDateTime.now().minusDays(Random.nextLong(1, 45))
             val completionDate = if (status == OrderStatus.COMPLETE) {
@@ -362,8 +361,8 @@ suspend fun fillOrders(
                     startDate = startDate,
                     completionDate = completionDate,
                     buyerId = buyerIds.random(),
-                    sellerId = sellerIds.random(),
-                    productId = productIds.random(),
+                    sellerId = sellerIds[sellerIndex],
+                    productId = productIds[sellerIndex + Random.nextInt(10) * 5],
                     description = LoremIpsum(Random.nextInt(20, 50)).values.joinToString("") { it }
                 )
             )
@@ -422,7 +421,7 @@ suspend fun feelChat(
     ordersDao: OrderDao
 ) {
     val initialChats: List<ChatEntity> = buildList {
-        for (i in 0 until 10) {
+        for (i in orders.indices) {
             val order = ordersDao.getOrderById(orders[i]).first()
 
             val myId = if (i % 2 == 0) order.buyerId else order.sellerId

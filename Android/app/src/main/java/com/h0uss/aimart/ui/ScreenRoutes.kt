@@ -57,6 +57,11 @@ data class ProductInfo(
 ): ScreensRoutes
 
 @Serializable
+data class ProductSellerInfo(
+    val productId: Long
+): ScreensRoutes
+
+@Serializable
 object Orders: ScreensRoutes
 @Serializable
 object OrderList: ScreensRoutes
@@ -72,4 +77,6 @@ object Products: ScreensRoutes
 @Serializable
 object MyProducts: ScreensRoutes
 @Serializable
-object NewProduct: ScreensRoutes
+data class NewProduct(
+    val productId: Long = -1L
+): ScreensRoutes

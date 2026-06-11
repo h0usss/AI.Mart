@@ -54,7 +54,7 @@ fun Balance(
             )
             Text(
                 modifier = Modifier,
-                text = "$$balance",
+                text = "$balance₽",
                 style = semiboldStyle,
                 fontSize = 18.sp,
                 color = Black80
