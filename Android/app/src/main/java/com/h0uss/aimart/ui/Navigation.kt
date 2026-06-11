@@ -213,6 +213,9 @@ fun Navigation(
                                 },
                                 navToBack = {
                                     navController.popBackStack()
+                                },
+                                onEdit = { productId ->
+                                    navController.navigate(NewProduct(productId))
                                 }
                             )
                         }

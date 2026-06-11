@@ -21,6 +21,7 @@ import com.h0uss.aimart.data.dao.MessageDao
 import com.h0uss.aimart.data.dao.OrderDao
 import com.h0uss.aimart.data.dao.PortfolioDao
 import com.h0uss.aimart.data.dao.ProductDao
+import com.h0uss.aimart.data.dao.ProductViewDao
 import com.h0uss.aimart.data.dao.SearchHintDao
 import com.h0uss.aimart.data.dao.UserDao
 import com.h0uss.aimart.data.dao.UserSellInfoDao
@@ -33,6 +34,7 @@ import com.h0uss.aimart.data.entity.PortfolioItemEntity
 import com.h0uss.aimart.data.entity.PortfolioTagEntity
 import com.h0uss.aimart.data.entity.ProductEntity
 import com.h0uss.aimart.data.entity.ProductTagEntity
+import com.h0uss.aimart.data.entity.ProductViewEntity
 import com.h0uss.aimart.data.entity.SearchHintEntity
 import com.h0uss.aimart.data.entity.TagEntity
 import com.h0uss.aimart.data.entity.TransactionEntity
@@ -68,6 +70,7 @@ import kotlin.random.Random
         MessageEntity::class,
         ProductEntity::class,
         OrderEntity::class,
+        ProductViewEntity::class,
         UserEntity::class,
         ChatEntity::class,
         TagEntity::class,
@@ -88,6 +91,7 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun userSellInfoDao(): UserSellInfoDao
     abstract fun chatDao(): ChatDao
     abstract fun messageDao(): MessageDao
+    abstract fun productViewDao(): ProductViewDao
 
     companion object {
         @Volatile

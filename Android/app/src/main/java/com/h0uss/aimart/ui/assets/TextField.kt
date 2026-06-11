@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,6 +34,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.h0uss.aimart.R
@@ -53,7 +56,7 @@ fun TextField(
     isFill: Boolean = false,
     isBigTextField: Boolean = false,
     placeHolder: String,
-    radiusPercent: Int = 20,
+    radius: Dp = 6.dp,
     inputTransformation: InputTransformation = InputTransformation{},
     outputTransformation: OutputTransformation = OutputTransformation{},
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Default),
@@ -95,18 +98,21 @@ fun TextField(
             ),
             cursorBrush = SolidColor(Black80),
             decorator = { innerTextField ->
+                val boxModifier = if (isBigTextField) {
+                    Modifier.fillMaxWidth().fillMaxHeight()
+                } else {
+                    Modifier.fillMaxWidth().heightIn(min = 40.dp)
+                }
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 40.dp)
-                        .clip(RoundedCornerShape(radiusPercent))
+                    modifier = boxModifier
+                        .clip(RoundedCornerShape(radius))
                         .border(
                             color =
                                 if (!errorMessage.isEmpty()) ErrorText
                                 else if (isFocus) Black80
                                 else Black10,
                             width = 1.dp,
-                            shape = RoundedCornerShape(radiusPercent)
+                            shape = RoundedCornerShape(radius)
                         )
                         .background(
                             color =
@@ -122,7 +128,7 @@ fun TextField(
                             end = 16.dp,
                             bottom = 8.dp
                         ),
-                    contentAlignment = Alignment.CenterStart
+                    contentAlignment = if (isBigTextField) Alignment.TopStart  else Alignment.CenterStart
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -142,7 +148,8 @@ fun TextField(
 
                         Box(
                             modifier = Modifier
-                                .weight(1f)
+                                .weight(1f),
+                            contentAlignment = Alignment.TopStart
                         ){
                             if (state.text.isEmpty())
                                 Text(
@@ -208,9 +215,16 @@ private fun PreviewNecessarily() {
             leftImageId = R.drawable.loupe
         )
         TextField(
+            modifier = Modifier.height(200.dp),
             placeHolder = "Пароль",
             isBigTextField = true,
             state = remember{ TextFieldState("dfasjhdlhas jd sj fdkjlshd flksdfs dsdh sdjk lasldk jhfaslkdjfhlskahj dhfk jsdhakjshdf slkjh fkjsd hlsdkjhf lskjdh fljksda hldjhf ljks dhahf ljkash fdasjhkl f") }
+        )
+        TextField(
+            modifier = Modifier.height(200.dp),
+            placeHolder = "Пароль",
+            isBigTextField = true,
+            state = remember{ TextFieldState("") }
         )
     }
 }

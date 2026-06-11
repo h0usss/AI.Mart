@@ -20,6 +20,7 @@ fun ProductSellerInfo(
     navToUser: (Long) -> Unit,
     navToBack: () -> Unit,
     onBuy: (Long, Long) -> Unit,
+    onEdit: (Long) -> Unit = {},
 ) {
     val viewModel: ProductSellerInfoViewModel = viewModel(
         factory = ProductSellerInfoViewModelFactory(productId)
@@ -32,6 +33,9 @@ fun ProductSellerInfo(
             when (event) {
                 is ProductSellerInfoNavigationEvent.User -> {
                     navToUser(event.value)
+                }
+                is ProductSellerInfoNavigationEvent.EditProduct -> {
+                    onEdit(productId)
                 }
             }
         }

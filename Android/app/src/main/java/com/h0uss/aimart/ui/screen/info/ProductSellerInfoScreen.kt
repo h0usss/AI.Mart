@@ -29,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -47,6 +48,7 @@ import com.h0uss.aimart.ui.assets.Button
 import com.h0uss.aimart.ui.assets.Feedback
 import com.h0uss.aimart.ui.assets.SellerHint
 import com.h0uss.aimart.ui.theme.Black100
+import com.h0uss.aimart.ui.theme.Black45
 import com.h0uss.aimart.ui.theme.Black80
 import com.h0uss.aimart.ui.theme.White
 import com.h0uss.aimart.ui.theme.regularStyle
@@ -67,7 +69,6 @@ fun ProductSellerInfoScreen(
     onBackClick: () -> Unit = {},
 ) {
     var countFeedbackItem by remember { mutableIntStateOf(3) }
-    var likeImage by remember { mutableIntStateOf(R.drawable.like) }
 
     Column(
         modifier = modifier
@@ -96,15 +97,11 @@ fun ProductSellerInfoScreen(
                 )
                 Image(
                     modifier = Modifier
-                        .padding(4.dp)
                         .clickable {
-                            likeImage = if (likeImage == R.drawable.like)
-                                R.drawable.like_red
-                            else
-                                R.drawable.like
+                            onEvent(ProductSellerInfoEvent.EditClick)
                         },
-                    painter = painterResource(likeImage),
-                    contentDescription = "Like",
+                    painter = painterResource(R.drawable.edit),
+                    contentDescription = "Edit",
                 )
             }
         }
@@ -113,19 +110,43 @@ fun ProductSellerInfoScreen(
             contentPadding = WindowInsets.systemBars.asPaddingValues()
         ) {
             item {
-                LazyRow(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    contentPadding = PaddingValues(bottom = 14.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(state.product.imagesUrl) { imageId ->
-                        AsyncImage(
-                            modifier = Modifier
-                                .size(240.dp)
-                                .clip(RoundedCornerShape(8.dp)),
-                            model = imageId,
-                            contentDescription = "Product image $imageId",
-                            contentScale = ContentScale.Crop
+                Column {
+                    LazyRow(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        contentPadding = PaddingValues(bottom = 14.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(state.product.imagesUrl) { imageId ->
+                            AsyncImage(
+                                modifier = Modifier
+                                    .size(240.dp)
+                                    .clip(RoundedCornerShape(8.dp)),
+                                model = imageId,
+                                contentDescription = "Product image $imageId",
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(start = 16.dp, bottom = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.eye),
+                            contentDescription = "Просмотры",
+                            modifier = Modifier.padding(end = 10.dp),
+                        )
+                        val displayViews = if (state.todayViews > 0) {
+                            "${state.totalViews - state.todayViews} +${state.todayViews}"
+                        } else {
+                            state.totalViews.toString()
+                        }
+                        Text(
+                            text = displayViews,
+                            style = regularStyle,
+                            fontSize = 14.sp,
+                            color = Black45,
                         )
                     }
                 }

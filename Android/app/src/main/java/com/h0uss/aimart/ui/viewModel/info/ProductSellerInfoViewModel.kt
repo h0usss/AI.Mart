@@ -4,9 +4,12 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.Graph.feedbackRepository
 import com.h0uss.aimart.Graph.productRepository
+import com.h0uss.aimart.Graph.productViewDao
 import com.h0uss.aimart.Graph.userRepository
+import com.h0uss.aimart.data.entity.ProductViewEntity
 import com.h0uss.aimart.data.model.FeedbackData
 import com.h0uss.aimart.data.model.ProductData
 import com.h0uss.aimart.data.model.UserData
@@ -18,6 +21,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -32,9 +38,38 @@ class ProductSellerInfoViewModel(
         private set
 
     init {
+        viewModelScope.launch {
+            val product = productRepository.getProductEntityById(productId)
+            if (product != null && product.userId != authUserIdLong) {
+                productRepository.incrementViewCount(productId)
+                productViewDao.insert(
+                    ProductViewEntity(
+                        productId = productId,
+                        userId = authUserIdLong,
+                        viewedAt = LocalDateTime.now(),
+                    )
+                )
+            }
+        }
+
         productRepository.getProductById(productId)
             .onEach { product ->
                 state.update { it.copy(product = product) }
+            }
+            .launchIn(viewModelScope)
+
+        val todayStart = LocalDate.now().atStartOfDay()
+        val todayEnd = LocalDate.now().atTime(LocalTime.MAX)
+
+        productViewDao.getTotalUniqueViewsByProductId(productId)
+            .onEach { total ->
+                state.update { it.copy(totalViews = total.toInt()) }
+            }
+            .launchIn(viewModelScope)
+
+        productViewDao.getUniqueViewsByProductIdBetween(productId, todayStart, todayEnd)
+            .onEach { today ->
+                state.update { it.copy(todayViews = today.toInt()) }
             }
             .launchIn(viewModelScope)
 
@@ -66,6 +101,11 @@ class ProductSellerInfoViewModel(
             }
             is ProductSellerInfoEvent.FeedbackTagClick -> {
                 handleFeedbackTagClick(event.index)
+            }
+            is ProductSellerInfoEvent.EditClick -> {
+                viewModelScope.launch {
+                    navigationEvents.send(ProductSellerInfoNavigationEvent.EditProduct)
+                }
             }
         }
     }
@@ -103,13 +143,18 @@ data class ProductSellerInfoState(
     val feedbackFilter: List<Boolean> = listOf(true, false, false),
     val filteredFeedback: List<FeedbackData> = listOf(),
     val originalFeedback: List<FeedbackData> = listOf(),
+
+    val totalViews: Int = 0,
+    val todayViews: Int = 0,
 )
 
 sealed class ProductSellerInfoEvent {
     data class UserClick(val value: Long) : ProductSellerInfoEvent()
     data class FeedbackTagClick(val index: Int) : ProductSellerInfoEvent()
+    data object EditClick : ProductSellerInfoEvent()
 }
 
 sealed class ProductSellerInfoNavigationEvent {
     data class User(val value: Long) : ProductSellerInfoNavigationEvent()
+    data object EditProduct : ProductSellerInfoNavigationEvent()
 }

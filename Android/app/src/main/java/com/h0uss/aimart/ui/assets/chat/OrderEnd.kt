@@ -85,7 +85,7 @@ fun OrderEnd(
                 .fillMaxWidth()
                 .padding(bottom = 8.dp)
             ,
-            text = "Оплатить",
+            text = if (canPay) "Оплатить" else "Недостаточно средств",
             isGray = !canPay,
             onClick = {
                 if (canPay)

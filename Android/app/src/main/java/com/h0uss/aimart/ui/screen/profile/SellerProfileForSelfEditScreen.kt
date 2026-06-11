@@ -207,7 +207,6 @@ fun SellerProfileForSelfEditScreen(
                         isBigTextField = true,
                         placeHolder = "Напишите тут информацию о себе ..",
                         state = state.newAboutState,
-                        radiusPercent = 10,
                     )
                     Text(
                         modifier = Modifier.padding(top = 18.dp, bottom = 18.dp),

@@ -230,13 +230,9 @@ fun MyProductsScreen(
                         }
                         items(failed) { item ->
                             MyProductCard(
-                                modifier = Modifier
-                                    .padding(top = 12.dp)
-                                    .clickable{
-                                        onEvent(MyProductsEvent.ActiveProductClick(item.id))
-                                    }
-                                ,
+                                modifier = Modifier.padding(top = 12.dp),
                                 product = item,
+                                onClick = { id -> onEvent(MyProductsEvent.ActiveProductClick(id)) },
                                 onEditClick = { id -> onEvent(MyProductsEvent.EditProductClick(id)) },
                             )
                         }
@@ -254,13 +250,9 @@ fun MyProductsScreen(
                         }
                         items(inModeration) { item ->
                             MyProductCard(
-                                modifier = Modifier
-                                    .padding(top = 12.dp)
-                                    .clickable{
-                                        onEvent(MyProductsEvent.ActiveProductClick(item.id))
-                                    }
-                                ,
+                                modifier = Modifier.padding(top = 12.dp),
                                 product = item,
+                                onClick = { id -> onEvent(MyProductsEvent.ActiveProductClick(id)) },
                                 onEditClick = { id -> onEvent(MyProductsEvent.EditProductClick(id)) },
                             )
                         }
@@ -269,13 +261,9 @@ fun MyProductsScreen(
                 else if (index == 1) {
                     items(productsFiltered[index]) { item ->
                         MyProductCard(
-                            modifier = Modifier
-                                .padding(top = 16.dp)
-                                .clickable{
-                                    onEvent(MyProductsEvent.ActiveProductClick(item.id))
-                                }
-                            ,
+                            modifier = Modifier.padding(top = 16.dp),
                             product = item,
+                            onClick = { id -> onEvent(MyProductsEvent.ActiveProductClick(id)) },
                             onEditClick = { id -> onEvent(MyProductsEvent.EditProductClick(id)) },
                         )
                     }
@@ -283,13 +271,9 @@ fun MyProductsScreen(
                 else {
                     items(productsFiltered[index]) { item ->
                         MyProductCard(
-                            modifier = Modifier
-                                .padding(top = 16.dp)
-                                .clickable{
-                                    onEvent(MyProductsEvent.ActiveProductClick(item.id))
-                                }
-                            ,
+                            modifier = Modifier.padding(top = 16.dp),
                             product = item,
+                            onClick = { id -> onEvent(MyProductsEvent.ActiveProductClick(id)) },
                             onEditClick = { id -> onEvent(MyProductsEvent.EditProductClick(id)) },
                         )
                     }

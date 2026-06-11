@@ -239,7 +239,7 @@ fun NewProductScreen(
                 color = Black80
             )
             TextField(
-                modifier = Modifier.height(100.dp).padding(bottom = 16.dp),
+                modifier = Modifier.height(150.dp).padding(bottom = 16.dp),
                 placeHolder = "Опишите товар, его характеристики, условия выполнения и т.д.",
                 state = state.desc,
                 errorMessage = state.descError ?: "",

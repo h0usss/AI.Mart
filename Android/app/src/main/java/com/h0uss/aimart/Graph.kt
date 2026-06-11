@@ -76,10 +76,12 @@ object Graph {
             messageDao = db.messageDao(),
         )
     }
+    val productViewDao by lazy { db.productViewDao() }
+
     val analyticsRepository by lazy {
         AnalyticsRepository(
             orderDao = db.orderDao(),
-            productDao = db.productDao(),
+            productViewDao = db.productViewDao(),
         )
     }
 

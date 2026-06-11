@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -163,33 +166,70 @@ private fun AnalyticBarChart(
     val maxValue = bars.maxOf { it.value }.coerceAtLeast(1f)
     val chartHeight = 90.dp
 
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Bottom,
-    ) {
-        bars.forEachIndexed { index, bar ->
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable { onBarSelect(index) },
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                val barHeight = (bar.value / maxValue * chartHeight.value).dp.coerceAtLeast(4.dp)
-                Box(
+    if (bars.size <= 7) {
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom,
+        ) {
+            bars.forEachIndexed { index, bar ->
+                Column(
                     modifier = Modifier
-                        .width(36.dp)
-                        .height(barHeight)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(if (index == selectedIndex) Teal else AnalyticGray),
-                )
-                Text(
-                    text = bar.label,
-                    modifier = Modifier.padding(top = 6.dp),
-                    style = regularStyle,
-                    fontSize = 11.sp,
-                    color = Black45,
-                )
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clickable { onBarSelect(index) },
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Bottom,
+                ) {
+                    val barHeight = (bar.value / maxValue * chartHeight.value).dp.coerceAtLeast(4.dp)
+                    Box(
+                        modifier = Modifier
+                            .width(36.dp)
+                            .height(barHeight)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(if (index == selectedIndex) Teal else AnalyticGray),
+                    )
+                    Text(
+                        text = bar.label,
+                        modifier = Modifier.padding(top = 6.dp),
+                        style = regularStyle,
+                        fontSize = 11.sp,
+                        color = Black45,
+                    )
+                }
+            }
+        }
+    } else {
+        LazyRow(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.Bottom,
+        ) {
+            itemsIndexed(bars) { index, bar ->
+                Column(
+                    modifier = Modifier
+                        .width(48.dp)
+                        .fillMaxHeight()
+                        .clickable { onBarSelect(index) },
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Bottom,
+                ) {
+                    val barHeight = (bar.value / maxValue * chartHeight.value).dp.coerceAtLeast(4.dp)
+                    Box(
+                        modifier = Modifier
+                            .width(36.dp)
+                            .height(barHeight)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(if (index == selectedIndex) Teal else AnalyticGray),
+                    )
+                    Text(
+                        text = bar.label,
+                        modifier = Modifier.padding(top = 6.dp),
+                        style = regularStyle,
+                        fontSize = 11.sp,
+                        color = Black45,
+                    )
+                }
             }
         }
     }
