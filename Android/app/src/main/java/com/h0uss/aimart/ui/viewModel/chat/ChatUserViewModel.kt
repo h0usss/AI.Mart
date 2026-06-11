@@ -9,7 +9,6 @@ import com.h0uss.aimart.Graph.chatRepository
 import com.h0uss.aimart.Graph.messageRepository
 import com.h0uss.aimart.Graph.orderRepository
 import com.h0uss.aimart.Graph.userRepository
-import com.h0uss.aimart.data.enum.OrderStatus
 import com.h0uss.aimart.data.model.ChatUserData
 import com.h0uss.aimart.data.model.MessageData
 import com.h0uss.aimart.data.model.OrderData
@@ -108,7 +107,7 @@ class ChatUserViewModel(
                     )
 
                     if (success) {
-                        orderRepository.updateStatus(order.id, OrderStatus.COMPLETE)
+                        orderRepository.completeOrder(order.id)
                     }
                 }
             }

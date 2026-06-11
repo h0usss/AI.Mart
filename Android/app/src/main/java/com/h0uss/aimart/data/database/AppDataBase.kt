@@ -300,7 +300,45 @@ suspend fun fillProduct(productDao: ProductDao, users: List<Long>): List<Long> {
         }
     }
 
-    return productDao.insertAll(initialProduct)
+    val productIds = productDao.insertAll(initialProduct)
+
+    val archiveNames = List(10) { "Архив: ${productArtTypes.random()} #${it + 1}" }
+    val moderationNames = List(10) { "Модерация: ${productArtTypes.random()} #${it + 1}" }
+    val extraProducts: List<ProductEntity> = buildList {
+        for (s in 0..4) {
+            for (a in 0..1) {
+                add(
+                    ProductEntity(
+                        name = archiveNames[s * 2 + a],
+                        imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${productImageIds.random()}" },
+                        price = Random.nextInt(5, 500).toFloat(),
+                        description = "Архивный товар: ${productArtTypes.random()}.",
+                        createDate = LocalDateTime.now().minusDays(Random.nextLong(0, 365)),
+                        productStatus = ProductStatus.ARCHIVE,
+                        viewCount = Random.nextLong(0, 100),
+                        userId = users[s]
+                    )
+                )
+            }
+            for (m in 0..1) {
+                add(
+                    ProductEntity(
+                        name = moderationNames[s * 2 + m],
+                        imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${productImageIds.random()}" },
+                        price = Random.nextInt(5, 500).toFloat(),
+                        description = "Товар на модерации: ${productArtTypes.random()}.",
+                        createDate = LocalDateTime.now().minusDays(Random.nextLong(0, 365)),
+                        productStatus = if (m == 0) ProductStatus.IN_MODERATING_PROCESS else ProductStatus.MODERATING_FAILED,
+                        viewCount = 0L,
+                        userId = users[s]
+                    )
+                )
+            }
+        }
+    }
+    productDao.insertAll(extraProducts)
+
+    return productIds
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

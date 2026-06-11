@@ -9,6 +9,7 @@ import com.h0uss.aimart.data.enum.OrderStatus
 import com.h0uss.aimart.data.model.OrderCardData
 import com.h0uss.aimart.data.model.OrderData
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDateTime
 
 @Dao
 interface OrderDao {
@@ -51,6 +52,9 @@ interface OrderDao {
 
     @Query("UPDATE orders SET status = :status WHERE id = :orderId")
     suspend fun updateOrderStatus(orderId: Long, status: OrderStatus)
+
+    @Query("UPDATE orders SET status = 'COMPLETE', completion_date = :completionDate WHERE id = :orderId")
+    suspend fun completeOrder(orderId: Long, completionDate: LocalDateTime)
 
     @Query("""
         SELECT * FROM orders

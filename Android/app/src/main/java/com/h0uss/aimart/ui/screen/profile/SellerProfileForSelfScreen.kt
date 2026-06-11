@@ -225,6 +225,9 @@ fun SellerProfileForSelfScreen(
                     onBarSelect = { index ->
                         onEvent(SellerProfileForSelfEvent.AnalyticBarSelect(index))
                     },
+                    onViewsModeToggle = {
+                        onEvent(SellerProfileForSelfEvent.ToggleAnalyticViewsMode)
+                    },
                 )
             }
             item {

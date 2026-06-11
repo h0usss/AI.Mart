@@ -6,6 +6,7 @@ import com.h0uss.aimart.data.enum.OrderStatus
 import com.h0uss.aimart.data.model.OrderCardData
 import com.h0uss.aimart.data.model.OrderData
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDateTime
 
 class OrderRepository(
     private val orderDao: OrderDao
@@ -25,5 +26,9 @@ class OrderRepository(
 
     suspend fun updateStatus(orderId: Long, status: OrderStatus){
         orderDao.updateOrderStatus(orderId, status)
+    }
+
+    suspend fun completeOrder(orderId: Long) {
+        orderDao.completeOrder(orderId, LocalDateTime.now())
     }
 }

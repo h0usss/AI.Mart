@@ -30,6 +30,10 @@ class AnalyticsRepository(
         selectedBarIndex: Int,
     ): Flow<AnalyticData> = orderDao.getCompletedOrdersBySellerId(sellerId).map { orders ->
         val now = LocalDate.now()
+        val yearsForYearPeriod: List<Int> = if (period == AnalyticPeriod.YEAR) {
+            orders.mapNotNull { it.completionDate?.toLocalDate()?.year }.distinct().sortedDescending().take(7)
+        } else emptyList()
+
         val barsData = when (period) {
             AnalyticPeriod.WEEK -> buildWeekBars(orders, now)
             AnalyticPeriod.MONTH -> buildMonthBars(orders, now)
@@ -44,17 +48,16 @@ class AnalyticsRepository(
             defaultIndex
         }
 
-        val yearsForYearPeriod: List<Int> = if (period == AnalyticPeriod.YEAR) {
-            orders.mapNotNull { it.completionDate?.toLocalDate()?.year }.distinct().sortedDescending().take(7)
-        } else emptyList()
-
-        val (startDate, endDate) = barDateRange(period, index, now, yearsForYearPeriod)
-        val viewCount = productViewDao.getUniqueViewsBySellerIdBetween(sellerId, startDate, endDate)
+        val barsWithViews = bars.mapIndexed { i, bar ->
+            val (startDate, endDate) = barDateRange(period, i, now, yearsForYearPeriod)
+            val viewCount = productViewDao.getUniqueViewsBySellerIdBetween(sellerId, startDate, endDate)
+            bar.copy(viewCount = viewCount.toInt())
+        }
 
         AnalyticData(
-            bars = bars,
+            bars = barsWithViews,
             selectedIndex = index,
-            totalViews = viewCount.toInt(),
+            totalViews = barsWithViews.sumOf { it.viewCount },
         )
     }
 

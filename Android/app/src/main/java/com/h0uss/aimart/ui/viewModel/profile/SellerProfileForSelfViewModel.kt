@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -37,6 +38,7 @@ class SellerProfileForSelfViewModel : ViewModel(){
 
     private val analyticPeriod = MutableStateFlow(AnalyticPeriod.WEEK)
     private val analyticSelectedBarIndex = MutableStateFlow(-1)
+    private val isAnalyticViewsMode = MutableStateFlow(false)
 
     init{
         combine(
@@ -62,14 +64,14 @@ class SellerProfileForSelfViewModel : ViewModel(){
                 }
         }.launchIn(viewModelScope)
 
-        combine(analyticPeriod, analyticSelectedBarIndex) { period, selectedIndex ->
-            period to selectedIndex
-        }.flatMapLatest { (period, selectedIndex) ->
+        combine(analyticPeriod, analyticSelectedBarIndex, isAnalyticViewsMode) { period, selectedIndex, isViews ->
+            Triple(period, selectedIndex, isViews)
+        }.flatMapLatest { (period, selectedIndex, isViews) ->
             analyticsRepository.getSellerAnalytics(
                 sellerId = authUserIdLong,
                 period = period,
                 selectedBarIndex = selectedIndex,
-            )
+            ).map { data -> data.copy(isViewsMode = isViews) }
         }.onEach { analyticData ->
             state.update {
                 it.copy(
@@ -147,6 +149,9 @@ class SellerProfileForSelfViewModel : ViewModel(){
             }
             is SellerProfileForSelfEvent.AnalyticBarSelect -> {
                 analyticSelectedBarIndex.value = event.index
+            }
+            is SellerProfileForSelfEvent.ToggleAnalyticViewsMode -> {
+                isAnalyticViewsMode.value = !isAnalyticViewsMode.value
             }
         }
     }
@@ -257,6 +262,7 @@ sealed class SellerProfileForSelfEvent {
     data class FeedbackTagClick(val index: Int) : SellerProfileForSelfEvent()
     data class AnalyticPeriodChange(val period: AnalyticPeriod) : SellerProfileForSelfEvent()
     data class AnalyticBarSelect(val index: Int) : SellerProfileForSelfEvent()
+    object ToggleAnalyticViewsMode : SellerProfileForSelfEvent()
 }
 
 sealed class SellerProfileForSelfNavigationEvent {
