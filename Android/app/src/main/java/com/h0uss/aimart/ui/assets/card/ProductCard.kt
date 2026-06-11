@@ -31,6 +31,7 @@ fun ProductCard(
     modifier: Modifier = Modifier,
     product: ProductCardData,
     onClick: (Long) -> Unit = {},
+    isSellerClick: Boolean = false,
 ) {
     Column(
         modifier = modifier
@@ -81,11 +82,14 @@ private fun Preview() {
             modifier = Modifier.padding(end = 5.dp),
             product = ProductCardData(
                 id = 1L,
+                authorId = 1L,
                 authorName = "Чуча",
                 name = "ProductName",
                 price = 10.99f,
                 imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
-                description = "a"
+                description = "a",
+                orderCount = 0,
+                authorRate = 0f
             )
         )
     }

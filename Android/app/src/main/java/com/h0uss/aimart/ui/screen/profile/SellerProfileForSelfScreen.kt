@@ -47,6 +47,7 @@ import com.h0uss.aimart.data.model.FeedbackData
 import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.data.model.SellerData
 import com.h0uss.aimart.data.model.UserData
+import com.h0uss.aimart.ui.assets.Analytic
 import com.h0uss.aimart.ui.assets.Balance
 import com.h0uss.aimart.ui.assets.Button
 import com.h0uss.aimart.ui.assets.Dropdown
@@ -212,6 +213,19 @@ fun SellerProfileForSelfScreen(
                         },
                     )
                 }
+            }
+            item {
+                Analytic(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    data = state.analyticData,
+                    selectedPeriod = state.analyticPeriod,
+                    onPeriodChange = { period ->
+                        onEvent(SellerProfileForSelfEvent.AnalyticPeriodChange(period))
+                    },
+                    onBarSelect = { index ->
+                        onEvent(SellerProfileForSelfEvent.AnalyticBarSelect(index))
+                    },
+                )
             }
             item {
                 Column(

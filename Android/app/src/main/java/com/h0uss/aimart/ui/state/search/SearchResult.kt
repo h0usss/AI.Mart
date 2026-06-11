@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 fun SearchResult(
     viewModel: SearchViewModel,
     navToSeller: (Long) -> Unit,
-    navToProduct: (Long) -> Unit,
+    navToProduct: (Long, Long) -> Unit,
     navToSearchResult: () -> Unit,
     navToSearch: () -> Unit,
     navToHome: () -> Unit,
@@ -32,7 +32,15 @@ fun SearchResult(
                     navToSeller(event.value)
                 }
                 is SearchNavigationEvent.Product -> {
-                    navToProduct(event.value)
+                    val productList = products.itemSnapshotList
+                    var authorId = -1L
+                    for (p in productList) {
+                        if (p?.id == event.value) {
+                            authorId = p?.authorId ?: -1L
+                            break
+                        }
+                    }
+                    navToProduct(event.value, authorId)
                 }
                 is SearchNavigationEvent.SearchEnter -> navToSearchResult()
                 is SearchNavigationEvent.Back -> navToSearch()

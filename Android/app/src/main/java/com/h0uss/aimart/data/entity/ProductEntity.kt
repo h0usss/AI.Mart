@@ -18,6 +18,7 @@ data class ProductEntity(
     @ColumnInfo( name = "description")      val description: String,
     @ColumnInfo( name = "create_date")      val createDate: LocalDateTime,
     @ColumnInfo( name = "product_status")   val productStatus: ProductStatus,
+    @ColumnInfo( name = "view_count")       val viewCount: Long = 0L,
 
     @ColumnInfo( name = "user_id")      val userId: Long,
 )

@@ -150,11 +150,14 @@ private fun Preview_data() {
     val productsFlow = flowOf(PagingData.from(List(21){ item ->
         ProductCardData(
             id = item.toLong(),
+            authorId = item.toLong(),
             authorName = "Бильбо",
             name = "AI Кольцо всевластия",
             price = 0.09f,
             imagesUrl = List(4) { "android.resource://com.h0uss.aimart/${R.drawable.background}" },
-            description = "Ты не пройдёшь"
+            description = "Ты не пройдёшь",
+            orderCount = 0,
+            authorRate = 0f
         )
     }))
 

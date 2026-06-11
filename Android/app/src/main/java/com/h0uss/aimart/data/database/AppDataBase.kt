@@ -75,7 +75,7 @@ import kotlin.random.Random
     views = [
         FeedbackWithUserReferenceView::class,
     ],
-    version = 2,
+    version = 1,
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {
@@ -278,6 +278,7 @@ suspend fun fillProduct(productDao: ProductDao, users: List<Long>): List<Long> {
     val descriptions =
         List(50) { "Высококачественное цифровое изображение, созданное с помощью нейронных сетей. Идеально подходит для печати или использования в качестве аватара. Стиль: ${productArtTypes.random()}." }
     val createDates = List(50) { LocalDateTime.now().minusDays(Random.nextLong(0, 365)) }
+    val viewCounts = List(50) { Random.nextLong(0, 500) }
     val initialProduct: List<ProductEntity> = buildList {
         for (i in 0..49) {
             add(
@@ -288,6 +289,7 @@ suspend fun fillProduct(productDao: ProductDao, users: List<Long>): List<Long> {
                     description = descriptions[i],
                     createDate = createDates[i],
                     productStatus = ProductStatus.ACTIVE,
+                    viewCount = viewCounts[i],
                     userId = users[i % 5]
                 )
             )

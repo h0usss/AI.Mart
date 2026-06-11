@@ -267,8 +267,8 @@ fun Navigation(
                                     navToSeller = { sellerId ->
                                         navController.navigate(Seller(sellerId))
                                     },
-                                    navToProduct = { productId ->
-                                        if (isSeller == true)
+                                    navToProduct = { productId, authorId ->
+                                        if (authUserIdLong == authorId)
                                             navController.navigate(ProductSellerInfo(productId))
                                         else
                                             navController.navigate(ProductInfo(productId))
@@ -296,8 +296,8 @@ fun Navigation(
                                     navToSeller = { sellerId ->
                                         navController.navigate(Seller(sellerId))
                                     },
-                                    navToProduct = { productId ->
-                                        if (isSeller == true)
+                                    navToProduct = { productId, authorId ->
+                                        if (authUserIdLong == authorId)
                                             navController.navigate(ProductSellerInfo(productId))
                                         else
                                             navController.navigate(ProductInfo(productId))

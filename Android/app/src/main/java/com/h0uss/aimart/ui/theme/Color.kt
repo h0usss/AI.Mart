@@ -43,3 +43,4 @@ val InWork   = Color(0xfffbbf24)
 val Debate   = Color(0xffef4444)
 val Complete = Color(0xff22c55e)
 
+val AnalyticGray = Color(0xff9CA3AF)

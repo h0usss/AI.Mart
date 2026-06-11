@@ -65,4 +65,12 @@ class ProductRepository(
             }
         ).flow
     }
+
+    fun getTotalViewCountBySellerId(sellerId: Long): Flow<Long> {
+        return productDao.getTotalViewCountBySellerId(sellerId)
+    }
+
+    suspend fun incrementViewCount(productId: Long) {
+        productDao.incrementViewCount(productId)
+    }
 }

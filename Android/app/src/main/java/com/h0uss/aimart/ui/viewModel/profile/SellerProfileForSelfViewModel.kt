@@ -4,12 +4,15 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.h0uss.aimart.Graph.analyticsRepository
 import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.Graph.deleteUserId
 import com.h0uss.aimart.Graph.feedbackRepository
 import com.h0uss.aimart.Graph.portfolioRepository
 import com.h0uss.aimart.Graph.userRepository
 import com.h0uss.aimart.data.model.AlertData
+import com.h0uss.aimart.data.model.AnalyticData
+import com.h0uss.aimart.data.model.AnalyticPeriod
 import com.h0uss.aimart.data.model.FeedbackData
 import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.data.model.SellerData
@@ -17,7 +20,9 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -29,6 +34,9 @@ class SellerProfileForSelfViewModel : ViewModel(){
 
     var navigationEvents = Channel<SellerProfileForSelfNavigationEvent>()
         private set
+
+    private val analyticPeriod = MutableStateFlow(AnalyticPeriod.WEEK)
+    private val analyticSelectedBarIndex = MutableStateFlow(-1)
 
     init{
         combine(
@@ -52,6 +60,23 @@ class SellerProfileForSelfViewModel : ViewModel(){
                         portfolioFilter = List(allTags.size) { index -> index == 0 }
                     )
                 }
+        }.launchIn(viewModelScope)
+
+        combine(analyticPeriod, analyticSelectedBarIndex) { period, selectedIndex ->
+            period to selectedIndex
+        }.flatMapLatest { (period, selectedIndex) ->
+            analyticsRepository.getSellerAnalytics(
+                sellerId = authUserIdLong,
+                period = period,
+                selectedBarIndex = selectedIndex,
+            )
+        }.onEach { analyticData ->
+            state.update {
+                it.copy(
+                    analyticData = analyticData,
+                    analyticPeriod = analyticPeriod.value,
+                )
+            }
         }.launchIn(viewModelScope)
     }
 
@@ -115,6 +140,13 @@ class SellerProfileForSelfViewModel : ViewModel(){
 
                     sendNavEvent(SellerProfileForSelfNavigationEvent.ShowPortfolioItem(portfolioItem))
                 }
+            }
+            is SellerProfileForSelfEvent.AnalyticPeriodChange -> {
+                analyticPeriod.value = event.period
+                analyticSelectedBarIndex.value = -1
+            }
+            is SellerProfileForSelfEvent.AnalyticBarSelect -> {
+                analyticSelectedBarIndex.value = event.index
             }
         }
     }
@@ -204,6 +236,9 @@ data class SellerProfileForSelfState(
 
     val filteredFeedback: List<FeedbackData> = listOf(),
     val originalFeedback: List<FeedbackData> = listOf(),
+
+    val analyticData: AnalyticData = AnalyticData(),
+    val analyticPeriod: AnalyticPeriod = AnalyticPeriod.WEEK,
 )
 
 sealed class SellerProfileForSelfEvent {
@@ -220,6 +255,8 @@ sealed class SellerProfileForSelfEvent {
     data class ShowPortfolioItem(val portfolioId: Long) : SellerProfileForSelfEvent()
     data class PortfolioTagClick(val name: String) : SellerProfileForSelfEvent()
     data class FeedbackTagClick(val index: Int) : SellerProfileForSelfEvent()
+    data class AnalyticPeriodChange(val period: AnalyticPeriod) : SellerProfileForSelfEvent()
+    data class AnalyticBarSelect(val index: Int) : SellerProfileForSelfEvent()
 }
 
 sealed class SellerProfileForSelfNavigationEvent {

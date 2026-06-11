@@ -52,4 +52,12 @@ interface OrderDao {
     @Query("UPDATE orders SET status = :status WHERE id = :orderId")
     suspend fun updateOrderStatus(orderId: Long, status: OrderStatus)
 
+    @Query("""
+        SELECT * FROM orders
+        WHERE seller_id = :sellerId
+          AND status = 'COMPLETE'
+          AND completion_date IS NOT NULL
+    """)
+    fun getCompletedOrdersBySellerId(sellerId: Long): Flow<List<OrderEntity>>
+
 }

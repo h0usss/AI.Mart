@@ -28,11 +28,11 @@ interface ProductDao {
     @Query("""
         SELECT 
             p.id AS id,
+            u.id AS authorId,
             u.name AS authorName,
             p.name AS name,
             p.price AS price,
             p.images AS imagesUrl,
-            p.product_status AS status,
             p.description AS description,
             (SELECT COUNT(*) FROM orders AS o WHERE o.product_id = p.id) AS orderCount,
             u.rate AS authorRate
@@ -70,11 +70,11 @@ interface ProductDao {
     @Query("""
         SELECT 
             p.id AS id,
+            u.id AS authorId,
             u.name AS authorName,
             p.name AS name,
             p.price AS price,
             p.images AS imagesUrl,
-            p.product_status AS status,
             p.description AS description,
             (SELECT COUNT(*) FROM orders AS o WHERE o.product_id = p.id) AS orderCount,
             u.rate AS authorRate
@@ -85,4 +85,10 @@ interface ProductDao {
         ORDER BY orderCount DESC, authorRate DESC, p.create_date DESC
     """)
     fun getProductByStringInside(string: String):  PagingSource<Int, ProductCardData>
+
+    @Query("SELECT COALESCE(SUM(view_count), 0) FROM product WHERE user_id = :sellerId")
+    fun getTotalViewCountBySellerId(sellerId: Long): Flow<Long>
+
+    @Query("UPDATE product SET view_count = view_count + 1 WHERE id = :productId")
+    suspend fun incrementViewCount(productId: Long)
 }
