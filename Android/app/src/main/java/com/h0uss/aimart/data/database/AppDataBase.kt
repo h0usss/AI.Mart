@@ -11,6 +11,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.h0uss.aimart.R
+import com.h0uss.aimart.data.converter.BigDecimalConverter
 import com.h0uss.aimart.data.converter.ListIntConverter
 import com.h0uss.aimart.data.converter.ListStringConverter
 import com.h0uss.aimart.data.converter.LocalDateTimeConverter
@@ -53,6 +54,7 @@ import kotlin.random.Random
     value = [
         LocalDateTimeConverter::class,
         ListStringConverter::class,
+        BigDecimalConverter::class,
         ListIntConverter::class,
     ]
 )
