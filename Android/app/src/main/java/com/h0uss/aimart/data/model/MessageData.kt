@@ -8,4 +8,5 @@ class MessageData (
     val avatarUrl: String = "",
     val userId: Long = -1L,
     val attachments: List<String> = emptyList(),
+    val isProtected: Boolean = false,
 )

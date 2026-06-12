@@ -35,7 +35,7 @@ interface ProductDao {
             p.price AS price,
             p.images AS imagesUrl,
             p.description AS description,
-            (SELECT COUNT(*) FROM orders AS o WHERE o.product_id = p.id) AS orderCount,
+            (SELECT COUNT(*) FROM orders AS o WHERE o.product_id = p.id AND o.status = 'COMPLETE') AS orderCount,
             u.rate AS authorRate
         FROM product AS p
         JOIN user AS u ON p.user_id = u.id
@@ -61,7 +61,8 @@ interface ProductDao {
             p.price AS price,
             p.description AS description,
             p.images AS imagesUrl,
-            p.product_status AS status
+            p.product_status AS status,
+            (SELECT COUNT(*) FROM orders AS o WHERE o.product_id = p.id AND o.status = 'COMPLETE') AS orderCount
         FROM product AS p
         JOIN user AS u ON p.user_id = u.id
         WHERE p.id = :productId
@@ -77,7 +78,7 @@ interface ProductDao {
             p.price AS price,
             p.images AS imagesUrl,
             p.description AS description,
-            (SELECT COUNT(*) FROM orders AS o WHERE o.product_id = p.id) AS orderCount,
+            (SELECT COUNT(*) FROM orders AS o WHERE o.product_id = p.id AND o.status = 'COMPLETE') AS orderCount,
             u.rate AS authorRate
         FROM product AS p
         LEFT JOIN user AS u ON p.user_id = u.id

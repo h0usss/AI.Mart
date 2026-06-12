@@ -104,6 +104,7 @@ fun OtherMessage(
                                             .weight(1f)
                                             .aspectRatio(1f)
                                     }
+                                    val protected = messageData.isProtected
                                     if (url.contains("/video/")) {
                                         Box(
                                             modifier = itemModifier
@@ -129,16 +130,44 @@ fun OtherMessage(
                                                     fontSize = 24.sp,
                                                 )
                                             }
+                                            if (protected) {
+                                                Text(
+                                                    text = "AI.MART",
+                                                    color = White.copy(alpha = 0.4f),
+                                                    fontSize = 10.sp,
+                                                    modifier = Modifier
+                                                        .align(Alignment.BottomEnd)
+                                                        .padding(4.dp)
+                                                        .background(Color.Black.copy(alpha = 0.4f), RoundedCornerShape(2.dp))
+                                                        .padding(horizontal = 3.dp, vertical = 1.dp),
+                                                )
+                                            }
                                         }
                                     } else {
-                                        AsyncImage(
-                                            model = url,
-                                            contentDescription = null,
+                                        Box(
                                             modifier = itemModifier
                                                 .clip(RoundedCornerShape(8.dp))
                                                 .clickable { onImageClick(url) },
-                                            contentScale = ContentScale.Crop,
-                                        )
+                                        ) {
+                                            AsyncImage(
+                                                model = url,
+                                                contentDescription = null,
+                                                modifier = Modifier.fillMaxSize(),
+                                                contentScale = ContentScale.Crop,
+                                            )
+                                            if (protected) {
+                                                Text(
+                                                    text = "AI.MART",
+                                                    color = White.copy(alpha = 0.4f),
+                                                    fontSize = 10.sp,
+                                                    modifier = Modifier
+                                                        .align(Alignment.BottomEnd)
+                                                        .padding(4.dp)
+                                                        .background(Color.Black.copy(alpha = 0.4f), RoundedCornerShape(2.dp))
+                                                        .padding(horizontal = 3.dp, vertical = 1.dp),
+                                                )
+                                            }
+                                        }
                                     }
                                 }
                                 if (rowItems.size == 1 && !isLastSingle) {

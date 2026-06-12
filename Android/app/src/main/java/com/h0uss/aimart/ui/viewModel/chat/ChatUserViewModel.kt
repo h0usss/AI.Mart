@@ -132,13 +132,15 @@ class ChatUserViewModel(
             is ChatUserEvent.SendAttachments -> {
                 viewModelScope.launch {
                     val current = state.value.selectedAttachments
+                    val isProtected = state.value.isProtectEnabled
                     if (current.isNotEmpty()) {
-                        messageRepository.addMessageToChat(chatId, authUserIdLong, "", current)
+                        messageRepository.addMessageToChat(chatId, authUserIdLong, "", current, isProtected)
                     }
                     state.update {
                         it.copy(
                             selectedAttachments = emptyList(),
                             isAttachmentSheetVisible = false,
+                            isProtectEnabled = false,
                         )
                     }
                 }

@@ -19,4 +19,5 @@ data class MessageEntity(
     @ColumnInfo( name = "attachments" ) val attachments: List<String> = emptyList(),
 
     @ColumnInfo(name = "created_at") val createdAt: LocalDateTime,
+    @ColumnInfo(name = "is_protected") val isProtected: Boolean = false,
 )

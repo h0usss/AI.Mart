@@ -24,7 +24,8 @@ interface MessageDao {
             m.created_at AS date,
             u.avatar AS avatarUrl,
             u.id AS userId,
-            m.attachments AS attachments
+            m.attachments AS attachments,
+            m.is_protected AS isProtected
         FROM messages AS m
         JOIN user AS u ON m.sender_id = u.id
         WHERE m.chat_id = :chatId

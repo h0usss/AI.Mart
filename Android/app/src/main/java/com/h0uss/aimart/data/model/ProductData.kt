@@ -10,5 +10,6 @@ data class ProductData(
     val price: Float = 0f,
     val description: String = "",
     val imagesUrl: List<String> = listOf(),
-    val status: ProductStatus = ProductStatus.ACTIVE
+    val status: ProductStatus = ProductStatus.ACTIVE,
+    val orderCount: Int = 0,
 )

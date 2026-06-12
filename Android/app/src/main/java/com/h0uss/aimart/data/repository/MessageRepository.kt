@@ -13,24 +13,26 @@ class MessageRepository(
 ) {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun addMessageToChat(chatId: Long, senderId: Long, text: String) {
+    suspend fun addMessageToChat(chatId: Long, senderId: Long, text: String, isProtected: Boolean = false) {
         val newMessage = MessageEntity(
             chatId = chatId,
             senderId = senderId,
             message = text,
-            createdAt = LocalDateTime.now()
+            createdAt = LocalDateTime.now(),
+            isProtected = isProtected,
         )
         messageDao.insertMessage(newMessage)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun addMessageToChat(chatId: Long, senderId: Long, text: String, attachments: List<String>) {
+    suspend fun addMessageToChat(chatId: Long, senderId: Long, text: String, attachments: List<String>, isProtected: Boolean = false) {
         val newMessage = MessageEntity(
             chatId = chatId,
             senderId = senderId,
             message = text,
             attachments = attachments,
-            createdAt = LocalDateTime.now()
+            createdAt = LocalDateTime.now(),
+            isProtected = isProtected,
         )
         messageDao.insertMessage(newMessage)
     }

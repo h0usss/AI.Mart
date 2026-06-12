@@ -162,7 +162,7 @@ fun ProductSellerInfoScreen(
                                 contentDescription = "Покупки",
                                 modifier = Modifier.padding(end = 10.dp),
                             )
-                            val displayBuy = "0"
+                            val displayBuy = state.product.orderCount.toString()
                             Text(
                                 text = displayBuy,
                                 style = regularStyle,

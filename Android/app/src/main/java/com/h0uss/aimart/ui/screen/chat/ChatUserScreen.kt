@@ -1,11 +1,14 @@
 package com.h0uss.aimart.ui.screen.chat
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.view.WindowManager
 import android.widget.VideoView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -40,6 +43,7 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -51,10 +55,12 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
@@ -62,7 +68,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.net.toUri
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
 import com.h0uss.aimart.Graph.authUserIdLong
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.enum.OrderStatus
@@ -77,6 +85,7 @@ import com.h0uss.aimart.ui.assets.chat.MyMessage
 import com.h0uss.aimart.ui.assets.chat.OrderEnd
 import com.h0uss.aimart.ui.assets.chat.OtherMessage
 import com.h0uss.aimart.ui.theme.Black10
+import com.h0uss.aimart.ui.theme.Black100
 import com.h0uss.aimart.ui.theme.Black80
 import com.h0uss.aimart.ui.theme.Teal
 import com.h0uss.aimart.ui.theme.White
@@ -88,6 +97,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 
+@SuppressLint("ContextCastToActivity")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ChatUserScreen(
@@ -97,6 +107,25 @@ fun ChatUserScreen(
 ) {
     var previewUrl by remember { mutableStateOf<String?>(null) }
     var previewIsVideo by remember { mutableStateOf(false) }
+    var previewIsProtected by remember { mutableStateOf(false) }
+
+    val hasProtectedMessages = remember(state.messages) {
+        state.messages.any { it.isProtected }
+    }
+    val activity = LocalContext.current as? Activity
+    DisposableEffect(hasProtectedMessages) {
+        if (hasProtectedMessages) {
+            activity?.window?.setFlags(
+                WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE
+            )
+        }
+        onDispose {
+            if (hasProtectedMessages) {
+                activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+            }
+        }
+    }
 
     Column(
         modifier = modifier
@@ -157,10 +186,12 @@ fun ChatUserScreen(
                             onImageClick = { url ->
                                 previewUrl = url
                                 previewIsVideo = false
+                                previewIsProtected = message.isProtected
                             },
                             onVideoClick = { url ->
                                 previewUrl = url
                                 previewIsVideo = true
+                                previewIsProtected = message.isProtected
                             },
                         )
                     } else {
@@ -172,10 +203,12 @@ fun ChatUserScreen(
                             onImageClick = { url ->
                                 previewUrl = url
                                 previewIsVideo = false
+                                previewIsProtected = message.isProtected
                             },
                             onVideoClick = { url ->
                                 previewUrl = url
                                 previewIsVideo = true
+                                previewIsProtected = message.isProtected
                             },
                         )
                     }
@@ -231,11 +264,13 @@ fun ChatUserScreen(
         if (previewIsVideo) {
             VideoPreviewDialog(
                 url = url,
+                isProtected = previewIsProtected,
                 onDismiss = { previewUrl = null },
             )
         } else {
             ImagePreviewDialog(
                 url = url,
+                isProtected = previewIsProtected,
                 onDismiss = { previewUrl = null },
             )
         }
@@ -245,8 +280,24 @@ fun ChatUserScreen(
 @Composable
 private fun ImagePreviewDialog(
     url: String,
+    isProtected: Boolean,
     onDismiss: () -> Unit,
 ) {
+    val context = LocalContext.current
+    val activity = context as? Activity
+    DisposableEffect(isProtected) {
+        if (isProtected) {
+            activity?.window?.setFlags(
+                WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE
+            )
+        }
+        onDispose {
+            if (isProtected) {
+                activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+            }
+        }
+    }
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false),
@@ -258,14 +309,36 @@ private fun ImagePreviewDialog(
                 .clickable(onClick = onDismiss),
             contentAlignment = Alignment.Center,
         ) {
-            AsyncImage(
-                model = url,
-                contentDescription = null,
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(24.dp),
-                contentScale = ContentScale.Fit,
-            )
+                contentAlignment = Alignment.Center,
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
+                ) {
+                    val model = if (isProtected) {
+                        ImageRequest.Builder(context)
+                            .data(url)
+                            .size(150)
+                            .build()
+                    } else {
+                        url
+                    }
+                    AsyncImage(
+                        model = model,
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Fit,
+                    )
+                    if (isProtected) {
+                        WatermarkOverlay(modifier = Modifier.matchParentSize().clipToBounds())
+                    }
+                }
+            }
         }
     }
 }
@@ -273,8 +346,24 @@ private fun ImagePreviewDialog(
 @Composable
 private fun VideoPreviewDialog(
     url: String,
+    isProtected: Boolean,
     onDismiss: () -> Unit,
 ) {
+    val context = LocalContext.current
+    val activity = context as? Activity
+    DisposableEffect(isProtected) {
+        if (isProtected) {
+            activity?.window?.setFlags(
+                WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE
+            )
+        }
+        onDispose {
+            if (isProtected) {
+                activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+            }
+        }
+    }
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false),
@@ -286,21 +375,411 @@ private fun VideoPreviewDialog(
                 .clickable(onClick = onDismiss),
             contentAlignment = Alignment.Center,
         ) {
-            AndroidView(
-                factory = { ctx ->
-                    VideoView(ctx).apply {
-                        setVideoURI(Uri.parse(url))
-                        setOnPreparedListener { it.isLooping = true }
-                        start()
-                    }
-                },
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.6f),
-            )
+            ) {
+                AndroidView(
+                    factory = { ctx ->
+                        VideoView(ctx).apply {
+                            setVideoURI(url.toUri())
+                            setOnPreparedListener { it.isLooping = true }
+                            start()
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                )
+                if (isProtected) {
+                    WatermarkOverlay(modifier = Modifier.matchParentSize())
+                }
+            }
         }
     }
 }
+
+@Composable
+private fun WatermarkOverlay(modifier: Modifier = Modifier) {
+    val color = listOf(Black100, Teal, White)
+    var c = 0
+    Column(
+        modifier = modifier.clipToBounds(),
+        verticalArrangement = Arrangement.spacedBy(30.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        repeat(20) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ){
+                repeat(5) {
+                    Text(
+                        text = "AI.MART",
+                        color = color[c % color.size].copy(alpha = 0.5f),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    c++
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AttachmentSheet(
+    selectedAttachments: List<String>,
+    isProtectEnabled: Boolean,
+    onToggleProtect: () -> Unit,
+    onToggleAttachment: (String) -> Unit,
+    onSend: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val context = LocalContext.current
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    val permImages = if (Build.VERSION.SDK_INT >= 33)
+        Manifest.permission.READ_MEDIA_IMAGES else Manifest.permission.READ_EXTERNAL_STORAGE
+    val permVideos = if (Build.VERSION.SDK_INT >= 33)
+        Manifest.permission.READ_MEDIA_VIDEO else Manifest.permission.READ_EXTERNAL_STORAGE
+
+    val hasPermission = remember {
+        mutableStateOf(
+            context.checkSelfPermission(permImages) == PackageManager.PERMISSION_GRANTED &&
+                    context.checkSelfPermission(permVideos) == PackageManager.PERMISSION_GRANTED
+        )
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { result ->
+        hasPermission.value = result.values.all { it }
+    }
+
+    data class GalleryItem(
+        val uri: Uri,
+        val isVideo: Boolean,
+        val durationMs: Long,
+        val dateAdded: Long,
+        val id: Long
+    )
+
+    val galleryItems = remember { mutableStateOf<List<GalleryItem>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(false) }
+    var hasMoreImages by remember { mutableStateOf(true) }
+    var hasMoreVideos by remember { mutableStateOf(true) }
+    var lastImageDate by remember { mutableLongStateOf(Long.MAX_VALUE) }
+    var lastImageId by remember { mutableLongStateOf(Long.MAX_VALUE) }
+    var lastVideoDate by remember { mutableLongStateOf(Long.MAX_VALUE) }
+    var lastVideoId by remember { mutableLongStateOf(Long.MAX_VALUE) }
+
+    fun loadNextBatch() {
+        if (isLoading) return
+        if (!hasMoreImages && !hasMoreVideos) return
+        isLoading = true
+
+        val newItems = mutableListOf<GalleryItem>()
+
+        if (hasMoreImages) {
+            val imageSelection = if (lastImageDate == Long.MAX_VALUE) null
+            else "${MediaStore.Images.Media.DATE_ADDED} < ? OR (${MediaStore.Images.Media.DATE_ADDED} = ? AND ${MediaStore.Images.Media._ID} < ?)"
+            val imageArgs = if (lastImageDate == Long.MAX_VALUE) null
+            else arrayOf(lastImageDate.toString(), lastImageDate.toString(), lastImageId.toString())
+            context.contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_ADDED),
+                imageSelection, imageArgs,
+                "${MediaStore.Images.Media.DATE_ADDED} DESC, ${MediaStore.Images.Media._ID} DESC"
+            )?.use { cursor ->
+                var count = 0
+                while (cursor.moveToNext() && count < 20) {
+                    val id =
+                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
+                    val dateAdded =
+                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED))
+                    newItems.add(
+                        GalleryItem(
+                            uri = Uri.withAppendedPath(
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                id.toString()
+                            ),
+                            isVideo = false, durationMs = 0L, dateAdded = dateAdded, id = id,
+                        )
+                    )
+                    lastImageDate = dateAdded
+                    lastImageId = id
+                    count++
+                }
+                hasMoreImages = count == 20
+            }
+        }
+
+        if (hasMoreVideos) {
+            val videoSelection = if (lastVideoDate == Long.MAX_VALUE) null
+            else "${MediaStore.Video.Media.DATE_ADDED} < ? OR (${MediaStore.Video.Media.DATE_ADDED} = ? AND ${MediaStore.Video.Media._ID} < ?)"
+            val videoArgs = if (lastVideoDate == Long.MAX_VALUE) null
+            else arrayOf(lastVideoDate.toString(), lastVideoDate.toString(), lastVideoId.toString())
+            context.contentResolver.query(
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                arrayOf(
+                    MediaStore.Video.Media._ID,
+                    MediaStore.Video.Media.DURATION,
+                    MediaStore.Video.Media.DATE_ADDED
+                ),
+                videoSelection, videoArgs,
+                "${MediaStore.Video.Media.DATE_ADDED} DESC, ${MediaStore.Video.Media._ID} DESC"
+            )?.use { cursor ->
+                var count = 0
+                while (cursor.moveToNext() && count < 20) {
+                    val id =
+                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID))
+                    val duration =
+                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION))
+                    val dateAdded =
+                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED))
+                    newItems.add(
+                        GalleryItem(
+                            uri = Uri.withAppendedPath(
+                                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                                id.toString()
+                            ),
+                            isVideo = true, durationMs = duration, dateAdded = dateAdded, id = id,
+                        )
+                    )
+                    lastVideoDate = dateAdded
+                    lastVideoId = id
+                    count++
+                }
+                hasMoreVideos = count == 20
+            }
+        }
+
+        newItems.sortByDescending { it.dateAdded }
+        galleryItems.value = galleryItems.value + newItems
+        isLoading = false
+    }
+
+    LaunchedEffect(hasPermission.value) {
+        if (hasPermission.value && galleryItems.value.isEmpty()) {
+            loadNextBatch()
+        } else if (!hasPermission.value) {
+            permissionLauncher.launch(arrayOf(permImages, permVideos))
+        }
+    }
+
+    val gridState = rememberLazyGridState()
+
+    LaunchedEffect(gridState) {
+        snapshotFlow {
+            val layoutInfo = gridState.layoutInfo
+            val lastVisible = layoutInfo.visibleItemsInfo.lastOrNull() ?: return@snapshotFlow false
+            lastVisible.index >= layoutInfo.totalItemsCount - 4
+        }.collect { nearEnd ->
+            if (nearEnd && !isLoading && (hasMoreImages || hasMoreVideos)) {
+                loadNextBatch()
+            }
+        }
+    }
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+        containerColor = White,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 2.dp, vertical = 16.dp),
+        ) {
+            if (selectedAttachments.isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "Защитить",
+                        style = regularStyle,
+                        fontSize = 14.sp,
+                        color = Black80,
+                    )
+                    Switch(
+                        checked = isProtectEnabled,
+                        onCheckedChange = { onToggleProtect() },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = White,
+                            checkedTrackColor = Black80,
+                            uncheckedThumbColor = White,
+                            uncheckedTrackColor = Black10,
+                        )
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
+            if (hasPermission.value && galleryItems.value.isNotEmpty()) {
+                LazyVerticalGrid(
+                    state = gridState,
+                    columns = GridCells.Fixed(3),
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                ) {
+                    items(galleryItems.value) { item ->
+                        val uriStr = item.uri.toString()
+                        val isSelected = selectedAttachments.contains(uriStr)
+                        Box(
+                            modifier = Modifier
+                                .aspectRatio(1f)
+                                .clip(RoundedCornerShape(6.dp))
+                                .border(
+                                    width = if (isSelected) 2.dp else 0.dp,
+                                    color = Teal,
+                                    shape = RoundedCornerShape(6.dp),
+                                )
+                                .clickable {
+                                    onToggleAttachment(uriStr)
+                                },
+                        ) {
+                            if (item.isVideo) {
+                                Box {
+                                    VideoThumbnail(
+                                        uri = item.uri,
+                                        context = context,
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .clip(RoundedCornerShape(if (isSelected) 5.dp else 6.dp)),
+                                    )
+                                    Box(
+                                        modifier = Modifier
+                                            .align(Alignment.Center)
+                                            .size(32.dp)
+                                            .clip(RoundedCornerShape(6.dp))
+                                            .background(Black80.copy(alpha = 0.6f)),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        Text(
+                                            text = "\u25B6",
+                                            color = White,
+                                            fontSize = 18.sp,
+                                        )
+                                    }
+                                }
+                            } else {
+                                AsyncImage(
+                                    model = item.uri,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .clip(RoundedCornerShape(if (isSelected) 5.dp else 6.dp)),
+                                    contentScale = ContentScale.Crop,
+                                )
+                            }
+                            if (item.isVideo) {
+                                Box(
+                                    modifier = Modifier
+                                        .align(Alignment.BottomEnd)
+                                        .padding(4.dp)
+                                        .background(
+                                            Black80.copy(alpha = 0.7f),
+                                            RoundedCornerShape(4.dp)
+                                        )
+                                        .padding(horizontal = 4.dp, vertical = 2.dp),
+                                ) {
+                                    Text(
+                                        text = formatDuration(item.durationMs),
+                                        color = White,
+                                        fontSize = 11.sp,
+                                        style = regularStyle,
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            } else if (!hasPermission.value) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = "Разрешите доступ к галерее",
+                        style = regularStyle,
+                        fontSize = 14.sp,
+                        color = Black80,
+                    )
+                }
+            }
+
+            if (selectedAttachments.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(40.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Black80)
+                        .clickable { onSend() },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = "Отправить (${selectedAttachments.size})",
+                        style = semiboldStyle,
+                        fontSize = 14.sp,
+                        color = White,
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
+
+@Composable
+private fun VideoThumbnail(
+    uri: Uri,
+    context: android.content.Context,
+    modifier: Modifier = Modifier
+) {
+    val bitmap by produceState<Bitmap?>(null, uri) {
+        value = withContext(Dispatchers.IO) {
+            try {
+                val retriever = android.media.MediaMetadataRetriever()
+                retriever.setDataSource(context, uri)
+                val frame = retriever.frameAtTime
+                retriever.release()
+                frame
+            } catch (e: Exception) {
+                null
+            }
+        }
+    }
+    bitmap?.let { bmp ->
+        Image(
+            bitmap = bmp.asImageBitmap(),
+            contentDescription = null,
+            modifier = modifier,
+            contentScale = ContentScale.Crop,
+        )
+    }
+}
+
+private fun formatDuration(ms: Long): String {
+    val totalSeconds = ms / 1000
+    val minutes = totalSeconds / 60
+    val seconds = totalSeconds % 60
+    return "%d:%02d".format(minutes, seconds)
+}
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
@@ -449,325 +928,9 @@ private fun Preview_V5() {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showSystemUi = true)
 @Composable
-fun AttachmentSheet(
-    selectedAttachments: List<String>,
-    isProtectEnabled: Boolean,
-    onToggleProtect: () -> Unit,
-    onToggleAttachment: (String) -> Unit,
-    onSend: () -> Unit,
-    onDismiss: () -> Unit,
-) {
-    val context = LocalContext.current
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-    val permImages = if (Build.VERSION.SDK_INT >= 33)
-        Manifest.permission.READ_MEDIA_IMAGES else Manifest.permission.READ_EXTERNAL_STORAGE
-    val permVideos = if (Build.VERSION.SDK_INT >= 33)
-        Manifest.permission.READ_MEDIA_VIDEO else Manifest.permission.READ_EXTERNAL_STORAGE
-
-    val hasPermission = remember {
-        mutableStateOf(
-            context.checkSelfPermission(permImages) == PackageManager.PERMISSION_GRANTED &&
-            context.checkSelfPermission(permVideos) == PackageManager.PERMISSION_GRANTED
-        )
-    }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { result ->
-        hasPermission.value = result.values.all { it }
-    }
-
-    data class GalleryItem(val uri: Uri, val isVideo: Boolean, val durationMs: Long, val dateAdded: Long, val id: Long)
-
-    val galleryItems = remember { mutableStateOf<List<GalleryItem>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(false) }
-    var hasMoreImages by remember { mutableStateOf(true) }
-    var hasMoreVideos by remember { mutableStateOf(true) }
-    var lastImageDate by remember { mutableLongStateOf(Long.MAX_VALUE) }
-    var lastImageId by remember { mutableLongStateOf(Long.MAX_VALUE) }
-    var lastVideoDate by remember { mutableLongStateOf(Long.MAX_VALUE) }
-    var lastVideoId by remember { mutableLongStateOf(Long.MAX_VALUE) }
-
-    fun loadNextBatch() {
-        if (isLoading) return
-        if (!hasMoreImages && !hasMoreVideos) return
-        isLoading = true
-
-        val newItems = mutableListOf<GalleryItem>()
-
-        if (hasMoreImages) {
-            val imageSelection = if (lastImageDate == Long.MAX_VALUE) null
-                else "${MediaStore.Images.Media.DATE_ADDED} < ? OR (${MediaStore.Images.Media.DATE_ADDED} = ? AND ${MediaStore.Images.Media._ID} < ?)"
-            val imageArgs = if (lastImageDate == Long.MAX_VALUE) null
-                else arrayOf(lastImageDate.toString(), lastImageDate.toString(), lastImageId.toString())
-            context.contentResolver.query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_ADDED),
-                imageSelection, imageArgs,
-                "${MediaStore.Images.Media.DATE_ADDED} DESC, ${MediaStore.Images.Media._ID} DESC"
-            )?.use { cursor ->
-                var count = 0
-                while (cursor.moveToNext() && count < 20) {
-                    val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
-                    val dateAdded = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED))
-                    newItems.add(GalleryItem(
-                        uri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id.toString()),
-                        isVideo = false, durationMs = 0L, dateAdded = dateAdded, id = id,
-                    ))
-                    lastImageDate = dateAdded
-                    lastImageId = id
-                    count++
-                }
-                hasMoreImages = count == 20
-            }
-        }
-
-        if (hasMoreVideos) {
-            val videoSelection = if (lastVideoDate == Long.MAX_VALUE) null
-                else "${MediaStore.Video.Media.DATE_ADDED} < ? OR (${MediaStore.Video.Media.DATE_ADDED} = ? AND ${MediaStore.Video.Media._ID} < ?)"
-            val videoArgs = if (lastVideoDate == Long.MAX_VALUE) null
-                else arrayOf(lastVideoDate.toString(), lastVideoDate.toString(), lastVideoId.toString())
-            context.contentResolver.query(
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                arrayOf(MediaStore.Video.Media._ID, MediaStore.Video.Media.DURATION, MediaStore.Video.Media.DATE_ADDED),
-                videoSelection, videoArgs,
-                "${MediaStore.Video.Media.DATE_ADDED} DESC, ${MediaStore.Video.Media._ID} DESC"
-            )?.use { cursor ->
-                var count = 0
-                while (cursor.moveToNext() && count < 20) {
-                    val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID))
-                    val duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION))
-                    val dateAdded = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED))
-                    newItems.add(GalleryItem(
-                        uri = Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id.toString()),
-                        isVideo = true, durationMs = duration, dateAdded = dateAdded, id = id,
-                    ))
-                    lastVideoDate = dateAdded
-                    lastVideoId = id
-                    count++
-                }
-                hasMoreVideos = count == 20
-            }
-        }
-
-        newItems.sortByDescending { it.dateAdded }
-        galleryItems.value = galleryItems.value + newItems
-        isLoading = false
-    }
-
-    LaunchedEffect(hasPermission.value) {
-        if (hasPermission.value && galleryItems.value.isEmpty()) {
-            loadNextBatch()
-        } else if (!hasPermission.value) {
-            permissionLauncher.launch(arrayOf(permImages, permVideos))
-        }
-    }
-
-    val gridState = rememberLazyGridState()
-
-    LaunchedEffect(gridState) {
-        snapshotFlow {
-            val layoutInfo = gridState.layoutInfo
-            val lastVisible = layoutInfo.visibleItemsInfo.lastOrNull() ?: return@snapshotFlow false
-            lastVisible.index >= layoutInfo.totalItemsCount - 4
-        }.collect { nearEnd ->
-            if (nearEnd && !isLoading && (hasMoreImages || hasMoreVideos)) {
-                loadNextBatch()
-            }
-        }
-    }
-
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-        containerColor = White,
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 2.dp, vertical = 16.dp),
-        ) {
-            if (selectedAttachments.isNotEmpty()) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = "Защитить",
-                        style = regularStyle,
-                        fontSize = 14.sp,
-                        color = Black80,
-                    )
-                    Switch(
-                        checked = isProtectEnabled,
-                        onCheckedChange = { onToggleProtect() },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = White,
-                            checkedTrackColor = Black80,
-                            uncheckedThumbColor = White,
-                            uncheckedTrackColor = Black10,
-                        )
-                    )
-                }
-                Spacer(modifier = Modifier.height(12.dp))
-            }
-
-            if (hasPermission.value && galleryItems.value.isNotEmpty()) {
-                LazyVerticalGrid(
-                    state = gridState,
-                    columns = GridCells.Fixed(3),
-                    horizontalArrangement = Arrangement.spacedBy(2.dp),
-                    verticalArrangement = Arrangement.spacedBy(2.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                ) {
-                    items(galleryItems.value) { item ->
-                        val uriStr = item.uri.toString()
-                        val isSelected = selectedAttachments.contains(uriStr)
-                        Box(
-                            modifier = Modifier
-                                .aspectRatio(1f)
-                                .clip(RoundedCornerShape(6.dp))
-                                .border(
-                                    width = if (isSelected) 2.dp else 0.dp,
-                                    color = Teal,
-                                    shape = RoundedCornerShape(6.dp),
-                                )
-                                .clickable {
-                                    onToggleAttachment(uriStr)
-                                },
-                        ) {
-                            if (item.isVideo) {
-                                Box {
-                                    VideoThumbnail(
-                                        uri = item.uri,
-                                        context = context,
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .clip(RoundedCornerShape(if (isSelected) 5.dp else 6.dp)),
-                                    )
-                                    Box(
-                                        modifier = Modifier
-                                            .align(Alignment.Center)
-                                            .size(32.dp)
-                                            .clip(RoundedCornerShape(6.dp))
-                                            .background(Black80.copy(alpha = 0.6f)),
-                                        contentAlignment = Alignment.Center,
-                                    ) {
-                                        Text(
-                                            text = "\u25B6",
-                                            color = White,
-                                            fontSize = 18.sp,
-                                        )
-                                    }
-                                }
-                            } else {
-                                AsyncImage(
-                                    model = item.uri,
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .clip(RoundedCornerShape(if (isSelected) 5.dp else 6.dp)),
-                                    contentScale = ContentScale.Crop,
-                                )
-                            }
-                            if (item.isVideo) {
-                                Box(
-                                    modifier = Modifier
-                                        .align(Alignment.BottomEnd)
-                                        .padding(4.dp)
-                                        .background(
-                                            Black80.copy(alpha = 0.7f),
-                                            RoundedCornerShape(4.dp)
-                                        )
-                                        .padding(horizontal = 4.dp, vertical = 2.dp),
-                                ) {
-                                    Text(
-                                        text = formatDuration(item.durationMs),
-                                        color = White,
-                                        fontSize = 11.sp,
-                                        style = regularStyle,
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            } else if (!hasPermission.value) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = "Разрешите доступ к галерее",
-                        style = regularStyle,
-                        fontSize = 14.sp,
-                        color = Black80,
-                    )
-                }
-            }
-
-            if (selectedAttachments.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(16.dp))
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(Black80)
-                        .clickable { onSend() },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = "Отправить (${selectedAttachments.size})",
-                        style = semiboldStyle,
-                        fontSize = 14.sp,
-                        color = White,
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
-}
-
-@Composable
-private fun VideoThumbnail(uri: Uri, context: android.content.Context, modifier: Modifier = Modifier) {
-    val bitmap by produceState<Bitmap?>(null, uri) {
-        value = withContext(Dispatchers.IO) {
-            try {
-                val retriever = android.media.MediaMetadataRetriever()
-                retriever.setDataSource(context, uri)
-                val frame = retriever.frameAtTime
-                retriever.release()
-                frame
-            } catch (e: Exception) {
-                null
-            }
-        }
-    }
-    bitmap?.let { bmp ->
-        Image(
-            bitmap = bmp.asImageBitmap(),
-            contentDescription = null,
-            modifier = modifier,
-            contentScale = ContentScale.Crop,
-        )
-    }
-}
-
-private fun formatDuration(ms: Long): String {
-    val totalSeconds = ms / 1000
-    val minutes = totalSeconds / 60
-    val seconds = totalSeconds % 60
-    return "%d:%02d".format(minutes, seconds)
+private fun Preview_V6() {
+    WatermarkOverlay()
 }

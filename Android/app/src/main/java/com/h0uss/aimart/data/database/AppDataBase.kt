@@ -133,6 +133,7 @@ abstract class AppDataBase : RoomDatabase() {
                         feedbackDao = database.feedbackDao(),
                         chatDao = database.chatDao(),
                         messageDao = database.messageDao(),
+                        productViewDao = database.productViewDao(),
                     )
                 } ?: Log.e("AI.MartDB", "Fatal: AppDataBase INSTANCE was null after creation.")
             }
@@ -150,6 +151,7 @@ suspend fun populateDatabase(
     feedbackDao: FeedbackDao,
     chatDao: ChatDao,
     messageDao: MessageDao,
+    productViewDao: ProductViewDao,
 ) {
     val usersIds: List<Long> = fillUsers(userDao, userSellInfoDao)
     val p = fillProduct(productDao, usersIds)
@@ -157,6 +159,7 @@ suspend fun populateDatabase(
     val o = fillOrders(orderDao = orderDao, usersIds, p)
     fillFeedback(feedbackDao, o)
     feelChat(chatDao, messageDao, o, orderDao)
+    fillImAnalytics(orderDao, productViewDao, usersIds[0], p, usersIds.drop(5))
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -505,4 +508,60 @@ suspend fun feelChat(
     }
     messageDao.insertAll(initialMessage)
 
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+suspend fun fillImAnalytics(
+    orderDao: OrderDao,
+    productViewDao: ProductViewDao,
+    sellerId: Long,
+    productIds: List<Long>,
+    buyerIds: List<Long>,
+) {
+    val year = 2026
+    val targets = listOf(
+        Triple(2, 5000f, 120),
+        Triple(3, 12000f, 280),
+        Triple(4, 8000f, 190),
+        Triple(5, 15000f, 340),
+        Triple(6, 10000f, 220),
+        Triple(7, 18000f, 400),
+    )
+
+    val sellerProductIds = productIds.filterIndexed { i, _ -> i % 5 == 0 }
+
+    targets.forEach { (month, revenue, views) ->
+        val numOrders = Random.nextInt(2, 5)
+        val baseAmount = (revenue / numOrders).toInt()
+        repeat(numOrders) {
+            val amount = baseAmount + Random.nextInt(-200, 201)
+            val day = Random.nextInt(1, 25)
+            val completionDate = LocalDateTime.of(year, month, day, Random.nextInt(8, 20), 0)
+            val startDate = completionDate.minusDays(Random.nextLong(1, 14))
+            orderDao.insert(
+                OrderEntity(
+                    price = amount.coerceAtLeast(100).toFloat(),
+                    status = OrderStatus.COMPLETE,
+                    description = "AI artwork",
+                    deadline = startDate.plusDays(Random.nextLong(7, 30)),
+                    startDate = startDate,
+                    completionDate = completionDate,
+                    buyerId = buyerIds.random(),
+                    sellerId = sellerId,
+                    productId = sellerProductIds.random(),
+                )
+            )
+        }
+
+        repeat(views) {
+            val viewDay = Random.nextInt(1, 26)
+            productViewDao.insert(
+                ProductViewEntity(
+                    productId = sellerProductIds.random(),
+                    userId = buyerIds.random(),
+                    viewedAt = LocalDateTime.of(year, month, viewDay, Random.nextInt(0, 23), 0),
+                )
+            )
+        }
+    }
 }
