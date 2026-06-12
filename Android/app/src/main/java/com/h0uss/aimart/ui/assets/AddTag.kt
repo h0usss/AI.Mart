@@ -41,15 +41,15 @@ import com.h0uss.aimart.ui.theme.semiboldStyle
 fun AddTag(
     modifier: Modifier = Modifier,
     placeHolder: String,
-    inputTransformation: InputTransformation = InputTransformation{},
-    outputTransformation: OutputTransformation = OutputTransformation{},
+    inputTransformation: InputTransformation = InputTransformation {},
+    outputTransformation: OutputTransformation = OutputTransformation {},
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     state: TextFieldState = TextFieldState(""),
     onClickAdd: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
-    ){
+    ) {
         BasicTextField(
             modifier = Modifier,
             state = state,
@@ -82,18 +82,19 @@ fun AddTag(
                             start = 16.dp,
                             top = 8.dp,
                             end = 4.dp,
-                            bottom = 8.dp),
+                            bottom = 8.dp
+                        ),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
-                    ){
+                    ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ){
+                        ) {
                             Box {
                                 if (state.text.isEmpty())
                                     Text(
@@ -110,11 +111,10 @@ fun AddTag(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(20))
                                 .background(BlackProfileAdd)
-                                .clickable{
+                                .clickable {
                                     onClickAdd()
-                                }
-                            ,
-                        ){
+                                },
+                        ) {
                             Text(
                                 modifier = Modifier.padding(vertical = 6.dp, horizontal = 14.dp),
                                 text = "+ добавить",

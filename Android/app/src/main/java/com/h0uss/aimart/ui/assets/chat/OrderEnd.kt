@@ -35,8 +35,7 @@ fun OrderEnd(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-        ,
+            .padding(horizontal = 16.dp),
     ) {
         Text(
             modifier = Modifier
@@ -49,8 +48,7 @@ fun OrderEnd(
         Text(
             modifier = Modifier
                 .padding(bottom = 16.dp)
-                .fillMaxWidth()
-            ,
+                .fillMaxWidth(),
             text = "Нажимая кнопку “Оплатить”, " +
                     "Вы подтверждаете что заказ завершен, и деньги отправляются продавцу.\n\n" +
                     "Если Вы считаете, что услуга не предоставлена, вы можете открыть спор.",
@@ -63,10 +61,9 @@ fun OrderEnd(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp)
-            ,
+                .padding(bottom = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
-        ){
+        ) {
             Text(
                 text = "Итого",
                 style = semiboldStyle,
@@ -83,8 +80,7 @@ fun OrderEnd(
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp)
-            ,
+                .padding(bottom = 8.dp),
             text = if (canPay) "Оплатить" else "Недостаточно средств",
             isGray = !canPay,
             onClick = {
@@ -95,8 +91,7 @@ fun OrderEnd(
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp)
-            ,
+                .padding(bottom = 8.dp),
             text = "Открыть спор",
             isRedFill = true,
             onClick = {

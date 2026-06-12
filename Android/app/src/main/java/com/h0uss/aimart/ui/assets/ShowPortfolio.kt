@@ -37,9 +37,8 @@ fun ShowPortfolio(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .clickable{ onExit() }
-            .padding(horizontal = 16.dp)
-        ,
+            .clickable { onExit() }
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -48,7 +47,7 @@ fun ShowPortfolio(
                 .clip(RoundedCornerShape(8.dp))
                 .background(White)
                 .padding(16.dp)
-                .clickable(enabled = false){}
+                .clickable(enabled = false) {}
         ) {
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -57,8 +56,7 @@ fun ShowPortfolio(
                     Image(
                         modifier = Modifier
                             .height(240.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                        ,
+                            .clip(RoundedCornerShape(8.dp)),
                         painter = painterResource(media),
                         contentDescription = "Portfolio image $media",
                         contentScale = ContentScale.FillHeight
@@ -67,8 +65,7 @@ fun ShowPortfolio(
             }
             Text(
                 modifier = Modifier
-                    .padding(top = 16.dp)
-                ,
+                    .padding(top = 16.dp),
                 text = data.title,
                 style = semiboldStyle,
                 color = Black80,
@@ -76,8 +73,7 @@ fun ShowPortfolio(
             )
             Text(
                 modifier = Modifier
-                    .padding(top = 12.dp)
-                ,
+                    .padding(top = 12.dp),
                 text = data.description,
                 style = regularStyle,
                 color = Black80,
@@ -88,8 +84,7 @@ fun ShowPortfolio(
         Image(
             modifier = Modifier
                 .padding(top = 24.dp)
-                .clickable{ onExit() }
-            ,
+                .clickable { onExit() },
             painter = painterResource(R.drawable.close_portfolio),
             contentDescription = "Close portfolio"
         )

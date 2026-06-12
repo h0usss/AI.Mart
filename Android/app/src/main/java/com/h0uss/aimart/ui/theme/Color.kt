@@ -38,9 +38,9 @@ val TealTagBorder = Color(0xff8adece)
 
 val Blue = Color(0xff2d6eff)
 
-val Waiting  = Color(0xff3b82f6)
-val InWork   = Color(0xfffbbf24)
-val Debate   = Color(0xffef4444)
+val Waiting = Color(0xff3b82f6)
+val InWork = Color(0xfffbbf24)
+val Debate = Color(0xffef4444)
 val Complete = Color(0xff22c55e)
 
 val AnalyticGray = Color(0xff9CA3AF)

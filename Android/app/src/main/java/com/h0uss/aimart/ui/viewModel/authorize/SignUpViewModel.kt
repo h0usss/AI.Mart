@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class SignUpViewModel : ViewModel(){
+class SignUpViewModel : ViewModel() {
 
     var state = MutableStateFlow(SignUpState())
         private set
@@ -30,20 +30,24 @@ class SignUpViewModel : ViewModel(){
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun onEvent(event: SignUpEvent) {
-        when(event){
+        when (event) {
 
             is SignUpEvent.SignUpClicked -> {
                 viewModelScope.launch {
                     val currentState = state.value
 
                     val nameError =
-                        currentState.nameState.text.toString().validateName().takeIf { it.isNotEmpty() }
+                        currentState.nameState.text.toString().validateName()
+                            .takeIf { it.isNotEmpty() }
                     val emailError =
-                        currentState.emailState.text.toString().validateMail().takeIf { it.isNotEmpty() }
+                        currentState.emailState.text.toString().validateMail()
+                            .takeIf { it.isNotEmpty() }
                     val dateError =
-                        currentState.dateState.text.toString().validateDate().takeIf { it.isNotEmpty() }
+                        currentState.dateState.text.toString().validateDate()
+                            .takeIf { it.isNotEmpty() }
                     val passwordError =
-                        currentState.passwordState.text.toString().validatePassword().takeIf { it.isNotEmpty() }
+                        currentState.passwordState.text.toString().validatePassword()
+                            .takeIf { it.isNotEmpty() }
 
                     val hasError =
                         listOfNotNull(nameError, emailError, dateError, passwordError).any()
@@ -71,7 +75,8 @@ class SignUpViewModel : ViewModel(){
                                 name = currentState.nameState.text.toString(),
                                 email = currentState.emailState.text.toString(),
                                 password = currentState.passwordState.text.toString(),
-                                dateOfBirth = currentState.dateState.text.toString().toLocalDateTime(),
+                                dateOfBirth = currentState.dateState.text.toString()
+                                    .toLocalDateTime(),
                                 isSeller = currentState.isSeller,
                             )
                         )
@@ -81,11 +86,13 @@ class SignUpViewModel : ViewModel(){
                     }
                 }
             }
+
             is SignUpEvent.LoginClicked -> {
                 viewModelScope.launch {
                     navigationEvents.send(SignUpNavigationEvent.NavigateToLogin)
                 }
             }
+
             is SignUpEvent.DateSelected -> {
                 state.update {
                     it.copy(
@@ -94,6 +101,7 @@ class SignUpViewModel : ViewModel(){
                     )
                 }
             }
+
             is SignUpEvent.ClearError -> {
                 state.update { currentState ->
                     when (event.field) {
@@ -107,6 +115,7 @@ class SignUpViewModel : ViewModel(){
                     }
                 }
             }
+
             is SignUpEvent.GoogleSignUpClicked -> {}
             is SignUpEvent.AgreementClicked -> {}
             is SignUpEvent.PrivacyPolicyClicked -> {}

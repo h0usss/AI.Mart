@@ -68,17 +68,19 @@ class SearchViewModel : ViewModel() {
     }
 
     fun onEvent(event: SearchEvent) {
-        when(event){
+        when (event) {
             is SearchEvent.SellerClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(SearchNavigationEvent.Seller(event.value))
                 }
             }
+
             is SearchEvent.ProductClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(SearchNavigationEvent.Product(event.value))
                 }
             }
+
             is SearchEvent.HintClick -> {
                 viewModelScope.launch {
                     searchHintRepository.updateTimeHint(
@@ -93,21 +95,26 @@ class SearchViewModel : ViewModel() {
 
                     searchTrigger.value = event.value
 
-                    navigationEvents.send(SearchNavigationEvent.SearchEnter(
-                        state.value.searchState.text.toString()
-                    ))
+                    navigationEvents.send(
+                        SearchNavigationEvent.SearchEnter(
+                            state.value.searchState.text.toString()
+                        )
+                    )
                 }
             }
+
             is SearchEvent.SearchClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(SearchNavigationEvent.SearchTextField)
                 }
             }
+
             is SearchEvent.BackClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(SearchNavigationEvent.Back)
                 }
             }
+
             is SearchEvent.DeleteSearchClick -> {
                 state.update {
                     it.copy(searchState = TextFieldState(""))
@@ -116,6 +123,7 @@ class SearchViewModel : ViewModel() {
                     navigationEvents.send(SearchNavigationEvent.SearchTextField)
                 }
             }
+
             is SearchEvent.DeleteHintClick -> {
                 viewModelScope.launch {
                     searchHintRepository.deleteHint(
@@ -124,21 +132,25 @@ class SearchViewModel : ViewModel() {
                     )
                 }
             }
+
             is SearchEvent.ClearHintsClick -> {
                 viewModelScope.launch {
                     searchHintRepository.deleteAllHint(userId = authUserIdLong)
                 }
             }
+
             is SearchEvent.ClearSearchClick -> {
                 state.update {
                     it.copy(searchState = TextFieldState(""))
                 }
             }
+
             is SearchEvent.CancelClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(SearchNavigationEvent.CancelClick)
                 }
             }
+
             is SearchEvent.SearchRequest -> {
                 val query = event.value
                 state.update {
@@ -189,8 +201,8 @@ sealed class SearchEvent {
 sealed class SearchNavigationEvent {
     data class Seller(val value: Long) : SearchNavigationEvent()
     data class Product(val value: Long) : SearchNavigationEvent()
-    data class SearchEnter(val value: String): SearchNavigationEvent()
-    object SearchTextField: SearchNavigationEvent()
-    object Back: SearchNavigationEvent()
-    object CancelClick: SearchNavigationEvent()
+    data class SearchEnter(val value: String) : SearchNavigationEvent()
+    object SearchTextField : SearchNavigationEvent()
+    object Back : SearchNavigationEvent()
+    object CancelClick : SearchNavigationEvent()
 }

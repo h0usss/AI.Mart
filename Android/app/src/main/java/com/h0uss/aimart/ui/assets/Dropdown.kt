@@ -113,11 +113,10 @@ fun Dropdown(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-    ){
+    ) {
         DropdownMenu(
             modifier = modifier
-                .background(White)
-            ,
+                .background(White),
             expanded = isVisible,
             onDismissRequest = {
                 onDismissRequest()

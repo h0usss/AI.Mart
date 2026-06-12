@@ -11,11 +11,11 @@ import androidx.room.PrimaryKey
 )
 data class UserSellInfoEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")            val id: Long = 0L,
+    @ColumnInfo(name = "id") val id: Long = 0L,
 
-    @ColumnInfo(name = "about")         val about: String,
-    @ColumnInfo(name = "skills")        val skills: List<String>,
-    @ColumnInfo(name = "profession")    val profession: String,
+    @ColumnInfo(name = "about") val about: String,
+    @ColumnInfo(name = "skills") val skills: List<String>,
+    @ColumnInfo(name = "profession") val profession: String,
 
-    @ColumnInfo(name = "user_id")       val userId: Long,
+    @ColumnInfo(name = "user_id") val userId: Long,
 )

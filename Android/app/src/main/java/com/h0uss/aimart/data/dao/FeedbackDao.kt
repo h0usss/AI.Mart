@@ -14,12 +14,15 @@ interface FeedbackDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(products: List<FeedbackEntity>)
+
     @Transaction
-    @Query("""
+    @Query(
+        """
         SELECT * 
         FROM FeedbackWithUserReferenceView AS f
         WHERE seller_id = :sellerId
-    """)
+    """
+    )
     fun getFeedbackBySellerIdFlow(sellerId: Long): Flow<List<FeedbackWithUser>>
 
 }

@@ -31,7 +31,6 @@ fun ProductCard(
     modifier: Modifier = Modifier,
     product: ProductCardData,
     onClick: (Long) -> Unit = {},
-    isSellerClick: Boolean = false,
 ) {
     Column(
         modifier = modifier
@@ -44,8 +43,7 @@ fun ProductCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
-                .clip(RoundedCornerShape(5))
-            ,
+                .clip(RoundedCornerShape(5)),
             model = product.imagesUrl[0],
             contentDescription = "Product image",
             contentScale = ContentScale.Crop
@@ -77,7 +75,7 @@ fun ProductCard(
 @Preview
 @Composable
 private fun Preview() {
-    Row{
+    Row {
         ProductCard(
             modifier = Modifier.padding(end = 5.dp),
             product = ProductCardData(

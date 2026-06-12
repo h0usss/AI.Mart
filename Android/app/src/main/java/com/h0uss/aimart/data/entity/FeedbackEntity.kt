@@ -12,24 +12,26 @@ import java.time.LocalDateTime
     tableName = "feedback"
 )
 data class FeedbackEntity(
-    @PrimaryKey( autoGenerate = true )
-    @ColumnInfo( name = "id" )          val id: Long = 0L,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id") val id: Long = 0L,
 
-    @ColumnInfo( name = "text" )        val text: String,
-    @ColumnInfo( name = "star_count" )  val starCount: Int,
-    @ColumnInfo( name = "timestamp" )   val timestamp: LocalDateTime,
+    @ColumnInfo(name = "text") val text: String,
+    @ColumnInfo(name = "star_count") val starCount: Int,
+    @ColumnInfo(name = "timestamp") val timestamp: LocalDateTime,
 
-    @ColumnInfo( name = "order_id" )    val orderId: Long
+    @ColumnInfo(name = "order_id") val orderId: Long
 )
 
-@DatabaseView("""
+@DatabaseView(
+    """
     SELECT 
         f.*, 
         o.buyer_id, 
         o.seller_id 
     FROM feedback AS f
     INNER JOIN orders AS o ON f.order_id = o.id
-""")
+"""
+)
 data class FeedbackWithUserReferenceView(
     @Embedded
     val feedback: FeedbackEntity,

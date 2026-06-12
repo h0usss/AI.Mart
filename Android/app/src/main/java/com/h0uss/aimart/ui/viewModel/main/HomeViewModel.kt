@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
-class HomeViewModel: ViewModel() {
+class HomeViewModel : ViewModel() {
 
     var state = MutableStateFlow(HomeState())
         private set
@@ -37,17 +37,19 @@ class HomeViewModel: ViewModel() {
     }
 
     fun onEvent(event: HomeEvent) {
-        when(event){
+        when (event) {
             is HomeEvent.SearchClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(HomeNavigationEvent.Search)
                 }
             }
+
             is HomeEvent.SellerClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(HomeNavigationEvent.Seller(event.id))
                 }
             }
+
             is HomeEvent.ProductClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(HomeNavigationEvent.Product(event.id, event.authorId))
@@ -60,8 +62,8 @@ class HomeViewModel: ViewModel() {
     private fun getSellers() {
         userRepository.getSellerLimit(5)
             .onEach { newList ->
-                state.update { 
-                    it.copy(sellers = newList) 
+                state.update {
+                    it.copy(sellers = newList)
                 }
             }
             .launchIn(viewModelScope)
@@ -69,18 +71,24 @@ class HomeViewModel: ViewModel() {
 }
 
 data class HomeState(
-    val add: List<AddData> = List(5){ item -> AddData(image = R.drawable.add_0, url = "", name = "") },
+    val add: List<AddData> = List(5) { item ->
+        AddData(
+            image = R.drawable.add_0,
+            url = "",
+            name = ""
+        )
+    },
     val sellers: List<UserHomeData> = emptyList(),
 )
 
-sealed class HomeEvent{
-    object SearchClick: HomeEvent()
-    data class SellerClick(val id: Long): HomeEvent()
-    data class ProductClick(val id: Long, val authorId: Long): HomeEvent()
+sealed class HomeEvent {
+    object SearchClick : HomeEvent()
+    data class SellerClick(val id: Long) : HomeEvent()
+    data class ProductClick(val id: Long, val authorId: Long) : HomeEvent()
 }
 
-sealed class HomeNavigationEvent{
-    object Search: HomeNavigationEvent()
-    data class Seller(val id: Long): HomeNavigationEvent()
-    data class Product(val id: Long, val authorId: Long): HomeNavigationEvent()
+sealed class HomeNavigationEvent {
+    object Search : HomeNavigationEvent()
+    data class Seller(val id: Long) : HomeNavigationEvent()
+    data class Product(val id: Long, val authorId: Long) : HomeNavigationEvent()
 }

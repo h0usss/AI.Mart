@@ -24,15 +24,18 @@ fun UserProfileForSelf(
 
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.receiveAsFlow().collect { event ->
-            when(event) {
+            when (event) {
                 is UserProfileForSelfNavigationEvent.EditClick -> {
                     navToEditProfile(event.id)
                 }
+
                 is UserProfileForSelfNavigationEvent.ExitClick -> {
                     navToCreateOrLogin()
                 }
+
                 is UserProfileForSelfNavigationEvent.EmptiedAccount -> {
                 }
+
                 is UserProfileForSelfNavigationEvent.ReplenishAccount -> {
                     topUpClick()
                 }

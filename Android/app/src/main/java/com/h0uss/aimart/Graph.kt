@@ -32,9 +32,6 @@ object Graph {
     var authUserIdFlow = MutableStateFlow(-1L)
         private set
 
-    var authUserIsSellerFlow = MutableStateFlow(false)
-        private set
-
 
     val userRepository by lazy {
         UserRepository(
@@ -106,27 +103,9 @@ object Graph {
         authUserIdFlow.value = -1L
     }
 
-    val authUserIsSeller: Boolean
-        get() = authUserIsSellerFlow.value
-
-    suspend fun saveUserIsSeller(isSeller: Boolean) {
-        if (!::session.isInitialized) {
-            throw IllegalStateException("Graph must be initialized via provide() before calling saveUserId.")
-        }
-        session.saveUserIsSeller(isSeller)
-        authUserIsSellerFlow.value = isSeller
-    }
-
-    suspend fun deleteUserIsSeller() {
-        if (!::session.isInitialized) {
-            throw IllegalStateException("Graph must be initialized via provide() before calling saveUserId.")
-        }
-        session.deleteUserIsSeller()
-        authUserIsSellerFlow.value = false
-    }
-
-    fun provide(context: Context){
-        db = AppDataBase.getDataBase(context,
+    fun provide(context: Context) {
+        db = AppDataBase.getDataBase(
+            context,
             applicationScope
         )
         session = SessionManager().init(context.applicationContext)

@@ -53,7 +53,7 @@ fun AddBanner(
             Image(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable{},
+                    .clickable {},
                 painter = painterResource(adds[page].image),
                 contentDescription = adds[page].name,
                 contentScale = ContentScale.FillWidth

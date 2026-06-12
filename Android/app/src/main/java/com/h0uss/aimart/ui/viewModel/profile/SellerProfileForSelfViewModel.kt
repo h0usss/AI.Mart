@@ -16,6 +16,7 @@ import com.h0uss.aimart.data.model.AnalyticPeriod
 import com.h0uss.aimart.data.model.FeedbackData
 import com.h0uss.aimart.data.model.PortfolioItemData
 import com.h0uss.aimart.data.model.SellerData
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -27,8 +28,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
-class SellerProfileForSelfViewModel : ViewModel(){
+class SellerProfileForSelfViewModel : ViewModel() {
 
     var state = MutableStateFlow(SellerProfileForSelfState())
         private set
@@ -40,7 +42,7 @@ class SellerProfileForSelfViewModel : ViewModel(){
     private val analyticSelectedBarIndex = MutableStateFlow(-1)
     private val isAnalyticViewsMode = MutableStateFlow(false)
 
-    init{
+    init {
         combine(
             userRepository.getSellerByIdFlow(authUserIdLong),
             userRepository.getUserCountSellFlow(authUserIdLong),
@@ -64,7 +66,11 @@ class SellerProfileForSelfViewModel : ViewModel(){
                 }
         }.launchIn(viewModelScope)
 
-        combine(analyticPeriod, analyticSelectedBarIndex, isAnalyticViewsMode) { period, selectedIndex, isViews ->
+        combine(
+            analyticPeriod,
+            analyticSelectedBarIndex,
+            isAnalyticViewsMode
+        ) { period, selectedIndex, isViews ->
             Triple(period, selectedIndex, isViews)
         }.flatMapLatest { (period, selectedIndex, isViews) ->
             analyticsRepository.getSellerAnalytics(
@@ -83,12 +89,13 @@ class SellerProfileForSelfViewModel : ViewModel(){
     }
 
     fun onEvent(event: SellerProfileForSelfEvent) {
-        when(event){
+        when (event) {
             is SellerProfileForSelfEvent.ShowSettingsMenu -> {
                 state.update {
                     it.copy(isVisibleSettings = true)
                 }
             }
+
             is SellerProfileForSelfEvent.SettingsItemClick -> {
                 state.update { it.copy(isVisibleSettings = false) }
                 when (event.id) {
@@ -100,40 +107,51 @@ class SellerProfileForSelfViewModel : ViewModel(){
                     }
                 }
             }
+
             is SellerProfileForSelfEvent.DismissSettingsMenu -> {
                 state.update {
                     it.copy(isVisibleSettings = false)
                 }
             }
+
             is SellerProfileForSelfEvent.EditClick -> {
                 sendNavEvent(SellerProfileForSelfNavigationEvent.EditClick)
             }
+
             is SellerProfileForSelfEvent.ReplenishAccountClick -> {
                 sendNavEvent(SellerProfileForSelfNavigationEvent.ReplenishAccountClick)
             }
+
             is SellerProfileForSelfEvent.EmptiedAccountClick -> {
                 sendNavEvent(SellerProfileForSelfNavigationEvent.EmptiedAccountClick)
             }
+
             is SellerProfileForSelfEvent.AddCaseClick -> {
                 sendNavEvent(SellerProfileForSelfNavigationEvent.AddCaseClick)
             }
+
             is SellerProfileForSelfEvent.DeleteCaseClick -> {
                 viewModelScope.launch {
                     portfolioRepository.deletePortfolioItem(event.id)
                 }
             }
+
             is SellerProfileForSelfEvent.PortfolioTagClick -> {
                 handlePortfolioTagClick(event.name)
             }
+
             is SellerProfileForSelfEvent.FeedbackTagClick -> {
                 handleFeedbackTagClick(event.index)
             }
+
             is SellerProfileForSelfEvent.ShowAlert -> {
                 sendNavEvent(SellerProfileForSelfNavigationEvent.ShowAlert(event.alert))
             }
+
             is SellerProfileForSelfEvent.DeleteAlert -> {
                 sendNavEvent(SellerProfileForSelfNavigationEvent.DeleteAlert)
             }
+
             is SellerProfileForSelfEvent.ShowPortfolioItem -> {
                 viewModelScope.launch {
                     val portfolioItem = portfolioRepository
@@ -143,13 +161,16 @@ class SellerProfileForSelfViewModel : ViewModel(){
                     sendNavEvent(SellerProfileForSelfNavigationEvent.ShowPortfolioItem(portfolioItem))
                 }
             }
+
             is SellerProfileForSelfEvent.AnalyticPeriodChange -> {
                 analyticPeriod.value = event.period
                 analyticSelectedBarIndex.value = -1
             }
+
             is SellerProfileForSelfEvent.AnalyticBarSelect -> {
                 analyticSelectedBarIndex.value = event.index
             }
+
             is SellerProfileForSelfEvent.ToggleAnalyticViewsMode -> {
                 isAnalyticViewsMode.value = !isAnalyticViewsMode.value
             }
@@ -207,9 +228,11 @@ class SellerProfileForSelfViewModel : ViewModel(){
             1 -> currentState.originalFeedback
                 .filter { it.starCount >= 3 }
                 .sortedByDescending { it.starCount }
+
             2 -> currentState.originalFeedback
                 .filter { it.starCount < 3 }
                 .sortedBy { it.starCount }
+
             else -> currentState.originalFeedback.sortedBy { it.starCount }
         }
 
@@ -249,7 +272,7 @@ data class SellerProfileForSelfState(
 sealed class SellerProfileForSelfEvent {
     object ShowSettingsMenu : SellerProfileForSelfEvent()
     object DismissSettingsMenu : SellerProfileForSelfEvent()
-    object EditClick: SellerProfileForSelfEvent()
+    object EditClick : SellerProfileForSelfEvent()
     object ReplenishAccountClick : SellerProfileForSelfEvent()
     object EmptiedAccountClick : SellerProfileForSelfEvent()
     object AddCaseClick : SellerProfileForSelfEvent()
@@ -273,5 +296,6 @@ sealed class SellerProfileForSelfNavigationEvent {
     object AddCaseClick : SellerProfileForSelfNavigationEvent()
     object DeleteAlert : SellerProfileForSelfNavigationEvent()
     data class ShowAlert(val alert: AlertData) : SellerProfileForSelfNavigationEvent()
-    data class ShowPortfolioItem(val portfolioItem: PortfolioItemData) : SellerProfileForSelfNavigationEvent()
+    data class ShowPortfolioItem(val portfolioItem: PortfolioItemData) :
+        SellerProfileForSelfNavigationEvent()
 }

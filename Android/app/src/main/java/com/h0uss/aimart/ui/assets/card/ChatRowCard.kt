@@ -40,18 +40,16 @@ fun ChatRowCard(
             .background(White)
             .clickable {
                 onClick(chat.id)
-            }
-        ,
+            },
         horizontalArrangement = Arrangement.SpaceBetween
-    ){
+    ) {
         Row(
             modifier = Modifier.weight(.8f)
-        ){
+        ) {
             AsyncImage(
                 modifier = Modifier
                     .size(80.dp)
-                    .clip(RoundedCornerShape(10))
-                ,
+                    .clip(RoundedCornerShape(10)),
                 model = chat.imagesUrl[0],
                 contentDescription = chat.productName,
                 contentScale = ContentScale.Crop
@@ -59,10 +57,9 @@ fun ChatRowCard(
             Column(
                 modifier = Modifier
                     .padding(start = 24.dp)
-            ){
+            ) {
                 Text(
-                    modifier = Modifier
-                    ,
+                    modifier = Modifier,
                     text = chat.userName,
                     style = semiboldStyle,
                     fontSize = 16.sp,
@@ -70,8 +67,7 @@ fun ChatRowCard(
                 )
                 Text(
                     modifier = Modifier
-                        .padding(top = 4.dp)
-                    ,
+                        .padding(top = 4.dp),
                     text = chat.productName ?: "",
                     style = regularStyle,
                     fontSize = 16.sp,
@@ -81,8 +77,7 @@ fun ChatRowCard(
                 )
                 Text(
                     modifier = Modifier
-                        .padding(top = 4.dp)
-                    ,
+                        .padding(top = 4.dp),
                     text = if (chat.price != null) "${chat.price.formatPrice()}₽" else "",
                     style = regularStyle,
                     fontSize = 16.sp,

@@ -53,8 +53,7 @@ fun UserProfileForSelfScreen(
             .fillMaxSize()
             .background(White)
             .padding(start = 16.dp, end = 16.dp)
-            .systemBarsPadding()
-        ,
+            .systemBarsPadding(),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         Box(
@@ -97,8 +96,7 @@ fun UserProfileForSelfScreen(
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
-                    ,
+                        .padding(16.dp),
                     text = "Редактировать профиль",
                     isGray = true,
                     onClick = {
@@ -108,7 +106,7 @@ fun UserProfileForSelfScreen(
             }
             Box(
                 contentAlignment = Alignment.TopEnd
-            ){
+            ) {
                 Image(
                     modifier = Modifier
                         .padding(top = 12.dp, end = 14.dp)

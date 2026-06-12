@@ -57,8 +57,8 @@ fun TextField(
     isBigTextField: Boolean = false,
     placeHolder: String,
     radius: Dp = 6.dp,
-    inputTransformation: InputTransformation = InputTransformation{},
-    outputTransformation: OutputTransformation = OutputTransformation{},
+    inputTransformation: InputTransformation = InputTransformation {},
+    outputTransformation: OutputTransformation = OutputTransformation {},
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Default),
     state: TextFieldState = remember { TextFieldState("") },
     rightImageId: Int = -1,
@@ -66,20 +66,20 @@ fun TextField(
     onClickRightImage: () -> Unit = {},
     onClickLeftImage: () -> Unit = {},
     onClickEnter: () -> Unit = {},
-){
+) {
 
     val focusManager = LocalFocusManager.current
     val keyboardActions = remember(onClickEnter) {
         KeyboardActionHandler({
-                onClickEnter()
-                focusManager.clearFocus()
-            }
+            onClickEnter()
+            focusManager.clearFocus()
+        }
         )
     }
 
     Column(
         modifier = modifier
-    ){
+    ) {
         BasicTextField(
             modifier = Modifier,
             state = state,
@@ -99,9 +99,13 @@ fun TextField(
             cursorBrush = SolidColor(Black80),
             decorator = { innerTextField ->
                 val boxModifier = if (isBigTextField) {
-                    Modifier.fillMaxWidth().fillMaxHeight()
+                    Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
                 } else {
-                    Modifier.fillMaxWidth().heightIn(min = 40.dp)
+                    Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 40.dp)
                 }
                 Box(
                     modifier = boxModifier
@@ -128,13 +132,13 @@ fun TextField(
                             end = 16.dp,
                             bottom = 8.dp
                         ),
-                    contentAlignment = if (isBigTextField) Alignment.TopStart  else Alignment.CenterStart
+                    contentAlignment = if (isBigTextField) Alignment.TopStart else Alignment.CenterStart
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
-                    ){
+                    ) {
                         if (leftImageId != -1)
                             Image(
                                 modifier = Modifier
@@ -150,7 +154,7 @@ fun TextField(
                             modifier = Modifier
                                 .weight(1f),
                             contentAlignment = Alignment.TopStart
-                        ){
+                        ) {
                             if (state.text.isEmpty())
                                 Text(
                                     text = placeHolder,
@@ -163,7 +167,7 @@ fun TextField(
 
                         if (rightImageId != -1)
                             Image(
-                                modifier = Modifier.clickable{
+                                modifier = Modifier.clickable {
                                     onClickRightImage()
                                 },
                                 painter = painterResource(rightImageId),
@@ -178,9 +182,9 @@ fun TextField(
             Row(
                 modifier = Modifier.padding(top = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Image(
-                    painter = painterResource( R.drawable.error_status ),
+                    painter = painterResource(R.drawable.error_status),
                     contentDescription = "Error"
                 )
                 Text(
@@ -197,7 +201,7 @@ fun TextField(
 @Preview
 @Composable
 private fun PreviewNecessarily() {
-    Column(){
+    Column() {
         TextField(
             placeHolder = "Пароль",
             errorMessage = "aAlax",
@@ -218,13 +222,13 @@ private fun PreviewNecessarily() {
             modifier = Modifier.height(200.dp),
             placeHolder = "Пароль",
             isBigTextField = true,
-            state = remember{ TextFieldState("dfasjhdlhas jd sj fdkjlshd flksdfs dsdh sdjk lasldk jhfaslkdjfhlskahj dhfk jsdhakjshdf slkjh fkjsd hlsdkjhf lskjdh fljksda hldjhf ljks dhahf ljkash fdasjhkl f") }
+            state = remember { TextFieldState("dfasjhdlhas jd sj fdkjlshd flksdfs dsdh sdjk lasldk jhfaslkdjfhlskahj dhfk jsdhakjshdf slkjh fkjsd hlsdkjhf lskjdh fljksda hldjhf ljks dhahf ljkash fdasjhkl f") }
         )
         TextField(
             modifier = Modifier.height(200.dp),
             placeHolder = "Пароль",
             isBigTextField = true,
-            state = remember{ TextFieldState("") }
+            state = remember { TextFieldState("") }
         )
     }
 }

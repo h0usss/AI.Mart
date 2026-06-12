@@ -10,22 +10,20 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
-class TopUpWalletViewModel : ViewModel(){
-
-//    var state = MutableStateFlow(TopUpWalletState())
-//    private set
+class TopUpWalletViewModel : ViewModel() {
 
     var navigationEvents = Channel<TopUpWalletNavigationEvent>()
-    private set
+        private set
 
     fun onEvent(event: TopUpWalletEvent) {
-        when(event){
+        when (event) {
             is TopUpWalletEvent.TopUp -> {
                 viewModelScope.launch {
                     userRepository.addBalance(authUserIdLong, 1000f)
                     navigationEvents.send(TopUpWalletNavigationEvent.Exit)
                 }
             }
+
             is TopUpWalletEvent.Exit -> {
                 viewModelScope.launch {
                     navigationEvents.send(TopUpWalletNavigationEvent.Exit)
@@ -35,17 +33,11 @@ class TopUpWalletViewModel : ViewModel(){
     }
 }
 
-//data class TopUpWalletState(
-//    val user: UserData = UserData(),
-//    val isVisibleSettings: Boolean = false,
-//    val countBuy: Int = 0,
-//)
-
 sealed class TopUpWalletEvent {
     object TopUp : TopUpWalletEvent()
     object Exit : TopUpWalletEvent()
 }
 
 sealed class TopUpWalletNavigationEvent {
-    object Exit: TopUpWalletNavigationEvent()
+    object Exit : TopUpWalletNavigationEvent()
 }

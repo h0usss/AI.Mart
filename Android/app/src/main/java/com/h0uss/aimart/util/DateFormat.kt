@@ -22,7 +22,7 @@ fun String.toLocalDateTime(): LocalDateTime {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-object DateValidatorNoFuture: SelectableDates {
+object DateValidatorNoFuture : SelectableDates {
     override fun isSelectableDate(utcTimeMillis: Long): Boolean {
         return utcTimeMillis <= System.currentTimeMillis()
     }
@@ -33,7 +33,7 @@ object DateValidatorNoFuture: SelectableDates {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-object DateValidatorNoPast: SelectableDates {
+object DateValidatorNoPast : SelectableDates {
     override fun isSelectableDate(utcTimeMillis: Long): Boolean {
         val todayStartMillis = LocalDate.now()
             .atStartOfDay(ZoneOffset.UTC)

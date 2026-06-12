@@ -23,7 +23,7 @@ fun SignUp(
 
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.receiveAsFlow().collect { event ->
-            when(event) {
+            when (event) {
                 is SignUpNavigationEvent.Success -> navToHome()
                 is SignUpNavigationEvent.NavigateToLogin -> navToLogin()
             }

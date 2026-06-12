@@ -1,6 +1,6 @@
 package com.h0uss.aimart.ui.assets.chat
 
-import android.net.Uri
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -31,6 +31,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import coil3.compose.AsyncImage
 import com.h0uss.aimart.R
 import com.h0uss.aimart.data.model.MessageData
@@ -43,6 +44,7 @@ import com.h0uss.aimart.ui.theme.regularStyle
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+@SuppressLint("UseKtx")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun OtherMessage(
@@ -113,7 +115,7 @@ fun OtherMessage(
                                                 .clickable { onVideoClick(url) },
                                         ) {
                                             VideoThumbnail(
-                                                uri = Uri.parse(url),
+                                                uri = url.toUri(),
                                                 modifier = Modifier.fillMaxSize(),
                                             )
                                             Box(
@@ -138,8 +140,14 @@ fun OtherMessage(
                                                     modifier = Modifier
                                                         .align(Alignment.BottomEnd)
                                                         .padding(4.dp)
-                                                        .background(Color.Black.copy(alpha = 0.4f), RoundedCornerShape(2.dp))
-                                                        .padding(horizontal = 3.dp, vertical = 1.dp),
+                                                        .background(
+                                                            Color.Black.copy(alpha = 0.4f),
+                                                            RoundedCornerShape(2.dp)
+                                                        )
+                                                        .padding(
+                                                            horizontal = 3.dp,
+                                                            vertical = 1.dp
+                                                        ),
                                                 )
                                             }
                                         }
@@ -163,8 +171,14 @@ fun OtherMessage(
                                                     modifier = Modifier
                                                         .align(Alignment.BottomEnd)
                                                         .padding(4.dp)
-                                                        .background(Color.Black.copy(alpha = 0.4f), RoundedCornerShape(2.dp))
-                                                        .padding(horizontal = 3.dp, vertical = 1.dp),
+                                                        .background(
+                                                            Color.Black.copy(alpha = 0.4f),
+                                                            RoundedCornerShape(2.dp)
+                                                        )
+                                                        .padding(
+                                                            horizontal = 3.dp,
+                                                            vertical = 1.dp
+                                                        ),
                                                 )
                                             }
                                         }

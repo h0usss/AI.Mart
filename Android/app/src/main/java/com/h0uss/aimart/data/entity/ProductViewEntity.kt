@@ -10,8 +10,8 @@ import java.time.LocalDateTime
 )
 data class ProductViewEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")           val id: Long = 0L,
-    @ColumnInfo(name = "product_id")   val productId: Long,
-    @ColumnInfo(name = "user_id")      val userId: Long,
-    @ColumnInfo(name = "viewed_at")    val viewedAt: LocalDateTime,
+    @ColumnInfo(name = "id") val id: Long = 0L,
+    @ColumnInfo(name = "product_id") val productId: Long,
+    @ColumnInfo(name = "user_id") val userId: Long,
+    @ColumnInfo(name = "viewed_at") val viewedAt: LocalDateTime,
 )

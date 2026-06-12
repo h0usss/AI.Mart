@@ -20,7 +20,7 @@ fun TopUpWallet(
 ) {
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.receiveAsFlow().collect { event ->
-            when(event) {
+            when (event) {
                 is TopUpWalletNavigationEvent.Exit -> {
                     onExit()
                 }

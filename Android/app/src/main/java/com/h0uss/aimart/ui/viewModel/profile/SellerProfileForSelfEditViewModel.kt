@@ -31,7 +31,9 @@ class SellerProfileForSelfEditViewModel : ViewModel() {
     init {
         viewModelScope.launch {
             val user = userRepository.getSellerByIdFlow(authUserIdLong).firstOrNull()
-            val portfolio = portfolioRepository.getPortfolioBySellerIdFlow(authUserIdLong).firstOrNull() ?: emptyList()
+            val portfolio =
+                portfolioRepository.getPortfolioBySellerIdFlow(authUserIdLong).firstOrNull()
+                    ?: emptyList()
 
             if (user != null) {
                 val allTags = listOf("Все") + portfolio.flatMap { it.tags }.distinct()
@@ -64,12 +66,14 @@ class SellerProfileForSelfEditViewModel : ViewModel() {
                     sendNavEvent(SellerProfileForSelfEditNavigationEvent.SaveClick)
                 }
             }
+
             is SellerProfileForSelfEditEvent.ExitClick -> {
                 viewModelScope.launch {
                     deleteUserId()
                     sendNavEvent(SellerProfileForSelfEditNavigationEvent.ExitClick)
                 }
             }
+
             is SellerProfileForSelfEditEvent.DeleteAccountClick -> {
                 viewModelScope.launch {
                     val userIdToDelete = authUserIdLong
@@ -78,9 +82,11 @@ class SellerProfileForSelfEditViewModel : ViewModel() {
                     userRepository.deleteUser(userIdToDelete)
                 }
             }
+
             is SellerProfileForSelfEditEvent.AddSkillClick -> {
                 if (state.value.newSkillState.text.toString().isNotBlank()) {
-                    val newSkills = state.value.user.skills + state.value.newSkillState.text.toString()
+                    val newSkills =
+                        state.value.user.skills + state.value.newSkillState.text.toString()
                     state.update {
                         it.copy(
                             user = it.user.copy(skills = newSkills),
@@ -89,13 +95,16 @@ class SellerProfileForSelfEditViewModel : ViewModel() {
                     }
                 }
             }
+
             is SellerProfileForSelfEditEvent.DeleteCaseClick -> {
                 viewModelScope.launch {
                     portfolioRepository.deletePortfolioItem(event.id)
 
                     state.update {
-                        val newOriginalPortfolio = it.originalPortfolio.filter { item -> item.id != event.id }
-                        val newFilteredPortfolio = it.portfolio.filter { item -> item.id != event.id }
+                        val newOriginalPortfolio =
+                            it.originalPortfolio.filter { item -> item.id != event.id }
+                        val newFilteredPortfolio =
+                            it.portfolio.filter { item -> item.id != event.id }
                         it.copy(
                             originalPortfolio = newOriginalPortfolio,
                             portfolio = newFilteredPortfolio
@@ -103,31 +112,42 @@ class SellerProfileForSelfEditViewModel : ViewModel() {
                     }
                 }
             }
+
             is SellerProfileForSelfEditEvent.PortfolioTagClick -> {
                 handlePortfolioTagClick(event.name)
             }
+
             is SellerProfileForSelfEditEvent.ShowSettingsMenu -> {
                 state.update { it.copy(isVisibleSettings = true) }
             }
+
             is SellerProfileForSelfEditEvent.DismissSettingsMenu -> {
                 state.update { it.copy(isVisibleSettings = false) }
             }
+
             is SellerProfileForSelfEditEvent.AddCaseClick -> {
                 sendNavEvent(SellerProfileForSelfEditNavigationEvent.AddCaseClick)
             }
+
             is SellerProfileForSelfEditEvent.ShowAlert -> {
                 sendNavEvent(SellerProfileForSelfEditNavigationEvent.ShowAlert(event.alert))
             }
+
             is SellerProfileForSelfEditEvent.DeleteAlert -> {
                 sendNavEvent(SellerProfileForSelfEditNavigationEvent.DeleteAlert)
             }
+
             is SellerProfileForSelfEditEvent.ShowPortfolioItem -> {
                 viewModelScope.launch {
                     val portfolioItem = portfolioRepository
                         .getPortfolioByIdFlow(event.portfolioId)
                         .first()
 
-                    sendNavEvent(SellerProfileForSelfEditNavigationEvent.ShowPortfolioItem(portfolioItem))
+                    sendNavEvent(
+                        SellerProfileForSelfEditNavigationEvent.ShowPortfolioItem(
+                            portfolioItem
+                        )
+                    )
                 }
             }
         }
@@ -208,5 +228,6 @@ sealed class SellerProfileForSelfEditNavigationEvent {
     object AddCaseClick : SellerProfileForSelfEditNavigationEvent()
     object DeleteAlert : SellerProfileForSelfEditNavigationEvent()
     data class ShowAlert(val alert: AlertData) : SellerProfileForSelfEditNavigationEvent()
-    data class ShowPortfolioItem(val portfolioItem: PortfolioItemData) : SellerProfileForSelfEditNavigationEvent()
+    data class ShowPortfolioItem(val portfolioItem: PortfolioItemData) :
+        SellerProfileForSelfEditNavigationEvent()
 }

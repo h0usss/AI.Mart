@@ -11,9 +11,9 @@ import java.time.LocalDateTime
 data class TagEntity(
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")            val id: Long,
+    @ColumnInfo(name = "id") val id: Long,
 
-    @ColumnInfo(name = "name")          val name: String,
-    @ColumnInfo(name = "create_date")   val createDate: LocalDateTime
+    @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "create_date") val createDate: LocalDateTime
 
 )

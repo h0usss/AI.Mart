@@ -47,10 +47,7 @@ interface UserDao {
     """
     )
     suspend fun updateSellerSellInfo(
-        id: Long,
-        profession: String,
-        about: String,
-        skills: List<String>
+        id: Long, profession: String, about: String, skills: List<String>
     ): Int
 
     @Delete
@@ -207,10 +204,12 @@ interface UserDao {
     )
     fun getUsersByStringInside(string: String): Flow<List<UserEntity>>
 
-    @Query("""
+    @Query(
+        """
         UPDATE user 
         SET balance = :newBalance 
         WHERE id = :userId
-    """)
+    """
+    )
     suspend fun updateBalance(userId: Long, newBalance: Float)
 }

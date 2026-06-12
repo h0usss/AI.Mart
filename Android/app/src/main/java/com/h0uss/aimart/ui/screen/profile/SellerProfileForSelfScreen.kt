@@ -77,15 +77,14 @@ fun SellerProfileForSelfScreen(
     onEvent: (SellerProfileForSelfEvent) -> Unit = {},
 ) {
     val chunkedProducts = state.portfolio.chunked(2)
-    var countPortfolioRowItem by remember{ mutableIntStateOf(2) }
-    var countFeedbackItem by remember{ mutableIntStateOf(3) }
+    var countPortfolioRowItem by remember { mutableIntStateOf(2) }
+    var countFeedbackItem by remember { mutableIntStateOf(3) }
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(White)
-        ,
-    ){
+            .background(White),
+    ) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(14.dp),
             contentPadding = WindowInsets.systemBars.asPaddingValues()
@@ -154,8 +153,7 @@ fun SellerProfileForSelfScreen(
                         Button(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp)
-                            ,
+                                .padding(16.dp),
                             text = "Редактировать профиль",
                             isGray = true,
                             onClick = {
@@ -166,13 +164,12 @@ fun SellerProfileForSelfScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 16.dp, top = 12.dp, end = 16.dp)
-                        ,
+                            .padding(start = 16.dp, top = 12.dp, end = 16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
-                    ){
+                    ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
-                        ){
+                        ) {
                             Image(
                                 painter = painterResource(R.drawable.star),
                                 contentDescription = "Settings"
@@ -196,7 +193,7 @@ fun SellerProfileForSelfScreen(
                     }
                 }
             }
-            item{
+            item {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -204,7 +201,8 @@ fun SellerProfileForSelfScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Balance(
-                        balance = state.user.balance.toFloatOrNull()?.let { it.formatPrice() } ?: state.user.balance,
+                        balance = state.user.balance.toFloatOrNull()?.formatPrice()
+                            ?: state.user.balance,
                         onEmptiedClick = {
                             onEvent(SellerProfileForSelfEvent.EmptiedAccountClick)
                         },
@@ -326,91 +324,95 @@ fun SellerProfileForSelfScreen(
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(start = 32.dp, top = 8.dp, end = 32.dp, bottom = 8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Box(modifier = Modifier.weight(1f)) {
-                                    val portfolio1 = portfolio[0]
-                                    PortfolioCard(
-                                        portfolioData = portfolio1,
-                                        onClick = {
-                                            onEvent(
-                                                SellerProfileForSelfEvent.ShowPortfolioItem(
-                                                    portfolio1.id
-                                                )
-                                            )
-                                        },
-                                        onTrashClick = {
-                                            onEvent(
-                                                SellerProfileForSelfEvent.ShowAlert(
-                                                    AlertData(
-                                                        title = "Вы уверены, что хотите удалить кейс?",
-                                                        leftText = "Удалить",
-                                                        rightText = "Отменить",
-                                                        rightClick = {
-                                                            onEvent(
-                                                                SellerProfileForSelfEvent.DeleteAlert
-                                                            )
-                                                        },
-                                                        leftClick = {
-                                                            onEvent(SellerProfileForSelfEvent.DeleteAlert)
-                                                            onEvent(
-                                                                SellerProfileForSelfEvent.DeleteCaseClick(
-                                                                    portfolio1.id
-                                                                )
-                                                            )
-                                                        },
-                                                    )
-                                                )
-                                            )
-                                        },
-                                    )
-                                }
-                                Box(
-                                    modifier = Modifier.weight(1f),
-                                    contentAlignment = Alignment.TopEnd
+                                        .padding(
+                                            start = 32.dp,
+                                            top = 8.dp,
+                                            end = 32.dp,
+                                            bottom = 8.dp
+                                        ),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
-                                    if (portfolio.size > 1) {
-                                        val portfolio2 = portfolio[1]
+                                    Box(modifier = Modifier.weight(1f)) {
+                                        val portfolio1 = portfolio[0]
                                         PortfolioCard(
-                                            portfolioData = portfolio2,
+                                            portfolioData = portfolio1,
                                             onClick = {
                                                 onEvent(
                                                     SellerProfileForSelfEvent.ShowPortfolioItem(
-                                                        portfolio2.id
+                                                        portfolio1.id
                                                     )
                                                 )
                                             },
                                             onTrashClick = {
                                                 onEvent(
-                                                    SellerProfileForSelfEvent.DeleteCaseClick(
-                                                        portfolio2.id
+                                                    SellerProfileForSelfEvent.ShowAlert(
+                                                        AlertData(
+                                                            title = "Вы уверены, что хотите удалить кейс?",
+                                                            leftText = "Удалить",
+                                                            rightText = "Отменить",
+                                                            rightClick = {
+                                                                onEvent(
+                                                                    SellerProfileForSelfEvent.DeleteAlert
+                                                                )
+                                                            },
+                                                            leftClick = {
+                                                                onEvent(SellerProfileForSelfEvent.DeleteAlert)
+                                                                onEvent(
+                                                                    SellerProfileForSelfEvent.DeleteCaseClick(
+                                                                        portfolio1.id
+                                                                    )
+                                                                )
+                                                            },
+                                                        )
                                                     )
                                                 )
                                             },
                                         )
-                                    } else {
-                                        Spacer(Modifier.fillMaxWidth())
+                                    }
+                                    Box(
+                                        modifier = Modifier.weight(1f),
+                                        contentAlignment = Alignment.TopEnd
+                                    ) {
+                                        if (portfolio.size > 1) {
+                                            val portfolio2 = portfolio[1]
+                                            PortfolioCard(
+                                                portfolioData = portfolio2,
+                                                onClick = {
+                                                    onEvent(
+                                                        SellerProfileForSelfEvent.ShowPortfolioItem(
+                                                            portfolio2.id
+                                                        )
+                                                    )
+                                                },
+                                                onTrashClick = {
+                                                    onEvent(
+                                                        SellerProfileForSelfEvent.DeleteCaseClick(
+                                                            portfolio2.id
+                                                        )
+                                                    )
+                                                },
+                                            )
+                                        } else {
+                                            Spacer(Modifier.fillMaxWidth())
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
 
-                    if (chunkedProducts.size > countPortfolioRowItem)
-                        Button(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 32.dp, top = 16.dp, end = 32.dp)
-                            ,
-                            text = "Показать еще",
-                            isGray = true,
-                            onClick = {
-                                countPortfolioRowItem += 2
-                            }
-                        )
+                        if (chunkedProducts.size > countPortfolioRowItem)
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 32.dp, top = 16.dp, end = 32.dp),
+                                text = "Показать еще",
+                                isGray = true,
+                                onClick = {
+                                    countPortfolioRowItem += 2
+                                }
+                            )
+                    }
                 }
-            }
             }
             if (state.originalFeedback.isNotEmpty()) {
                 item {
@@ -455,7 +457,10 @@ fun SellerProfileForSelfScreen(
                         Column(
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            for (i in 0..min(countFeedbackItem - 1, state.filteredFeedback.size - 1))
+                            for (i in 0..min(
+                                countFeedbackItem - 1,
+                                state.filteredFeedback.size - 1
+                            ))
                                 Feedback(
                                     feedbackData = state.filteredFeedback[i]
                                 )
@@ -474,8 +479,8 @@ fun SellerProfileForSelfScreen(
                     }
                 }
             }
-            item{
-                Spacer( modifier = Modifier.height(50.dp))
+            item {
+                Spacer(modifier = Modifier.height(50.dp))
             }
         }
     }
@@ -495,9 +500,9 @@ private fun Preview() {
                 rate = 5.0f,
                 profession = "Художник",
                 about = "Описание ",
-                skills = List(1) {item -> "Подсказка"},
+                skills = List(1) { item -> "Подсказка" },
             ),
-            portfolio = List(11){
+            portfolio = List(11) {
                 PortfolioItemData(
                     id = 1L,
                     media = listOf(R.drawable.background, R.drawable.background),
@@ -508,7 +513,7 @@ private fun Preview() {
                     )
                 )
             },
-            filteredFeedback = List(10){ item ->
+            filteredFeedback = List(10) { item ->
                 FeedbackData(
                     user = UserData(
                         name = "Гена",
@@ -521,7 +526,7 @@ private fun Preview() {
                     date = LocalDateTime.of(2022, 12, 11, 11, 11)
                 )
             },
-            allPortfolioTags = listOf("Все", "Видео", "Не видео", "Фото", "Не фото", "Попа" ),
+            allPortfolioTags = listOf("Все", "Видео", "Не видео", "Фото", "Не фото", "Попа"),
             portfolioFilter = List(6) { index -> index == 0 },
         )
     )

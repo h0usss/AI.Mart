@@ -17,25 +17,31 @@ interface SearchHintDao {
     @Upsert
     suspend fun upsert(hint: SearchHintEntity)
 
-    @Query("""
+    @Query(
+        """
         SELECT * 
         FROM search_hint 
         WHERE user_id = :userId 
         ORDER BY timestamp DESC
-    """)
+    """
+    )
     fun getHints(userId: Long): Flow<List<SearchHintEntity>>
 
-    @Query("""
+    @Query(
+        """
         DELETE 
         FROM search_hint 
         WHERE user_id = :userId AND text = :hintText
-    """)
+    """
+    )
     suspend fun deleteHint(userId: Long, hintText: String)
 
-    @Query("""
+    @Query(
+        """
         DELETE 
         FROM search_hint 
         WHERE user_id = :userId
-    """)
+    """
+    )
     suspend fun deleteAllForUser(userId: Long)
 }

@@ -95,7 +95,8 @@ class UserRepository(
     @Transaction
     suspend fun updateSeller(user: SellerData) {
         userDao.updateUserInfo(user.id, user.name, user.nick, user.imageUrl)
-        val affected = userDao.updateSellerSellInfo(user.id, user.profession, user.about, user.skills)
+        val affected =
+            userDao.updateSellerSellInfo(user.id, user.profession, user.about, user.skills)
         if (affected == 0) {
             userSellInfoDao.upsert(
                 UserSellInfoEntity(

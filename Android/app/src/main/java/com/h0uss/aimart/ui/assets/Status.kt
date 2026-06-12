@@ -40,27 +40,32 @@ fun Status(
     var name: String
     var color: Color
 
-    when(statusData.status){
+    when (statusData.status) {
         OrderStatus.WAITING -> {
             name = "Ожидание"
             color = Waiting
         }
+
         OrderStatus.IN_WORK -> {
             name = "В работе"
             color = InWork
         }
+
         OrderStatus.DEBATE -> {
             name = "Спор"
             color = Debate
         }
+
         OrderStatus.COMPLETE -> {
             name = if (statusData.isTag) "Завершенные" else "Завершен"
             color = Complete
         }
+
         OrderStatus.DELETED -> {
             name = "Удалён"
             color = Debate
         }
+
         OrderStatus.WAIT_PAY -> {
             name = "Ожидание оплаты"
             color = Waiting
@@ -76,16 +81,15 @@ fun Status(
                 shape = RoundedCornerShape(50),
                 color = if (statusData.isActive) TealTagBorder else Black10,
             )
-            .clickable{
+            .clickable {
                 statusData.onClick()
             }
             .padding(
                 horizontal = if (statusData.isTag) 12.dp else 8.dp,
                 vertical = if (statusData.isTag) 6.dp else 2.dp
-            )
-        ,
+            ),
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         Box(
             modifier = Modifier
                 .size(8.dp)
@@ -94,8 +98,7 @@ fun Status(
         )
         Text(
             modifier = Modifier
-                .padding(start = 8.dp)
-            ,
+                .padding(start = 8.dp),
             text = name,
             style = regularStyle,
             fontSize = 14.sp,
@@ -114,7 +117,7 @@ fun Status(
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
-    Column{
+    Column {
         Row {
             listOf(true, false).forEach { isTag ->
                 Column {

@@ -26,13 +26,15 @@ fun Home(
 
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.receiveAsFlow().collect { event ->
-            when(event) {
+            when (event) {
                 is HomeNavigationEvent.Seller -> {
                     navToSeller(event.id)
                 }
+
                 is HomeNavigationEvent.Product -> {
                     navToProduct(event.id, event.authorId)
                 }
+
                 is HomeNavigationEvent.Search -> navToSearch()
             }
         }

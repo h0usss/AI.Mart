@@ -66,8 +66,8 @@ fun TopUpWalletScreen(
             )
             Image(
                 modifier = Modifier
-                    .clickable{
-                      onEvent(TopUpWalletEvent.Exit)
+                    .clickable {
+                        onEvent(TopUpWalletEvent.Exit)
                     },
                 painter = painterResource(R.drawable.x_40),
                 contentDescription = "X",

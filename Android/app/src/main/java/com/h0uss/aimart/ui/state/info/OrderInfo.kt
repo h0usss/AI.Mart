@@ -28,10 +28,11 @@ fun OrderInfo(
 
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.receiveAsFlow().collect { event ->
-            when(event) {
+            when (event) {
                 is OrderInfoNavigationEvent.ToOrderList -> {
                     navToBack()
                 }
+
                 is OrderInfoNavigationEvent.ToChat -> {
                     navToChat(event.value)
                 }

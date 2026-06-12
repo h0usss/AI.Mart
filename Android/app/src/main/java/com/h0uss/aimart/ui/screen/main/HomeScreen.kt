@@ -48,11 +48,10 @@ fun HomeScreen(
     LazyColumn(
         modifier = modifier
             .background(White)
-            .padding(top = 11.dp)
-        ,
+            .padding(top = 11.dp),
         contentPadding = WindowInsets.systemBars.asPaddingValues()
-    ){
-        item{
+    ) {
+        item {
             SearchTextFieldButton(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -147,7 +146,7 @@ private fun Preview_v1() {
 
 @Composable
 private fun Preview_data() {
-    val productsFlow = flowOf(PagingData.from(List(21){ item ->
+    val productsFlow = flowOf(PagingData.from(List(21) { item ->
         ProductCardData(
             id = item.toLong(),
             authorId = item.toLong(),

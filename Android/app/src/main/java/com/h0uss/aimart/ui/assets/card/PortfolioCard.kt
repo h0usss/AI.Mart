@@ -35,19 +35,18 @@ fun PortfolioCard(
     Column(
         modifier = Modifier
             .background(White)
-            .clickable{
+            .clickable {
                 onClick()
             }
     ) {
         Box(
             modifier = modifier,
             contentAlignment = Alignment.TopEnd
-        ){
+        ) {
             Image(
                 modifier = Modifier
                     .size(150.dp)
-                    .clip(RoundedCornerShape(5))
-                ,
+                    .clip(RoundedCornerShape(5)),
                 painter = painterResource(portfolioData.media[0]),
                 contentDescription = "Product image",
                 contentScale = ContentScale.Crop
@@ -56,10 +55,9 @@ fun PortfolioCard(
                 Image(
                     modifier = Modifier
                         .padding(top = 8.dp, end = 12.dp)
-                        .clickable{
+                        .clickable {
                             onTrashClick()
-                        }
-                    ,
+                        },
                     painter = painterResource(R.drawable.trash),
                     contentDescription = "Trash"
                 )

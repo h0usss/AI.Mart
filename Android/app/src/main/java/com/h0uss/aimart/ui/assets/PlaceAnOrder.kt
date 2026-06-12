@@ -53,10 +53,9 @@ fun PlaceAnOrder(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable{
+                .clickable {
                     onUserClick(user.id)
-                }
-            ,
+                },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -90,16 +89,20 @@ fun PlaceAnOrder(
                         Row(
                             modifier = Modifier.padding(start = 8.dp),
                         ) {
-                            for (i in 1..floor(user.rate).toInt())
-                                Image(
-                                    painter = painterResource(R.drawable.star_yellow_feedback),
-                                    contentDescription = "Star yellow"
-                                )
-                            for (i in 1..5 - floor(user.rate).toInt())
-                                Image(
-                                    painter = painterResource(R.drawable.star_black_feedback),
-                                    contentDescription = "Star black"
-                                )
+                            (1..floor(user.rate).toInt())
+                                .forEach { i ->
+                                    Image(
+                                        painter = painterResource(R.drawable.star_yellow_feedback),
+                                        contentDescription = "Star yellow"
+                                    )
+                                }
+                            (1..5 - floor(user.rate).toInt())
+                                .forEach { i ->
+                                    Image(
+                                        painter = painterResource(R.drawable.star_black_feedback),
+                                        contentDescription = "Star black"
+                                    )
+                                }
                         }
                     }
                 }

@@ -16,22 +16,20 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
-class UserProfileForSelfViewModel : ViewModel(){
+class UserProfileForSelfViewModel : ViewModel() {
 
     var state = MutableStateFlow(UserProfileForSelfState())
-    private set
+        private set
 
     var navigationEvents = Channel<UserProfileForSelfNavigationEvent>()
-    private set
+        private set
 
-    init{
+    init {
         viewModelScope.launch {
             userRepository.getUserByIdFlow(authUserIdLong)
                 .onEach { user ->
-                    if (user != null) {
-                        state.update {
-                            it.copy(user = user)
-                        }
+                    state.update {
+                        it.copy(user = user)
                     }
                 }
                 .launchIn(viewModelScope)
@@ -47,32 +45,37 @@ class UserProfileForSelfViewModel : ViewModel(){
     }
 
     fun onEvent(event: UserProfileForSelfEvent) {
-        when(event){
+        when (event) {
             is UserProfileForSelfEvent.EditClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(UserProfileForSelfNavigationEvent.EditClick(event.id))
                 }
             }
+
             is UserProfileForSelfEvent.ShowSettingsMenu -> {
                 state.update {
                     it.copy(isVisibleSettings = true)
                 }
             }
+
             is UserProfileForSelfEvent.DismissSettingsMenu -> {
                 state.update {
                     it.copy(isVisibleSettings = false)
                 }
             }
+
             is UserProfileForSelfEvent.ReplenishAccount -> {
                 viewModelScope.launch {
                     navigationEvents.send(UserProfileForSelfNavigationEvent.ReplenishAccount)
                 }
             }
+
             is UserProfileForSelfEvent.EmptiedAccount -> {
 
             }
+
             is UserProfileForSelfEvent.SettingItemClick -> {
-                when(event.id){
+                when (event.id) {
                     "profile" -> {}
                     "like" -> {}
                     "lock" -> {}
@@ -85,6 +88,7 @@ class UserProfileForSelfViewModel : ViewModel(){
                             deleteUserId()
                         }
                     }
+
                     else -> {}
                 }
             }
@@ -101,10 +105,10 @@ data class UserProfileForSelfState(
 sealed class UserProfileForSelfEvent {
     data class EditClick(val id: Long) : UserProfileForSelfEvent()
     data class SettingItemClick(val id: String) : UserProfileForSelfEvent()
-    object ShowSettingsMenu: UserProfileForSelfEvent()
-    object DismissSettingsMenu: UserProfileForSelfEvent()
-    object ReplenishAccount: UserProfileForSelfEvent()
-    object EmptiedAccount: UserProfileForSelfEvent()
+    object ShowSettingsMenu : UserProfileForSelfEvent()
+    object DismissSettingsMenu : UserProfileForSelfEvent()
+    object ReplenishAccount : UserProfileForSelfEvent()
+    object EmptiedAccount : UserProfileForSelfEvent()
 }
 
 sealed class UserProfileForSelfNavigationEvent {

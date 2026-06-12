@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 @RequiresApi(Build.VERSION_CODES.O)
 class UserProfileForOtherViewModel(
     private val userId: Long
-) : ViewModel(){
+) : ViewModel() {
 
     var state = MutableStateFlow(UserProfileForOtherState())
         private set
@@ -28,10 +28,8 @@ class UserProfileForOtherViewModel(
         viewModelScope.launch {
             userRepository.getUserByIdFlow(userId)
                 .onEach { user ->
-                    if (user != null) {
-                        state.update {
-                            it.copy(user = user)
-                        }
+                    state.update {
+                        it.copy(user = user)
                     }
                 }
                 .launchIn(viewModelScope)
@@ -47,24 +45,27 @@ class UserProfileForOtherViewModel(
     }
 
     fun onEvent(event: UserProfileForOtherEvent) {
-        when(event){
+        when (event) {
             is UserProfileForOtherEvent.BackClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(UserProfileForOtherNavigationEvent.BackClick)
                 }
             }
+
             is UserProfileForOtherEvent.ShowAdditionalMenu -> {
                 state.update {
                     it.copy(isShowAdditional = true)
                 }
             }
+
             is UserProfileForOtherEvent.DismissAdditionalMenu -> {
                 state.update {
                     it.copy(isShowAdditional = false)
                 }
             }
+
             is UserProfileForOtherEvent.AdditionalItemClick -> {
-                when(event.id){
+                when (event.id) {
                     "share" -> {}
                     "complaint" -> {}
                     "block" -> {}

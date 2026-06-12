@@ -44,15 +44,14 @@ fun MyProductCard(
         modifier = modifier
             .fillMaxWidth()
             .background(White)
-            .clickable{
+            .clickable {
                 onClick(product.id)
-            }
-        ,
+            },
         horizontalArrangement = Arrangement.SpaceBetween
-    ){
+    ) {
         Row(
             modifier = Modifier.weight(.8f)
-        ){
+        ) {
             AsyncImage(
                 model = product.imagesUrl[0],
                 contentDescription = product.name,
@@ -64,10 +63,9 @@ fun MyProductCard(
             Column(
                 modifier = Modifier
                     .padding(start = 24.dp)
-            ){
+            ) {
                 Text(
-                    modifier = Modifier
-                    ,
+                    modifier = Modifier,
                     text = product.name,
                     style = regularStyle,
                     fontSize = 14.sp,
@@ -75,8 +73,7 @@ fun MyProductCard(
                 )
                 Text(
                     modifier = Modifier
-                        .padding(top = 6.dp)
-                    ,
+                        .padding(top = 6.dp),
                     text = "${product.price.formatPrice()}₽",
                     style = semiboldStyle,
                     fontSize = 16.sp,
@@ -84,8 +81,7 @@ fun MyProductCard(
                 )
                 Text(
                     modifier = Modifier
-                        .padding(top = 10.dp)
-                    ,
+                        .padding(top = 10.dp),
                     text = product.description,
                     style = regularStyle,
                     fontSize = 12.sp,
@@ -100,7 +96,7 @@ fun MyProductCard(
             modifier = Modifier
                 .weight(.2f),
             contentAlignment = Alignment.TopEnd
-        ){
+        ) {
             Image(
                 modifier = Modifier.clickable { onEditClick(product.id) },
                 painter = painterResource(R.drawable.edit),

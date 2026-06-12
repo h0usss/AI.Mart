@@ -70,9 +70,8 @@ fun SellerProfileForSelfEditScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(White)
-        ,
-    ){
+            .background(White),
+    ) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(14.dp),
             contentPadding = WindowInsets.systemBars.asPaddingValues()
@@ -141,8 +140,7 @@ fun SellerProfileForSelfEditScreen(
                         Button(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(18.dp)
-                            ,
+                                .padding(18.dp),
                             text = "Сохранить",
                             onClick = {
                                 onEvent(SellerProfileForSelfEditEvent.SaveClick)
@@ -152,13 +150,12 @@ fun SellerProfileForSelfEditScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 16.dp, top = 12.dp, end = 16.dp)
-                        ,
+                            .padding(start = 16.dp, top = 12.dp, end = 16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
-                    ){
+                    ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
-                        ){
+                        ) {
                             Image(
                                 painter = painterResource(R.drawable.star),
                                 contentDescription = "Settings"
@@ -220,7 +217,7 @@ fun SellerProfileForSelfEditScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         state.user.skills.forEach { skill ->
-                            Hint( text = skill )
+                            Hint(text = skill)
                         }
                     }
                     AddTag(
@@ -229,22 +226,24 @@ fun SellerProfileForSelfEditScreen(
                         state = state.newSkillState,
                         onClickAdd = {
                             if (state.user.skills.size < 7)
-                                onEvent(SellerProfileForSelfEditEvent.AddSkillClick(
-                                    state.newSkillState.text.toString()
-                                ))
+                                onEvent(
+                                    SellerProfileForSelfEditEvent.AddSkillClick(
+                                        state.newSkillState.text.toString()
+                                    )
+                                )
                         },
                     )
                 }
             }
-            item{
-                Column{
+            item {
+                Column {
                     Row(
                         modifier = Modifier
                             .padding(horizontal = 32.dp)
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
-                    ){
+                    ) {
                         Text(
                             text = "Портфолио",
                             style = semiboldStyle,
@@ -257,10 +256,10 @@ fun SellerProfileForSelfEditScreen(
                         modifier = Modifier.padding(top = 16.dp),
                         contentPadding = PaddingValues(horizontal = 32.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ){
-                        itemsIndexed(state.allPortfolioTags){ index, item ->
+                    ) {
+                        itemsIndexed(state.allPortfolioTags) { index, item ->
                             SellerHint(
-                                modifier = Modifier.clickable{
+                                modifier = Modifier.clickable {
                                     onEvent(SellerProfileForSelfEditEvent.PortfolioTagClick(item))
                                 },
                                 text = item,
@@ -288,20 +287,28 @@ fun SellerProfileForSelfEditScreen(
                                         )
                                     },
                                     onTrashClick = {
-                                        onEvent(SellerProfileForSelfEditEvent.ShowAlert(
-                                            AlertData(
-                                                title = "Вы уверены, что хотите удалить кейс?",
-                                                leftText = "Удалить",
-                                                rightText = "Отменить",
-                                                rightClick = { onEvent(SellerProfileForSelfEditEvent.DeleteAlert) },
-                                                leftClick = {
-                                                    onEvent(SellerProfileForSelfEditEvent.DeleteAlert)
-                                                    onEvent(SellerProfileForSelfEditEvent.DeleteCaseClick(
-                                                        portfolio1.id
-                                                    ))
-                                                },
+                                        onEvent(
+                                            SellerProfileForSelfEditEvent.ShowAlert(
+                                                AlertData(
+                                                    title = "Вы уверены, что хотите удалить кейс?",
+                                                    leftText = "Удалить",
+                                                    rightText = "Отменить",
+                                                    rightClick = {
+                                                        onEvent(
+                                                            SellerProfileForSelfEditEvent.DeleteAlert
+                                                        )
+                                                    },
+                                                    leftClick = {
+                                                        onEvent(SellerProfileForSelfEditEvent.DeleteAlert)
+                                                        onEvent(
+                                                            SellerProfileForSelfEditEvent.DeleteCaseClick(
+                                                                portfolio1.id
+                                                            )
+                                                        )
+                                                    },
+                                                )
                                             )
-                                        ))
+                                        )
                                     }
                                 )
                             }
@@ -338,8 +345,7 @@ fun SellerProfileForSelfEditScreen(
                     Button(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 32.dp, top = 16.dp, end = 32.dp)
-                        ,
+                            .padding(start = 32.dp, top = 16.dp, end = 32.dp),
                         text = "Добавить кейс",
                         isGray = true,
                         rightImageId = R.drawable.plus,
@@ -353,12 +359,12 @@ fun SellerProfileForSelfEditScreen(
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 32.dp, top = 18.dp, end = 32.dp)
-                    ,
+                        .padding(start = 32.dp, top = 18.dp, end = 32.dp),
                     text = "Удалить аккаунт",
                     isRedFill = true,
                     onClick = {
-                        onEvent(SellerProfileForSelfEditEvent.ShowAlert(
+                        onEvent(
+                            SellerProfileForSelfEditEvent.ShowAlert(
                                 AlertData(
                                     title = "Вы уверены, что хотите удалить аккаунт?",
                                     description = "После удаления аккаунта ваши данные восстановить невозможно",
@@ -394,9 +400,9 @@ private fun Preview() {
                 rate = 5.0f,
                 profession = "Художник",
                 about = "Описание описание описание описание описание описание описание описание ",
-                skills = List(7) {item -> "Подсказка"},
+                skills = List(7) { item -> "Подсказка" },
             ),
-            portfolio = List(11){
+            portfolio = List(11) {
                 PortfolioItemData(
                     id = 1L,
                     media = listOf(R.drawable.background, R.drawable.background),
@@ -407,7 +413,7 @@ private fun Preview() {
                     )
                 )
             },
-            allPortfolioTags = listOf("Все", "Видео", "Не видео", "Фото", "Не фото", "Попа" ),
+            allPortfolioTags = listOf("Все", "Видео", "Не видео", "Фото", "Не фото", "Попа"),
             portfolioFilter = List(6) { index -> index == 0 }
         )
     )

@@ -38,13 +38,12 @@ fun Balance(
             )
             .background(White)
             .padding(16.dp)
-    ){
+    ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-            ,
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
-        ){
+        ) {
             Text(
                 modifier = Modifier,
                 text = "Баланс",
@@ -62,15 +61,13 @@ fun Balance(
         }
         Row(
             modifier = modifier
-                .padding(top = 16.dp)
-            ,
+                .padding(top = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ){
+        ) {
             if (canWithdraw)
                 Button(
                     modifier = Modifier
-                        .weight(1f)
-                    ,
+                        .weight(1f),
                     text = "Вывести",
                     isGray = true,
                     onClick = {
@@ -79,8 +76,7 @@ fun Balance(
                 )
             Button(
                 modifier = Modifier
-                    .weight(1f)
-                ,
+                    .weight(1f),
                 text = "Пополнить",
                 onClick = {
                     onReplenishClick()
@@ -97,6 +93,7 @@ private fun Preview_v1() {
         balance = "1,000"
     )
 }
+
 @Preview
 @Composable
 private fun Preview_v2() {

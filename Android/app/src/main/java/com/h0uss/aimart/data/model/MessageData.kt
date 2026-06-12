@@ -2,7 +2,7 @@ package com.h0uss.aimart.data.model
 
 import java.time.LocalDateTime
 
-class MessageData (
+class MessageData(
     val text: String,
     val date: LocalDateTime,
     val avatarUrl: String = "",

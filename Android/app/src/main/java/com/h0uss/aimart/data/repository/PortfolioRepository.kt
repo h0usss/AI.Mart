@@ -10,13 +10,13 @@ class PortfolioRepository(
 ) {
     fun getPortfolioBySellerIdFlow(userId: Long): Flow<List<PortfolioItemData>> {
         return portfolioDao.getPortfolioBySellerIdFlow(userId).map { list ->
-            list.map{ item ->
+            list.map { item ->
                 PortfolioItemData(
                     id = item.portfolioItem.id,
                     media = item.portfolioItem.media,
                     title = item.portfolioItem.title,
                     description = item.portfolioItem.description,
-                    tags = item.tags.map{ tag -> tag.name },
+                    tags = item.tags.map { tag -> tag.name },
                 )
             }
         }
@@ -29,7 +29,7 @@ class PortfolioRepository(
                 media = item.portfolioItem.media,
                 title = item.portfolioItem.title,
                 description = item.portfolioItem.description,
-                tags = item.tags.map{ tag -> tag.name },
+                tags = item.tags.map { tag -> tag.name },
             )
         }
     }

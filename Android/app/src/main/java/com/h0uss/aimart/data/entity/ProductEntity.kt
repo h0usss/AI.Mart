@@ -11,14 +11,14 @@ import java.time.LocalDateTime
 )
 data class ProductEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo( name = "id")               val id: Long = 0L,
-    @ColumnInfo( name = "name")             val name: String,
-    @ColumnInfo( name = "images")           val imagesUrl: List<String>,
-    @ColumnInfo( name = "price")            val price: Float,
-    @ColumnInfo( name = "description")      val description: String,
-    @ColumnInfo( name = "create_date")      val createDate: LocalDateTime,
-    @ColumnInfo( name = "product_status")   val productStatus: ProductStatus,
-    @ColumnInfo( name = "view_count")       val viewCount: Long = 0L,
+    @ColumnInfo(name = "id") val id: Long = 0L,
+    @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "images") val imagesUrl: List<String>,
+    @ColumnInfo(name = "price") val price: Float,
+    @ColumnInfo(name = "description") val description: String,
+    @ColumnInfo(name = "create_date") val createDate: LocalDateTime,
+    @ColumnInfo(name = "product_status") val productStatus: ProductStatus,
+    @ColumnInfo(name = "view_count") val viewCount: Long = 0L,
 
-    @ColumnInfo( name = "user_id")      val userId: Long,
+    @ColumnInfo(name = "user_id") val userId: Long,
 )

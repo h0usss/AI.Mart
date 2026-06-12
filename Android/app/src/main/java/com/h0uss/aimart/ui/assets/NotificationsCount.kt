@@ -42,10 +42,9 @@ fun NotificationsCount(
                 width = 1.dp,
                 color = if (isActive) TealCounterBorder else Black10,
                 shape = CircleShape
-            )
-        ,
+            ),
         contentAlignment = Alignment.Center
-    ){
+    ) {
         Text(
             modifier = Modifier.padding(top = 1.dp, bottom = 2.dp, start = 3.dp, end = 3.dp),
             text = count.toString(),

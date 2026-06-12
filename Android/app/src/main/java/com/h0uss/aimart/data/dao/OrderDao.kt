@@ -20,7 +20,8 @@ interface OrderDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(order: OrderEntity): Long
 
-    @Query("""
+    @Query(
+        """
         SELECT
         o.id AS id,
         p.name AS name,
@@ -30,10 +31,12 @@ interface OrderDao {
         FROM orders AS o
         JOIN product AS p ON o.product_id = p.id
         WHERE o.seller_id = :userId AND o.status != 'DELETED'
-    """)
+    """
+    )
     fun getOrdersBySellerId(userId: Long): Flow<List<OrderCardData>>
 
-    @Query("""
+    @Query(
+        """
         SELECT 
             o.id AS id,
             o.price AS price,
@@ -47,7 +50,8 @@ interface OrderDao {
             o.product_id AS productId
         FROM orders AS o
         WHERE o.id = :orderId
-    """)
+    """
+    )
     fun getOrderById(orderId: Long): Flow<OrderData>
 
     @Query("UPDATE orders SET status = :status WHERE id = :orderId")
@@ -56,12 +60,14 @@ interface OrderDao {
     @Query("UPDATE orders SET status = 'COMPLETE', completion_date = :completionDate WHERE id = :orderId")
     suspend fun completeOrder(orderId: Long, completionDate: LocalDateTime)
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM orders
         WHERE seller_id = :sellerId
           AND status = 'COMPLETE'
           AND completion_date IS NOT NULL
-    """)
+    """
+    )
     fun getCompletedOrdersBySellerId(sellerId: Long): Flow<List<OrderEntity>>
 
 }

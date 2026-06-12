@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
-class ChatsViewModel : ViewModel(){
+class ChatsViewModel : ViewModel() {
 
     var state = MutableStateFlow(ChatsState())
         private set
@@ -36,7 +36,7 @@ class ChatsViewModel : ViewModel(){
     }
 
     fun onEvent(event: ChatsEvent) {
-        when(event){
+        when (event) {
             is ChatsEvent.ChatClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(ChatsNavigationEvent.Chat(event.value))

@@ -45,12 +45,11 @@ fun OrderCard(
         Box(
             modifier = modifier,
             contentAlignment = Alignment.TopEnd
-        ){
+        ) {
             AsyncImage(
                 modifier = Modifier
                     .size(164.dp)
-                    .clip(RoundedCornerShape(5))
-                ,
+                    .clip(RoundedCornerShape(5)),
                 model = order.imagesUrl[0],
                 contentDescription = "Product image",
                 contentScale = ContentScale.Crop
@@ -84,7 +83,7 @@ fun OrderCard(
 @Preview
 @Composable
 private fun Preview() {
-    Row{
+    Row {
         OrderCard(
             modifier = Modifier.padding(end = 5.dp),
             order = OrderCardData(

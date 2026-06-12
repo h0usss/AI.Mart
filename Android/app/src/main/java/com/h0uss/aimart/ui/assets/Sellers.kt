@@ -40,10 +40,10 @@ fun Sellers(
     Column(
         modifier = modifier
             .background(White)
-    ){
+    ) {
         Row(
             modifier = Modifier.padding(start = 16.dp)
-        ){
+        ) {
             Text(
                 text = "Продавцы",
                 style = semiboldStyle,
@@ -61,14 +61,14 @@ fun Sellers(
                 .padding(top = 22.dp),
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(24.dp)
-        ){
-            items(sellers){ item ->
+        ) {
+            items(sellers) { item ->
                 Column(
-                    modifier = Modifier.clickable{
+                    modifier = Modifier.clickable {
                         onSellerClick(item.id)
                     },
                     horizontalAlignment = Alignment.CenterHorizontally
-                ){
+                ) {
                     AsyncImage(
                         modifier = Modifier
                             .size(76.dp)

@@ -18,21 +18,26 @@ interface ChatDao {
     suspend fun insert(chats: ChatEntity): Long
 
 
-    @Query("""
+    @Query(
+        """
         SELECT * 
         FROM chats
         ORDER BY created_at DESC
-    """)
+    """
+    )
     fun getAll(): Flow<List<ChatEntity>>
 
-    @Query("""
+    @Query(
+        """
         SELECT * 
         FROM chats
         WHERE id = :chatId
-    """)
+    """
+    )
     fun getChatById(chatId: Long): Flow<ChatEntity?>
 
-    @Query("""
+    @Query(
+        """
         SELECT
             c.id AS id,
             COALESCE(p.images, 
@@ -56,10 +61,12 @@ interface ChatDao {
         ) AS m ON c.id = m.chat_id
         WHERE c.f_user_id = :userId OR c.s_user_id = :userId
         ORDER BY COALESCE(m.last_message_at, c.created_at) DESC
-    """)
+    """
+    )
     fun getAllUserChats(userId: Long): Flow<List<ChatData>>
 
-    @Query("""
+    @Query(
+        """
         SELECT
             c.id AS id,
             p.images AS imagesUrl,
@@ -76,10 +83,12 @@ interface ChatDao {
         JOIN product AS p ON o.product_id = p.id
         WHERE o.id = :orderId
         ORDER BY c.created_at DESC
-    """)
+    """
+    )
     fun getChatByOrderId(orderId: Long, myId: Long): Flow<List<ChatData>>
 
-    @Query("""
+    @Query(
+        """
         SELECT 
             c.id,
             CASE WHEN c.f_user_id = :myId THEN u2.avatar ELSE u1.avatar END AS imagesUrl,
@@ -93,6 +102,7 @@ interface ChatDao {
            OR (c.f_user_id = :sUserId AND c.s_user_id = :myId))
            AND c.order_id IS NULL
         LIMIT 1
-    """)
+    """
+    )
     fun getChatNoOrder(myId: Long, sUserId: Long): Flow<ChatData?>
 }

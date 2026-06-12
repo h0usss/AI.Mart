@@ -335,7 +335,9 @@ private fun ImagePreviewDialog(
                         contentScale = ContentScale.Fit,
                     )
                     if (isProtected) {
-                        WatermarkOverlay(modifier = Modifier.matchParentSize().clipToBounds())
+                        WatermarkOverlay(modifier = Modifier
+                            .matchParentSize()
+                            .clipToBounds())
                     }
                 }
             }
@@ -411,7 +413,7 @@ private fun WatermarkOverlay(modifier: Modifier = Modifier) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-            ){
+            ) {
                 repeat(5) {
                     Text(
                         text = "AI.MART",
@@ -758,7 +760,7 @@ private fun VideoThumbnail(
                 val frame = retriever.frameAtTime
                 retriever.release()
                 frame
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 null
             }
         }

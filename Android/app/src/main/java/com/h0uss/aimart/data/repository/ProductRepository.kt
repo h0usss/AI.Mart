@@ -10,7 +10,6 @@ import com.h0uss.aimart.Graph.productViewDao
 import com.h0uss.aimart.data.dao.ProductDao
 import com.h0uss.aimart.data.entity.ProductEntity
 import com.h0uss.aimart.data.entity.ProductViewEntity
-import com.h0uss.aimart.data.enum.ProductStatus
 import com.h0uss.aimart.data.mapper.toUserProductCardData
 import com.h0uss.aimart.data.model.ProductCardData
 import com.h0uss.aimart.data.model.ProductData
@@ -24,7 +23,7 @@ class ProductRepository(
     private val productDao: ProductDao
 ) {
 
-    suspend fun insert(product: ProductEntity): Long{
+    suspend fun insert(product: ProductEntity): Long {
         return productDao.insert(product)
     }
 
@@ -70,14 +69,6 @@ class ProductRepository(
         ).flow
     }
 
-    fun getTotalViewCountBySellerId(sellerId: Long): Flow<Long> {
-        return productDao.getTotalViewCountBySellerId(sellerId)
-    }
-
-    suspend fun incrementViewCount(productId: Long) {
-        productDao.incrementViewCount(productId)
-    }
-
     suspend fun incrementViewCountAndInsertView(productId: Long, userId: Long) {
         productDao.incrementViewCount(productId)
         productViewDao.insert(
@@ -87,9 +78,5 @@ class ProductRepository(
                 viewedAt = LocalDateTime.now(),
             )
         )
-    }
-
-    suspend fun updateProductStatus(productId: Long, status: ProductStatus) {
-        productDao.updateProductStatus(productId, status)
     }
 }

@@ -207,10 +207,6 @@ fun Navigation(
                                 navToUser = { userId ->
                                     navController.navigate(Seller(userId))
                                 },
-                                onBuy = { sellerId, productId ->
-                                    sellerIdForOrder = sellerId
-                                    productIdForOrder = productId
-                                },
                                 navToBack = {
                                     navController.popBackStack()
                                 },
@@ -325,9 +321,6 @@ fun Navigation(
                                 isBottomNavBarShow = true
 
                                 MyProducts(
-                                    navToProduct = { productId ->
-                                        navController.navigate(ProductInfo(productId))
-                                    },
                                     navToProductSellerInfo = { productId ->
                                         navController.navigate(ProductSellerInfo(productId))
                                     },
@@ -344,11 +337,13 @@ fun Navigation(
                                 isBottomNavBarShow = false
 
                                 val productId = it.toRoute<NewProduct>().productId
-                                NewProduct (
+                                NewProduct(
                                     productId = productId,
                                     onExit = {
                                         navController.navigate(MyProducts) {
-                                            popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                                            popUpTo(navController.graph.startDestinationId) {
+                                                inclusive = true
+                                            }
                                         }
                                     },
                                     navToBack = {

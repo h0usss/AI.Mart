@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 @RequiresApi(Build.VERSION_CODES.O)
 class ProductInfoViewModel(
     private val productId: Long
-) : ViewModel(){
+) : ViewModel() {
 
     var state = MutableStateFlow(ProductInfoState())
         private set
@@ -66,12 +66,13 @@ class ProductInfoViewModel(
     }
 
     fun onEvent(event: ProductInfoEvent) {
-        when(event){
+        when (event) {
             is ProductInfoEvent.UserClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(ProductInfoNavigationEvent.User(event.value))
                 }
             }
+
             is ProductInfoEvent.FeedbackTagClick -> {
                 handleFeedbackTagClick(event.index)
             }
@@ -88,9 +89,11 @@ class ProductInfoViewModel(
             1 -> currentState.originalFeedback
                 .filter { it.starCount >= 3 }
                 .sortedByDescending { it.starCount }
+
             2 -> currentState.originalFeedback
                 .filter { it.starCount < 3 }
                 .sortedBy { it.starCount }
+
             else -> currentState.originalFeedback.sortedBy { it.starCount }
         }
 

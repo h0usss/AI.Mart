@@ -16,24 +16,30 @@ interface PortfolioDao {
     suspend fun insertAll(products: List<PortfolioItemEntity>)
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         SELECT * 
         FROM portfolio_item
         WHERE user_id = :sellerId
-    """)
+    """
+    )
     fun getPortfolioBySellerIdFlow(sellerId: Long): Flow<List<PortfolioItemWithTags>>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         SELECT * 
         FROM portfolio_item
         WHERE id = :portfolioId
-    """)
+    """
+    )
     fun getPortfolioByIdFlow(portfolioId: Long): Flow<PortfolioItemWithTags>
 
-    @Query("""
+    @Query(
+        """
         DELETE FROM portfolio_item
         WHERE id = :portfolioItemId
-    """)
+    """
+    )
     suspend fun deletePortfolioItem(portfolioItemId: Long)
 }

@@ -56,7 +56,7 @@ fun ChatUserTopBar(
             modifier = Modifier
                 .padding(start = 20.dp)
                 .fillMaxWidth(),
-        ){
+        ) {
             if (userData.imagesUrl.isNotEmpty()) {
                 AsyncImage(
                     modifier = Modifier
@@ -80,7 +80,7 @@ fun ChatUserTopBar(
                         .background(Color.LightGray)
                 )
             }
-            
+
             Column(
                 modifier = Modifier
                     .padding(start = 16.dp, top = 2.dp)

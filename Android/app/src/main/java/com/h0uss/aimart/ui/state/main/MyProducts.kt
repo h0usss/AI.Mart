@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @Composable
 fun MyProducts(
     viewModel: MyProductsViewModel = viewModel<MyProductsViewModel>(),
-    navToProduct: (Long) -> Unit,
     navToProductSellerInfo: (Long) -> Unit = {},
     navToEditProduct: (Long) -> Unit = {},
     navToNewProduct: () -> Unit,
@@ -25,16 +24,19 @@ fun MyProducts(
 
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.receiveAsFlow().collect { event ->
-            when(event) {
+            when (event) {
                 is MyProductsNavigationEvent.Product -> {
                     navToProductSellerInfo(event.value)
                 }
+
                 is MyProductsNavigationEvent.ActiveProduct -> {
                     navToProductSellerInfo(event.value)
                 }
+
                 is MyProductsNavigationEvent.EditProduct -> {
                     navToEditProduct(event.value)
                 }
+
                 is MyProductsNavigationEvent.NewProduct -> {
                     navToNewProduct()
                 }

@@ -32,7 +32,7 @@ fun Hint(
             )
             .background(White)
             .padding(horizontal = 12.dp, vertical = 8.dp)
-    ){
+    ) {
         Text(
             text = text,
             style = mediumStyle,

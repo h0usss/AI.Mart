@@ -6,77 +6,91 @@ import kotlinx.serialization.Serializable
 sealed interface ScreensRoutes
 
 @Serializable
-object Splash: ScreensRoutes
+object Splash : ScreensRoutes
 
 @Serializable
-object Authorise: ScreensRoutes
-@Serializable
-object CreateOrLogin: ScreensRoutes
-@Serializable
-object Login: ScreensRoutes
-@Serializable
-object Register: ScreensRoutes
+object Authorise : ScreensRoutes
 
 @Serializable
-object Main: ScreensRoutes
+object CreateOrLogin : ScreensRoutes
+
 @Serializable
-object Home: ScreensRoutes
+object Login : ScreensRoutes
+
+@Serializable
+object Register : ScreensRoutes
+
+@Serializable
+object Main : ScreensRoutes
+
+@Serializable
+object Home : ScreensRoutes
 
 @Serializable
 data class Seller(
     val id: Long
-): ScreensRoutes
+) : ScreensRoutes
+
 @Serializable
 data class User(
     val id: Long
-): ScreensRoutes
-@Serializable
-object Profile: ScreensRoutes
-@Serializable
-object ProfileEdit: ScreensRoutes
+) : ScreensRoutes
 
 @Serializable
-object Search: ScreensRoutes
-@Serializable
-object SearchTextField: ScreensRoutes
-@Serializable
-object SearchResult: ScreensRoutes
+object Profile : ScreensRoutes
 
 @Serializable
-object Chat: ScreensRoutes
+object ProfileEdit : ScreensRoutes
+
 @Serializable
-object ChatList: ScreensRoutes
+object Search : ScreensRoutes
+
+@Serializable
+object SearchTextField : ScreensRoutes
+
+@Serializable
+object SearchResult : ScreensRoutes
+
+@Serializable
+object Chat : ScreensRoutes
+
+@Serializable
+object ChatList : ScreensRoutes
+
 @Serializable
 data class ChatWithUser(
     val id: Long
-): ScreensRoutes
+) : ScreensRoutes
 
 @Serializable
 data class ProductInfo(
     val productId: Long
-): ScreensRoutes
+) : ScreensRoutes
 
 @Serializable
 data class ProductSellerInfo(
     val productId: Long
-): ScreensRoutes
+) : ScreensRoutes
 
 @Serializable
-object Orders: ScreensRoutes
+object Orders : ScreensRoutes
+
 @Serializable
-object OrderList: ScreensRoutes
+object OrderList : ScreensRoutes
 
 @Serializable
 data class Order(
     val orderId: Long
-): ScreensRoutes
+) : ScreensRoutes
 
 
 @Serializable
-object Products: ScreensRoutes
+object Products : ScreensRoutes
+
 @Serializable
-object MyProducts: ScreensRoutes
+object MyProducts : ScreensRoutes
+
 @Serializable
 data class NewProduct(
     val productId: Long = -1L
-): ScreensRoutes
+) : ScreensRoutes

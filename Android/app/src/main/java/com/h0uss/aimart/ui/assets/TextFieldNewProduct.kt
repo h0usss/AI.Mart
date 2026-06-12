@@ -108,7 +108,7 @@ fun TextFieldNewProduct(
                 ) {
                     Box(
                         contentAlignment = Alignment.Center
-                    ){
+                    ) {
                         Text(
                             modifier = Modifier
                                 .clip(
@@ -155,7 +155,7 @@ fun TextFieldNewProduct(
 
                     Box(
                         contentAlignment = Alignment.CenterStart
-                    ){
+                    ) {
                         Text(
                             modifier = Modifier
                                 .clip(
@@ -175,8 +175,7 @@ fun TextFieldNewProduct(
                         VerticalDivider(
                             modifier = Modifier
                                 .height(40.dp)
-                                .padding(start = 16.dp)
-                            ,
+                                .padding(start = 16.dp),
                             thickness = 1.dp,
                             color = Black10
                         )

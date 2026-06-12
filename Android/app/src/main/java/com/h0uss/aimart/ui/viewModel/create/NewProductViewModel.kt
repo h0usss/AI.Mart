@@ -134,6 +134,7 @@ class NewProductViewModel : ViewModel() {
             is NewProductEvent.RemoveImage -> {
                 state.update { it.copy(images = it.images.filterIndexed { index, _ -> index != event.index }) }
             }
+
             is NewProductEvent.ArchiveProduct -> {
                 viewModelScope.launch {
                     val current = state.value
@@ -144,6 +145,7 @@ class NewProductViewModel : ViewModel() {
                     }
                 }
             }
+
             is NewProductEvent.RestoreProduct -> {
                 viewModelScope.launch {
                     val current = state.value
@@ -154,6 +156,7 @@ class NewProductViewModel : ViewModel() {
                     }
                 }
             }
+
             is NewProductEvent.BackClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(NewProductNavigationEvent.BackClick)

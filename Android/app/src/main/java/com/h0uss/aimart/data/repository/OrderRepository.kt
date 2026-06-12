@@ -16,15 +16,15 @@ class OrderRepository(
         return orderDao.insert(order)
     }
 
-    fun getOrdersByUserId(userId: Long): Flow<List<OrderCardData>>{
+    fun getOrdersByUserId(userId: Long): Flow<List<OrderCardData>> {
         return orderDao.getOrdersBySellerId(userId)
     }
 
-    fun getOrderById(orderId: Long): Flow<OrderData>{
+    fun getOrderById(orderId: Long): Flow<OrderData> {
         return orderDao.getOrderById(orderId)
     }
 
-    suspend fun updateStatus(orderId: Long, status: OrderStatus){
+    suspend fun updateStatus(orderId: Long, status: OrderStatus) {
         orderDao.updateOrderStatus(orderId, status)
     }
 

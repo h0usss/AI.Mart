@@ -12,9 +12,9 @@ data class ChatEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") val id: Long = 0L,
 
-    @ColumnInfo( name = "f_user_id" )     val fUserId: Long,
-    @ColumnInfo( name = "s_user_id" )     val sUserId: Long,
-    @ColumnInfo( name = "order_id" )     val orderId: Long?,
+    @ColumnInfo(name = "f_user_id") val fUserId: Long,
+    @ColumnInfo(name = "s_user_id") val sUserId: Long,
+    @ColumnInfo(name = "order_id") val orderId: Long?,
 
     @ColumnInfo(name = "created_at") val createdAt: LocalDateTime,
 )

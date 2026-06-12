@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mindrot.jbcrypt.BCrypt
 
-class SignInViewModel : ViewModel(){
+class SignInViewModel : ViewModel() {
 
     var state = MutableStateFlow(SignInState())
         private set
@@ -24,7 +24,7 @@ class SignInViewModel : ViewModel(){
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun onEvent(event: SignInEvent) {
-        when(event){
+        when (event) {
             is SignInEvent.SignInClicked -> {
                 val currentState = state.value
                 val identifier = currentState.emailState.text.toString()
@@ -48,11 +48,13 @@ class SignInViewModel : ViewModel(){
                     navigationEvents.send(SignInNavigationEvent.Success)
                 }
             }
+
             is SignInEvent.RegisterClicked -> {
                 viewModelScope.launch {
                     navigationEvents.send(SignInNavigationEvent.NavigateToRegister)
                 }
             }
+
             is SignInEvent.GoogleSignInClicked -> {}
             is SignInEvent.AgreementClicked -> {}
             is SignInEvent.PrivacyPolicyClicked -> {}

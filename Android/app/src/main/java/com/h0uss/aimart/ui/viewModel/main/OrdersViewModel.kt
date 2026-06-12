@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
-class OrdersViewModel : ViewModel(){
+class OrdersViewModel : ViewModel() {
 
     var state = MutableStateFlow(OrdersState())
         private set
@@ -33,11 +33,11 @@ class OrdersViewModel : ViewModel(){
                     currentState.copy(
                         originalOrders = newOrders,
                         orders = newOrders,
-                        countDebate     = ordersByStatus[OrderStatus.DEBATE]?.size ?: 0,
-                        countWaiting    = ordersByStatus[OrderStatus.WAITING]?.size ?: 0,
-                        countInWork     = ordersByStatus[OrderStatus.IN_WORK]?.size ?: 0,
-                        countComplete   = ordersByStatus[OrderStatus.COMPLETE]?.size ?: 0,
-                        countWaitPay    = ordersByStatus[OrderStatus.WAIT_PAY]?.size ?: 0
+                        countDebate = ordersByStatus[OrderStatus.DEBATE]?.size ?: 0,
+                        countWaiting = ordersByStatus[OrderStatus.WAITING]?.size ?: 0,
+                        countInWork = ordersByStatus[OrderStatus.IN_WORK]?.size ?: 0,
+                        countComplete = ordersByStatus[OrderStatus.COMPLETE]?.size ?: 0,
+                        countWaitPay = ordersByStatus[OrderStatus.WAIT_PAY]?.size ?: 0
                     )
                 }
             }
@@ -45,12 +45,13 @@ class OrdersViewModel : ViewModel(){
     }
 
     fun onEvent(event: OrdersEvent) {
-        when(event){
+        when (event) {
             is OrdersEvent.OrderClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(OrdersNavigationEvent.Order(event.value))
                 }
             }
+
             is OrdersEvent.DebateClick -> {
                 val wasActive = state.value.isDebate
                 state.update {
@@ -64,6 +65,7 @@ class OrdersViewModel : ViewModel(){
                 }
                 applyFilters()
             }
+
             is OrdersEvent.WaitingClick -> {
                 val wasActive = state.value.isWaiting
                 state.update {
@@ -77,6 +79,7 @@ class OrdersViewModel : ViewModel(){
                 }
                 applyFilters()
             }
+
             is OrdersEvent.InWorkClick -> {
                 val wasActive = state.value.isInWork
                 state.update {
@@ -90,6 +93,7 @@ class OrdersViewModel : ViewModel(){
                 }
                 applyFilters()
             }
+
             is OrdersEvent.CompleteClick -> {
                 val wasActive = state.value.isComplete
                 state.update {
@@ -103,6 +107,7 @@ class OrdersViewModel : ViewModel(){
                 }
                 applyFilters()
             }
+
             is OrdersEvent.WaitPayClick -> {
                 val wasActive = state.value.isWaitPay
                 state.update {

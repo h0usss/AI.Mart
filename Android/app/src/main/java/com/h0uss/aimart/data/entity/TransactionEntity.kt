@@ -13,13 +13,13 @@ import java.time.LocalDateTime
 )
 data class TransactionEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo( name = "id" )          val id: Long,
+    @ColumnInfo(name = "id") val id: Long,
 
-    @ColumnInfo( name = "amount" )      val amount: BigDecimal,
-    @ColumnInfo( name = "type" )        val type: TransactionType,
-    @ColumnInfo( name = "timestamp" )   val timestamp: LocalDateTime,
-    @ColumnInfo( name = "flow" )        val flow: TransactionFlowType,
+    @ColumnInfo(name = "amount") val amount: BigDecimal,
+    @ColumnInfo(name = "type") val type: TransactionType,
+    @ColumnInfo(name = "timestamp") val timestamp: LocalDateTime,
+    @ColumnInfo(name = "flow") val flow: TransactionFlowType,
 
-    @ColumnInfo( name = "user_id" )     val userId: Long,
-    @ColumnInfo( name = "order_id" )    val orderId: Long,
+    @ColumnInfo(name = "user_id") val userId: Long,
+    @ColumnInfo(name = "order_id") val orderId: Long,
 )

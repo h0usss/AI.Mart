@@ -173,7 +173,7 @@ fun OrderInfoScreen(
                     .padding(bottom = 16.dp)
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
-            ){
+            ) {
                 Text(
                     text = "Бюджет",
                     style = semiboldStyle,
@@ -203,7 +203,7 @@ fun OrderInfoScreen(
                                     .weight(1f)
                                     .fillMaxWidth(),
                                 isGreen = true,
-                                text="Принять",
+                                text = "Принять",
                                 onClick = {
                                     onEvent(OrderInfoEvent.Accept)
                                 }
@@ -214,7 +214,7 @@ fun OrderInfoScreen(
                                     .weight(1f)
                                     .fillMaxWidth(),
                                 isRedFill = true,
-                                text="Отклонить",
+                                text = "Отклонить",
                                 onClick = {
                                     onEvent(OrderInfoEvent.Reject)
                                 }
@@ -224,13 +224,14 @@ fun OrderInfoScreen(
                             modifier = Modifier
                                 .fillMaxWidth(),
                             isGray = true,
-                            text="Написать заказчику",
+                            text = "Написать заказчику",
                             onClick = {
                                 onEvent(OrderInfoEvent.CreateChat)
                             }
                         )
                     }
                 }
+
                 OrderStatus.IN_WORK -> {
                     Column(
                         modifier = Modifier
@@ -241,7 +242,7 @@ fun OrderInfoScreen(
                                 .padding(bottom = 16.dp)
                                 .fillMaxWidth(),
                             isGreen = true,
-                            text="Завершить заказ",
+                            text = "Завершить заказ",
                             onClick = {
                                 onEvent(OrderInfoEvent.CloseOrder)
                             }
@@ -250,24 +251,26 @@ fun OrderInfoScreen(
                             modifier = Modifier
                                 .fillMaxWidth(),
                             isGray = true,
-                            text="Чат с заказчиком",
+                            text = "Чат с заказчиком",
                             onClick = {
                                 onEvent(OrderInfoEvent.ToChat(state.chat.id))
                             }
                         )
                     }
                 }
+
                 OrderStatus.COMPLETE, OrderStatus.DEBATE, OrderStatus.WAIT_PAY -> {
                     Button(
                         modifier = Modifier
                             .fillMaxWidth(),
                         isGray = true,
-                        text="Чат с заказчиком",
+                        text = "Чат с заказчиком",
                         onClick = {
                             onEvent(OrderInfoEvent.ToChat(state.chat.id))
                         }
                     )
                 }
+
                 OrderStatus.DELETED -> {}
             }
         }

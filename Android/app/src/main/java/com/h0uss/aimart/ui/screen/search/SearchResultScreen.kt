@@ -57,7 +57,7 @@ fun SearchResultScreen(
             .background(White)
             .padding(top = 11.dp)
             .systemBarsPadding()
-    ){
+    ) {
         Row(
             modifier = modifier
                 .padding(horizontal = 16.dp),
@@ -65,10 +65,9 @@ fun SearchResultScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                modifier = Modifier.clickable{
+                modifier = Modifier.clickable {
                     onEvent(SearchEvent.BackClick)
-                }
-                ,
+                },
                 painter = painterResource(R.drawable.back),
                 contentDescription = "Back"
             )
@@ -77,8 +76,7 @@ fun SearchResultScreen(
                     .padding(start = 8.dp)
                     .clickable {
                         onEvent(SearchEvent.SearchClick)
-                    }
-                ,
+                    },
                 placeHolder = "Поиск",
                 value = state.searchState.text.toString(),
                 rightImageId = R.drawable.close,
@@ -94,19 +92,18 @@ fun SearchResultScreen(
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(state.hints){ hint ->
+            items(state.hints) { hint ->
                 Hint(
                     modifier = Modifier
-                        .clickable{
+                        .clickable {
                             onEvent(SearchEvent.HintClick(hint))
-                        }
-                    ,
+                        },
                     text = hint
                 )
             }
         }
 
-        if (products.itemCount == 0 && state.sellers.isEmpty()){
+        if (products.itemCount == 0 && state.sellers.isEmpty()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -120,8 +117,7 @@ fun SearchResultScreen(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 14.dp)
-                    ,
+                        .padding(top = 14.dp),
                     text = "Упс... По Вашему запросу ничего \n" +
                             "не нашлось.\n",
                     style = semiboldStyle,
@@ -131,8 +127,7 @@ fun SearchResultScreen(
                 )
                 Text(
                     modifier = Modifier
-                        .fillMaxWidth()
-                    ,
+                        .fillMaxWidth(),
                     text = "Попробуйте изменить параметры поиска.",
                     style = regularStyle,
                     fontSize = 16.sp,
@@ -140,8 +135,7 @@ fun SearchResultScreen(
                     textAlign = TextAlign.Center
                 )
             }
-        }
-        else {
+        } else {
             LazyColumn {
                 item {
                     if (state.sellers.isNotEmpty())
@@ -230,7 +224,8 @@ fun SearchResultScreen(
 private fun Preview_fill_min_width() {
     Preview_fill()
 }
-@Preview( heightDp = 1000)
+
+@Preview(heightDp = 1000)
 @Composable
 private fun Preview_fill_norm_width() {
     Preview_fill()
@@ -241,7 +236,8 @@ private fun Preview_fill_norm_width() {
 private fun Preview_empty_min_width() {
     Preview_empty()
 }
-@Preview( heightDp = 1000)
+
+@Preview(heightDp = 1000)
 @Composable
 private fun Preview_empty_norm_width() {
     Preview_empty()
@@ -249,7 +245,7 @@ private fun Preview_empty_norm_width() {
 
 @Composable
 private fun Preview_fill() {
-    val productsFlow = flowOf(PagingData.from(List(21){ item ->
+    val productsFlow = flowOf(PagingData.from(List(21) { item ->
         ProductCardData(
             id = item.toLong(),
             authorId = item.toLong(),

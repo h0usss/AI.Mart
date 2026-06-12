@@ -39,10 +39,10 @@ fun SearchTextFieldButton(
     leftImageId: Int = -1,
     onClickRightImage: () -> Unit = {},
     onClickLeftImage: () -> Unit = {},
-){
+) {
     Column(
         modifier = modifier
-    ){
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -70,15 +70,14 @@ fun SearchTextFieldButton(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
-            ){
+            ) {
                 if (leftImageId != -1)
                     Image(
                         modifier = Modifier
                             .padding(end = 8.dp)
                             .clickable {
                                 onClickLeftImage()
-                            }
-                        ,
+                            },
                         painter = painterResource(leftImageId),
                         contentDescription = "Left image"
                     )
@@ -103,17 +102,16 @@ fun SearchTextFieldButton(
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1,
 
-                        )
+                            )
                 }
 
 
                 if (rightImageId != -1)
                     Image(
                         modifier = Modifier
-                            .clickable{
+                            .clickable {
                                 onClickRightImage()
-                            }
-                        ,
+                            },
                         painter = painterResource(rightImageId),
                         contentDescription = "RightImage"
                     )

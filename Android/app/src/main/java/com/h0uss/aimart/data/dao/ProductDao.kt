@@ -17,6 +17,7 @@ interface ProductDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(products: List<ProductEntity>): List<Long>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(product: ProductEntity): Long
 
@@ -26,7 +27,8 @@ interface ProductDao {
     @Query("SELECT * FROM product WHERE id = :productId")
     suspend fun getProductEntityById(productId: Long): ProductEntity?
 
-    @Query("""
+    @Query(
+        """
         SELECT 
             p.id AS id,
             u.id AS authorId,
@@ -41,18 +43,22 @@ interface ProductDao {
         JOIN user AS u ON p.user_id = u.id
         WHERE p.product_status = 'ACTIVE' and u.id != :withoutUserId
         ORDER BY orderCount DESC, authorRate DESC, p.create_date DESC
-    """)
+    """
+    )
     fun getProductsPagingSource(withoutUserId: Long): PagingSource<Int, ProductCardData>
 
-    @Query("""
+    @Query(
+        """
         SELECT * 
         FROM product
         WHERE user_id = :userId
         ORDER BY create_date DESC
-    """)
+    """
+    )
     fun getProductsByUserId(userId: Long): Flow<List<ProductEntity>>
 
-    @Query("""
+    @Query(
+        """
         SELECT 
             p.id AS productId,
             u.id AS userId,
@@ -66,10 +72,12 @@ interface ProductDao {
         FROM product AS p
         JOIN user AS u ON p.user_id = u.id
         WHERE p.id = :productId
-    """)
+    """
+    )
     fun getProductById(productId: Long): Flow<ProductData>
 
-    @Query("""
+    @Query(
+        """
         SELECT 
             p.id AS id,
             u.id AS authorId,
@@ -85,8 +93,9 @@ interface ProductDao {
         WHERE p.product_status = 'ACTIVE' AND 
             (COALESCE(p.name, '') LIKE '%' || :string || '%' OR COALESCE(u.name, '') LIKE '%' || :string || '%')
         ORDER BY orderCount DESC, authorRate DESC, p.create_date DESC
-    """)
-    fun getProductByStringInside(string: String):  PagingSource<Int, ProductCardData>
+    """
+    )
+    fun getProductByStringInside(string: String): PagingSource<Int, ProductCardData>
 
     @Query("SELECT COALESCE(SUM(view_count), 0) FROM product WHERE user_id = :sellerId")
     fun getTotalViewCountBySellerId(sellerId: Long): Flow<Long>

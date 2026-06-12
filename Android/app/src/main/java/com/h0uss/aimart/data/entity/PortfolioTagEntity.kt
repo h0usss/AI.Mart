@@ -8,6 +8,6 @@ import androidx.room.Entity
     primaryKeys = ["tag_id", "portfolio_id"]
 )
 data class PortfolioTagEntity(
-    @ColumnInfo(name = "tag_id")        val tagId: Long,
-    @ColumnInfo(name = "portfolio_id")  val portfolioId: Long,
+    @ColumnInfo(name = "tag_id") val tagId: Long,
+    @ColumnInfo(name = "portfolio_id") val portfolioId: Long,
 )

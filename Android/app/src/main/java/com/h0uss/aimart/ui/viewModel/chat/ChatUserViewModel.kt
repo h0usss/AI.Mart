@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 @RequiresApi(Build.VERSION_CODES.O)
 class ChatUserViewModel(
     private val chatId: Long
-): ViewModel() {
+) : ViewModel() {
 
     var state = MutableStateFlow(ChatUserState())
         private set
@@ -61,12 +61,13 @@ class ChatUserViewModel(
     }
 
     fun onEvent(event: ChatUserEvent) {
-        when(event){
+        when (event) {
             is ChatUserEvent.ToListClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(ChatUserNavigationEvent.ChatList)
                 }
             }
+
             is ChatUserEvent.UserClick -> {
                 viewModelScope.launch {
                     val user = userRepository.getUserByIdFlow(event.value).first()
@@ -76,21 +77,25 @@ class ChatUserViewModel(
                         navigationEvents.send(ChatUserNavigationEvent.User(event.value))
                 }
             }
+
             is ChatUserEvent.ProductClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(ChatUserNavigationEvent.Product(event.value))
                 }
             }
+
             is ChatUserEvent.SendMessage -> {
                 viewModelScope.launch {
                     messageRepository.addMessageToChat(chatId, authUserIdLong, event.value)
                 }
             }
+
             is ChatUserEvent.TaskBar -> {
                 viewModelScope.launch {
                     navigationEvents.send(ChatUserNavigationEvent.TaskBar(state.value.orderData))
                 }
             }
+
             is ChatUserEvent.PayClick -> {
                 viewModelScope.launch {
                     val order = state.value.orderData
@@ -111,15 +116,19 @@ class ChatUserViewModel(
                     }
                 }
             }
+
             is ChatUserEvent.ShowAttachmentSheet -> {
                 state.update { it.copy(isAttachmentSheetVisible = true) }
             }
+
             is ChatUserEvent.HideAttachmentSheet -> {
                 state.update { it.copy(isAttachmentSheetVisible = false) }
             }
+
             is ChatUserEvent.ToggleProtect -> {
                 state.update { it.copy(isProtectEnabled = !it.isProtectEnabled) }
             }
+
             is ChatUserEvent.ToggleAttachment -> {
                 val current = state.value.selectedAttachments.toMutableList()
                 if (event.uri in current) {
@@ -129,12 +138,19 @@ class ChatUserViewModel(
                 }
                 state.update { it.copy(selectedAttachments = current) }
             }
+
             is ChatUserEvent.SendAttachments -> {
                 viewModelScope.launch {
                     val current = state.value.selectedAttachments
                     val isProtected = state.value.isProtectEnabled
                     if (current.isNotEmpty()) {
-                        messageRepository.addMessageToChat(chatId, authUserIdLong, "", current, isProtected)
+                        messageRepository.addMessageToChat(
+                            chatId,
+                            authUserIdLong,
+                            "",
+                            current,
+                            isProtected
+                        )
                     }
                     state.update {
                         it.copy(

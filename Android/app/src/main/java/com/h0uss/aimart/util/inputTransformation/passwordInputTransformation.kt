@@ -13,4 +13,3 @@ fun passwordInputTransformation(): InputTransformation {
         insert(0, ans)
     }
 }
-

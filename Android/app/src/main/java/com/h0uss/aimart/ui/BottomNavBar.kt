@@ -61,17 +61,16 @@ fun BottomNavBar(
         ),
     )
 
-    NavigationBar (
+    NavigationBar(
         modifier = modifier
             .fillMaxWidth()
             .shadow(50.dp, shape = RectangleShape)
             .background(White)
-            .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
-        ,
+            .padding(start = 12.dp, end = 12.dp, bottom = 12.dp),
         containerColor = White,
         contentColor = White,
         tonalElevation = 7.dp
-    ){
+    ) {
         items.forEach { item ->
             val isSelected = currentRoute?.let { route ->
                 route.startsWith(item.route.toString())

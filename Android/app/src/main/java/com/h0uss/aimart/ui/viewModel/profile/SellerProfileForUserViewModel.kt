@@ -69,6 +69,7 @@ class SellerProfileForUserViewModel(
             is SellerProfileForUserEvent.BackClick -> {
                 sendNavEvent(SellerProfileForUserNavigationEvent.BackClick)
             }
+
             is SellerProfileForUserEvent.AdditionalItemClick -> {
                 when (event.id) {
                     "share" -> {}
@@ -76,20 +77,25 @@ class SellerProfileForUserViewModel(
                     "block" -> {}
                 }
             }
+
             is SellerProfileForUserEvent.ShowAdditionalMenu -> {
                 state.update { it.copy(isShowAdditional = true) }
             }
+
             is SellerProfileForUserEvent.DismissAdditionalMenu -> {
                 state.update { it.copy(isShowAdditional = false) }
             }
+
             is SellerProfileForUserEvent.LikeClick -> {
                 state.update { it.copy(isLike = !state.value.isLike) }
             }
+
             is SellerProfileForUserEvent.WriteClick -> {
                 viewModelScope.launch {
                     val sellerId = state.value.user.id
-                    val chat = chatRepository.getChatNoProduct(authUserIdLong, sellerId).firstOrNull()
-                    
+                    val chat =
+                        chatRepository.getChatNoProduct(authUserIdLong, sellerId).firstOrNull()
+
                     if (chat != null) {
                         sendNavEvent(SellerProfileForUserNavigationEvent.WriteClick(chat.id))
                     } else {
@@ -105,12 +111,15 @@ class SellerProfileForUserViewModel(
                     }
                 }
             }
+
             is SellerProfileForUserEvent.PortfolioTagClick -> {
                 handlePortfolioTagClick(event.name)
             }
+
             is SellerProfileForUserEvent.FeedbackTagClick -> {
                 handleFeedbackTagClick(event.index)
             }
+
             is SellerProfileForUserEvent.ShowPortfolioItem -> {
                 viewModelScope.launch {
                     val portfolioItem = portfolioRepository
@@ -120,6 +129,7 @@ class SellerProfileForUserViewModel(
                     sendNavEvent(SellerProfileForUserNavigationEvent.ShowPortfolioItem(portfolioItem))
                 }
             }
+
             is SellerProfileForUserEvent.ProductClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(SellerProfileForUserNavigationEvent.ShowProduct(event.productId))
@@ -180,9 +190,11 @@ class SellerProfileForUserViewModel(
             1 -> currentState.originalFeedback
                 .filter { it.starCount >= 3 }
                 .sortedByDescending { it.starCount }
+
             2 -> currentState.originalFeedback
                 .filter { it.starCount < 3 }
                 .sortedBy { it.starCount }
+
             else -> currentState.originalFeedback.sortedBy { it.starCount }
         }
 
@@ -236,6 +248,8 @@ sealed class SellerProfileForUserEvent {
 sealed class SellerProfileForUserNavigationEvent {
     object BackClick : SellerProfileForUserNavigationEvent()
     data class WriteClick(val id: Long) : SellerProfileForUserNavigationEvent()
-    data class ShowPortfolioItem(val portfolioItem: PortfolioItemData) : SellerProfileForUserNavigationEvent()
+    data class ShowPortfolioItem(val portfolioItem: PortfolioItemData) :
+        SellerProfileForUserNavigationEvent()
+
     data class ShowProduct(val productId: Long) : SellerProfileForUserNavigationEvent()
 }

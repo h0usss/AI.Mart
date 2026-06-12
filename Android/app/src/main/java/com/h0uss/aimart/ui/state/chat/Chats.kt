@@ -22,7 +22,7 @@ fun Chats(
 
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.receiveAsFlow().collect { event ->
-            when(event) {
+            when (event) {
                 is ChatsNavigationEvent.Chat -> {
                     navToChat(event.value)
                 }

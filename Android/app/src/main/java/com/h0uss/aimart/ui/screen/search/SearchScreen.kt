@@ -53,17 +53,16 @@ fun SearchScreen(
             .background(White)
             .padding(start = 16.dp, top = 11.dp, end = 16.dp)
             .systemBarsPadding()
-    ){
+    ) {
         Row(
             modifier = Modifier,
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             TextField(
                 modifier = Modifier
                     .weight(.1f)
-                    .focusRequester(focusRequester)
-                ,
+                    .focusRequester(focusRequester),
                 isFocus = true,
                 isFill = true,
                 placeHolder = "Поиск",
@@ -81,10 +80,9 @@ fun SearchScreen(
             Text(
                 modifier = Modifier
                     .padding(start = 8.dp)
-                    .clickable{
+                    .clickable {
                         onEvent(SearchEvent.CancelClick)
-                    }
-                ,
+                    },
                 text = "Отмена",
                 style = regularStyle,
                 fontSize = 14.sp,
@@ -95,13 +93,12 @@ fun SearchScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
-        ){
-            item{
+        ) {
+            item {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 8.dp)
-                    ,
+                        .padding(bottom = 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
@@ -113,7 +110,7 @@ fun SearchScreen(
                     )
                     Text(
                         modifier = Modifier
-                            .clickable{
+                            .clickable {
                                 onEvent(SearchEvent.ClearHintsClick)
                             },
                         text = "Очистить",
@@ -123,7 +120,7 @@ fun SearchScreen(
                     )
                 }
             }
-            items(state.lastSearchList){ item ->
+            items(state.lastSearchList) { item ->
                 RecentSearchTerm(
                     modifier = Modifier.padding(top = 8.dp),
                     name = item,

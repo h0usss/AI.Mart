@@ -27,21 +27,23 @@ fun SearchResult(
 
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.receiveAsFlow().collect { event ->
-            when(event) {
+            when (event) {
                 is SearchNavigationEvent.Seller -> {
                     navToSeller(event.value)
                 }
+
                 is SearchNavigationEvent.Product -> {
                     val productList = products.itemSnapshotList
                     var authorId = -1L
                     for (p in productList) {
                         if (p?.id == event.value) {
-                            authorId = p?.authorId ?: -1L
+                            authorId = p.authorId
                             break
                         }
                     }
                     navToProduct(event.value, authorId)
                 }
+
                 is SearchNavigationEvent.SearchEnter -> navToSearchResult()
                 is SearchNavigationEvent.Back -> navToSearch()
                 is SearchNavigationEvent.SearchTextField -> navToSearch()

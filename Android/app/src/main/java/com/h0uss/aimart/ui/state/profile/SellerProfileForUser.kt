@@ -32,16 +32,19 @@ fun SellerProfileForUser(
 
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.receiveAsFlow().collect { event ->
-            when(event) {
+            when (event) {
                 is SellerProfileForUserNavigationEvent.BackClick -> {
                     navToBack()
                 }
+
                 is SellerProfileForUserNavigationEvent.WriteClick -> {
                     navToChat(event.id)
                 }
+
                 is SellerProfileForUserNavigationEvent.ShowPortfolioItem -> {
                     showPortfolio(event.portfolioItem)
                 }
+
                 is SellerProfileForUserNavigationEvent.ShowProduct -> {
                     navToProduct(event.productId)
                 }

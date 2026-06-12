@@ -57,8 +57,7 @@ fun SuccessNewOrder(
             Image(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable{ onExit() }
-                ,
+                    .clickable { onExit() },
                 painter = painterResource(R.drawable.success_order),
                 contentDescription = "Success order"
             )
@@ -68,8 +67,7 @@ fun SuccessNewOrder(
         Image(
             modifier = Modifier
                 .padding(top = 24.dp)
-                .clickable{ onExit() }
-            ,
+                .clickable { onExit() },
             painter = painterResource(R.drawable.close_portfolio),
             contentDescription = "Close order"
         )

@@ -27,25 +27,31 @@ fun SellerProfileForSelfEdit(
 
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.receiveAsFlow().collect { event ->
-            when(event) {
+            when (event) {
                 is SellerProfileForSelfEditNavigationEvent.SaveClick -> {
                     navToProfile()
                 }
+
                 is SellerProfileForSelfEditNavigationEvent.ExitClick -> {
                     navToCreateOrLogin()
                 }
+
                 is SellerProfileForSelfEditNavigationEvent.DeleteAccountClick -> {
                     navToCreateOrLogin()
                 }
+
                 is SellerProfileForSelfEditNavigationEvent.AddCaseClick -> {
 
                 }
+
                 is SellerProfileForSelfEditNavigationEvent.ShowAlert -> {
                     changeAlert(event.alert)
                 }
+
                 is SellerProfileForSelfEditNavigationEvent.DeleteAlert -> {
                     changeAlert(null)
                 }
+
                 is SellerProfileForSelfEditNavigationEvent.ShowPortfolioItem -> {
                     changePortfolio(event.portfolioItem)
                 }

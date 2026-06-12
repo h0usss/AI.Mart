@@ -19,7 +19,6 @@ fun ProductSellerInfo(
     productId: Long,
     navToUser: (Long) -> Unit,
     navToBack: () -> Unit,
-    onBuy: (Long, Long) -> Unit,
     onEdit: (Long) -> Unit = {},
 ) {
     val viewModel: ProductSellerInfoViewModel = viewModel(
@@ -34,6 +33,7 @@ fun ProductSellerInfo(
                 is ProductSellerInfoNavigationEvent.User -> {
                     navToUser(event.value)
                 }
+
                 is ProductSellerInfoNavigationEvent.EditProduct -> {
                     onEdit(productId)
                 }
@@ -44,7 +44,6 @@ fun ProductSellerInfo(
     ProductSellerInfoScreen(
         state = state,
         onEvent = viewModel::onEvent,
-        onBuy = onBuy,
         onBackClick = navToBack
     )
 }

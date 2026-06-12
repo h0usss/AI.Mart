@@ -48,10 +48,9 @@ fun UserProfileForOtherScreen(
             .fillMaxSize()
             .background(White)
             .padding(start = 16.dp, end = 16.dp)
-            .systemBarsPadding()
-        ,
-    ){
-        Box{
+            .systemBarsPadding(),
+    ) {
+        Box {
             TopBar(
                 onBackClick = {
                     onEvent(UserProfileForOtherEvent.BackClick)
@@ -78,7 +77,7 @@ fun UserProfileForOtherScreen(
         Box(
             modifier = Modifier.padding(top = 14.dp),
             contentAlignment = Alignment.TopEnd
-        ){
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -118,8 +117,7 @@ fun UserProfileForOtherScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 14.dp)
-            ,
+                .padding(top = 14.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             StatisticBox(

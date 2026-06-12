@@ -25,13 +25,15 @@ fun Search(
 
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.receiveAsFlow().collect { event ->
-            when(event) {
+            when (event) {
                 is SearchNavigationEvent.Seller -> {
                     navToSeller(event.value)
                 }
+
                 is SearchNavigationEvent.Product -> {
                     navToProduct(event.value, -1L)
                 }
+
                 is SearchNavigationEvent.SearchEnter -> navToSearchResult()
                 is SearchNavigationEvent.Back -> navToSearch()
                 is SearchNavigationEvent.SearchTextField -> navToSearch()

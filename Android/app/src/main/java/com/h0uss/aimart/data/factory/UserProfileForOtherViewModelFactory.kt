@@ -1,4 +1,5 @@
 package com.h0uss.aimart.data.factory
+
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel

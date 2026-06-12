@@ -189,7 +189,8 @@ private fun AnalyticBarChart(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Bottom,
                 ) {
-                    val rawHeight = (if (isViewsMode) bar.viewCount.toFloat() else bar.value) / maxValue * chartHeight.value
+                    val rawHeight =
+                        (if (isViewsMode) bar.viewCount.toFloat() else bar.value) / maxValue * chartHeight.value
                     val targetDp = rawHeight.dp.coerceAtLeast(4.dp)
                     val animatedHeight by animateDpAsState(
                         targetValue = targetDp,
@@ -227,7 +228,8 @@ private fun AnalyticBarChart(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Bottom,
                 ) {
-                    val rawHeight = (if (isViewsMode) bar.viewCount.toFloat() else bar.value) / maxValue * chartHeight.value
+                    val rawHeight =
+                        (if (isViewsMode) bar.viewCount.toFloat() else bar.value) / maxValue * chartHeight.value
                     val targetDp = rawHeight.dp.coerceAtLeast(4.dp)
                     val animatedHeight by animateDpAsState(
                         targetValue = targetDp,

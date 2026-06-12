@@ -50,22 +50,19 @@ fun MiniTaskBar(
             .clickable {
                 onClick()
             }
-            .padding(8.dp)
-        ,
+            .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             modifier = Modifier
-                .padding(end = 16.dp)
-            ,
+                .padding(end = 16.dp),
             painter = painterResource(R.drawable.unpin),
             contentDescription = "Unpin"
         )
 
         Column(
             modifier = Modifier
-                .background(White)
-            ,
+                .background(White),
         ) {
             Text(
                 modifier = Modifier

@@ -91,10 +91,9 @@ fun SignUpScreen(
         modifier = modifier
             .fillMaxSize()
             .background(White)
-            .padding(start = 24.dp, top = 60.dp, end = 24.dp )
-        ,
+            .padding(start = 24.dp, top = 60.dp, end = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         Text(
             text = "AI Mart",
             color = Black100,
@@ -103,8 +102,7 @@ fun SignUpScreen(
         )
         Text(
             modifier = Modifier
-                .padding(top = 25.dp)
-            ,
+                .padding(top = 25.dp),
             text = "Регистрация",
             color = Black100,
             fontSize = 18.sp,
@@ -114,8 +112,7 @@ fun SignUpScreen(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 25.dp)
-            ,
+                .padding(top = 25.dp),
             text = "Имя",
             color = Black80,
             fontSize = 14.sp,
@@ -123,8 +120,7 @@ fun SignUpScreen(
         )
         TextField(
             modifier = Modifier
-                .padding(top = 6.dp)
-            ,
+                .padding(top = 6.dp),
             placeHolder = "Ваше имя",
             inputTransformation = nameInputTransformation(),
             state = state.nameState,
@@ -134,8 +130,7 @@ fun SignUpScreen(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp)
-            ,
+                .padding(top = 10.dp),
             text = "E-mail",
             color = Black80,
             fontSize = 14.sp,
@@ -143,8 +138,7 @@ fun SignUpScreen(
         )
         TextField(
             modifier = Modifier
-                .padding(top = 6.dp)
-            ,
+                .padding(top = 6.dp),
             placeHolder = "example@gmail.com",
             inputTransformation = emailInputTransformation(),
             state = state.emailState,
@@ -154,8 +148,7 @@ fun SignUpScreen(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp)
-            ,
+                .padding(top = 10.dp),
             text = "Дата рождения",
             color = Black80,
             fontSize = 14.sp,
@@ -163,8 +156,7 @@ fun SignUpScreen(
         )
         TextField(
             modifier = Modifier
-                .padding(top = 6.dp)
-            ,
+                .padding(top = 6.dp),
             placeHolder = "DD.MM.YYYY",
             state = state.dateState,
             inputTransformation = dateInputTransformation(),
@@ -178,8 +170,7 @@ fun SignUpScreen(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp)
-            ,
+                .padding(top = 10.dp),
             text = "Пароль",
             color = Black80,
             fontSize = 14.sp,
@@ -187,8 +178,7 @@ fun SignUpScreen(
         )
         TextField(
             modifier = Modifier
-                .padding(top = 6.dp)
-            ,
+                .padding(top = 6.dp),
             placeHolder = "Пароль от 8 символов",
             inputTransformation = passwordInputTransformation(),
             outputTransformation = passwordOutputTransformation(),
@@ -241,8 +231,7 @@ fun SignUpScreen(
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
-            ,
+                .padding(top = 16.dp),
             text = "Продолжить",
             rightImageId = R.drawable.arrow,
             onClick = {
@@ -253,15 +242,13 @@ fun SignUpScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
-            ,
+                .padding(top = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
-        ){
+        ) {
             HorizontalDivider(
                 modifier = Modifier
-                    .width(143.dp)
-                ,
+                    .width(143.dp),
                 color = Black10
             )
             Text(
@@ -272,16 +259,14 @@ fun SignUpScreen(
             )
             HorizontalDivider(
                 modifier = Modifier
-                    .width(143.dp)
-                ,
+                    .width(143.dp),
                 color = Black10
             )
         }
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
-            ,
+                .padding(top = 16.dp),
             text = "Использовать",
             isGray = true,
             onClick = {
@@ -292,14 +277,15 @@ fun SignUpScreen(
 
         Text(
             modifier = Modifier.padding(top = 16.dp),
-            text =  buildAnnotatedString {
+            text = buildAnnotatedString {
                 agreementAnnotatedString(
                     isLogin = false,
                     onClickAgreement = {
                         onEvent(SignUpEvent.AgreementClicked)
                     },
                     onClickPrivacyPolicy = {
-                        onEvent(SignUpEvent.PrivacyPolicyClicked)}
+                        onEvent(SignUpEvent.PrivacyPolicyClicked)
+                    }
                 )
             },
             textAlign = TextAlign.Center
@@ -307,7 +293,7 @@ fun SignUpScreen(
 
         Text(
             modifier = Modifier.padding(top = 24.dp),
-            text =  buildAnnotatedString {
+            text = buildAnnotatedString {
                 haveAccountAnnotatedString(
                     onClickLogin = {
                         onEvent(SignUpEvent.LoginClicked)

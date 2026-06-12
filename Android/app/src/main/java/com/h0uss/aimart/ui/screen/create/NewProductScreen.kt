@@ -103,13 +103,14 @@ fun NewProductScreen(
                 Text(
                     modifier = Modifier,
                     text = if (state.existingProductId == -1L)
-                            "Новое объявление"
-                        else if (state.existingProductStatus == ProductStatus.IN_MODERATING_PROCESS ||
-                                 state.existingProductStatus == ProductStatus.MODERATING_FAILED)
-                            "Редактирование объявления"
-                        else if (state.existingProductStatus == ProductStatus.ACTIVE)
-                            "Активно"
-                        else "Архив",
+                        "Новое объявление"
+                    else if (state.existingProductStatus == ProductStatus.IN_MODERATING_PROCESS ||
+                        state.existingProductStatus == ProductStatus.MODERATING_FAILED
+                    )
+                        "Редактирование объявления"
+                    else if (state.existingProductStatus == ProductStatus.ACTIVE)
+                        "Активно"
+                    else "Архив",
                     style = semiboldStyle,
                     fontSize = 16.sp,
                     color = Black80
@@ -118,7 +119,8 @@ fun NewProductScreen(
                     || state.existingProductStatus in setOf(
                         ProductStatus.IN_MODERATING_PROCESS,
                         ProductStatus.MODERATING_FAILED
-                    )){
+                    )
+                ) {
                     Image(
                         modifier = Modifier.clickable {
                             onEvent(NewProductEvent.AddProduct)
@@ -275,7 +277,8 @@ fun NewProductScreen(
         Column {
             if (state.existingProductId != -1L) {
                 if (state.existingProductStatus == ProductStatus.IN_MODERATING_PROCESS ||
-                    state.existingProductStatus == ProductStatus.MODERATING_FAILED) {
+                    state.existingProductStatus == ProductStatus.MODERATING_FAILED
+                ) {
                     Button(
                         modifier = Modifier
                             .fillMaxWidth()

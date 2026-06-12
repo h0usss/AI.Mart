@@ -31,23 +31,21 @@ fun Alert(
             .clip(RoundedCornerShape(6.dp))
             .background(White)
             .padding(start = 20.dp, top = 20.dp, end = 20.dp, bottom = 24.dp)
-    ){
+    ) {
         Text(
             modifier = Modifier
-                .fillMaxWidth()
-            ,
+                .fillMaxWidth(),
             text = data.title,
             style = semiboldStyle,
             color = Black80,
             fontSize = 14.sp,
             textAlign = TextAlign.Center
         )
-        if (data.description.isNotEmpty()){
+        if (data.description.isNotEmpty()) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp)
-                ,
+                    .padding(top = 8.dp),
                 text = data.description,
                 style = regularStyle,
                 color = Black80,
@@ -57,10 +55,9 @@ fun Alert(
         }
         Row(
             modifier = Modifier
-                .padding(top = 16.dp)
-            ,
+                .padding(top = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ){
+        ) {
             Button(
                 modifier = Modifier.weight(1f),
                 text = data.leftText,
@@ -81,7 +78,7 @@ fun Alert(
 private fun Preview() {
     Column(
         verticalArrangement = Arrangement.spacedBy(100.dp)
-    ){
+    ) {
         Alert(
             data = AlertData(
                 title = "Вы уверены, что хотите удалить аккаунт?",

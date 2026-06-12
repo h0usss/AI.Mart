@@ -43,16 +43,15 @@ fun StatisticBox(
                 width = 1.dp,
                 color = Black10,
                 shape = RoundedCornerShape(15.dp)
-            )
-        ,
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
-    ){
+    ) {
         Row(
             modifier = Modifier.padding(bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
-        ){
+        ) {
             Image(
                 modifier = Modifier.padding(end = 4.dp),
                 painter = painterResource(imageId),

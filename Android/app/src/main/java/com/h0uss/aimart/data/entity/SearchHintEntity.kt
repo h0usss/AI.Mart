@@ -18,9 +18,9 @@ import androidx.room.ForeignKey
 )
 data class SearchHintEntity(
 
-    @ColumnInfo(name = "text")      val text: String,
+    @ColumnInfo(name = "text") val text: String,
     @ColumnInfo(name = "timestamp") val timestamp: Long = System.currentTimeMillis(),
 
-    @ColumnInfo(name = "user_id")   val userId: Long = 0L
+    @ColumnInfo(name = "user_id") val userId: Long = 0L
 )
 

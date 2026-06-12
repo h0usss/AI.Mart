@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.map
 class FeedbackRepository(
     private val feedbackDao: FeedbackDao
 ) {
-    fun getFeedbackBySellerIdFlow(userId: Long) : Flow<List<FeedbackData>> {
+    fun getFeedbackBySellerIdFlow(userId: Long): Flow<List<FeedbackData>> {
         return feedbackDao.getFeedbackBySellerIdFlow(userId).map { list ->
-            list.map{ item ->
+            list.map { item ->
                 FeedbackData(
                     user = item.user.toUserData(),
                     text = item.feedbackView.feedback.text,

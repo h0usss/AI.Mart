@@ -42,11 +42,10 @@ fun RecentSearchTerm(
                 shape = CircleShape
             )
             .padding(start = 8.dp, top = 4.dp, end = 4.dp, bottom = 4.dp)
-            .clickable{ onClick() }
-        ,
+            .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
-    ){
+    ) {
         Text(
             modifier = Modifier,
             text = name,
@@ -57,7 +56,7 @@ fun RecentSearchTerm(
         Image(
             modifier = Modifier
                 .padding(start = 2.dp)
-                .clickable{ onXClick() },
+                .clickable { onXClick() },
             painter = painterResource(R.drawable.x),
             contentDescription = "X"
         )

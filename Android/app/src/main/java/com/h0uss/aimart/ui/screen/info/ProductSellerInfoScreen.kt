@@ -65,7 +65,6 @@ fun ProductSellerInfoScreen(
     modifier: Modifier = Modifier,
     state: ProductSellerInfoState = ProductSellerInfoState(),
     onEvent: (ProductSellerInfoEvent) -> Unit = {},
-    onBuy: (Long, Long) -> Unit = { sellerId, productId -> },
     onBackClick: () -> Unit = {},
 ) {
     var countFeedbackItem by remember { mutableIntStateOf(3) }
@@ -136,7 +135,7 @@ fun ProductSellerInfoScreen(
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                        ){
+                        ) {
                             Image(
                                 painter = painterResource(R.drawable.eye),
                                 contentDescription = "Просмотры",
@@ -156,7 +155,7 @@ fun ProductSellerInfoScreen(
                         }
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                        ){
+                        ) {
                             Image(
                                 painter = painterResource(R.drawable.cart),
                                 contentDescription = "Покупки",
@@ -252,7 +251,10 @@ fun ProductSellerInfoScreen(
                         Column(
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            for (i in 0..min(countFeedbackItem - 1, state.filteredFeedback.size - 1))
+                            for (i in 0..min(
+                                countFeedbackItem - 1,
+                                state.filteredFeedback.size - 1
+                            ))
                                 Feedback(
                                     feedbackData = state.filteredFeedback[i]
                                 )

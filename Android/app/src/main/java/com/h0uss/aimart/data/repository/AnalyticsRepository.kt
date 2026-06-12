@@ -31,7 +31,8 @@ class AnalyticsRepository(
     ): Flow<AnalyticData> = orderDao.getCompletedOrdersBySellerId(sellerId).map { orders ->
         val now = LocalDate.now()
         val yearsForYearPeriod: List<Int> = if (period == AnalyticPeriod.YEAR) {
-            orders.mapNotNull { it.completionDate?.toLocalDate()?.year }.distinct().sortedDescending().take(7)
+            orders.mapNotNull { it.completionDate?.toLocalDate()?.year }.distinct()
+                .sortedDescending().take(7)
         } else emptyList()
 
         val barsData = when (period) {
@@ -50,7 +51,8 @@ class AnalyticsRepository(
 
         val barsWithViews = bars.mapIndexed { i, bar ->
             val (startDate, endDate) = barDateRange(period, i, now, yearsForYearPeriod)
-            val viewCount = productViewDao.getUniqueViewsBySellerIdBetween(sellerId, startDate, endDate)
+            val viewCount =
+                productViewDao.getUniqueViewsBySellerIdBetween(sellerId, startDate, endDate)
             bar.copy(viewCount = viewCount.toInt())
         }
 
@@ -61,18 +63,22 @@ class AnalyticsRepository(
         )
     }
 
-    private fun barDateRange(period: AnalyticPeriod, index: Int, now: LocalDate, years: List<Int>): Pair<LocalDateTime, LocalDateTime> {
+    private fun barDateRange(
+        period: AnalyticPeriod, index: Int, now: LocalDate, years: List<Int>
+    ): Pair<LocalDateTime, LocalDateTime> {
         return when (period) {
             AnalyticPeriod.WEEK -> {
                 val weekStart = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
                 val day = weekStart.plusDays(index.toLong())
                 day.atStartOfDay() to day.plusDays(1).atStartOfDay()
             }
+
             AnalyticPeriod.MONTH -> {
                 val start = LocalDate.of(now.year, index + 1, 1)
                 val end = start.plusMonths(1)
                 start.atStartOfDay() to end.atStartOfDay()
             }
+
             AnalyticPeriod.YEAR -> {
                 val year = years.getOrElse(index) { now.year }
                 val start = LocalDate.of(year, 1, 1)
@@ -91,10 +97,8 @@ class AnalyticsRepository(
 
         val days = (0..6).map { weekStart.plusDays(it.toLong()) }
         val bars = days.map { day ->
-            val revenue = orders
-                .filter { it.completionDate?.toLocalDate() == day }
-                .sumOf { it.price.toDouble() }
-                .toFloat()
+            val revenue = orders.filter { it.completionDate?.toLocalDate() == day }
+                .sumOf { it.price.toDouble() }.toFloat()
             AnalyticBar(
                 label = day.format(dayLabelFormatter).removeSuffix(".").take(2),
                 value = revenue,
@@ -113,13 +117,10 @@ class AnalyticsRepository(
         val months = (1..12).map { YearMonth.of(now.year, it) }
 
         val bars = months.map { ym ->
-            val revenue = orders
-                .filter {
+            val revenue = orders.filter {
                     val date = it.completionDate?.toLocalDate()
                     date?.year == ym.year && date.monthValue == ym.monthValue
-                }
-                .sumOf { it.price.toDouble() }
-                .toFloat()
+                }.sumOf { it.price.toDouble() }.toFloat()
             val monthDate = LocalDate.of(ym.year, ym.month, 1)
             AnalyticBar(
                 label = monthDate.format(monthLabelFormatter).removeSuffix("."),
@@ -135,31 +136,25 @@ class AnalyticsRepository(
         orders: List<OrderEntity>,
         now: LocalDate,
     ): Pair<List<AnalyticBar>, Int> {
-        val yearsFromOrders = orders
-            .mapNotNull { it.completionDate?.toLocalDate()?.year }
-            .distinct()
-            .sortedDescending()
+        val yearsFromOrders =
+            orders.mapNotNull { it.completionDate?.toLocalDate()?.year }.distinct()
+                .sortedDescending()
 
-        val allYears = (yearsFromOrders + listOf(now.year))
-            .distinct()
-            .sortedDescending()
-            .take(7)
+        val allYears = (yearsFromOrders + listOf(now.year)).distinct().sortedDescending().take(7)
 
         if (allYears.isEmpty()) return emptyList<AnalyticBar>() to 0
 
         val bars = allYears.map { year ->
-            val revenue = orders
-                .filter { it.completionDate?.toLocalDate()?.year == year }
-                .sumOf { it.price.toDouble() }
-                .toFloat()
+            val revenue = orders.filter { it.completionDate?.toLocalDate()?.year == year }
+                .sumOf { it.price.toDouble() }.toFloat()
             AnalyticBar(
                 label = year.toString().takeLast(2),
                 value = revenue,
                 subtitle = "$year год",
             )
         }
-        val selectedIndex = bars.indexOfFirst { it.label == now.year.toString().takeLast(2) }
-            .coerceAtLeast(0)
+        val selectedIndex =
+            bars.indexOfFirst { it.label == now.year.toString().takeLast(2) }.coerceAtLeast(0)
         return bars to selectedIndex
     }
 }

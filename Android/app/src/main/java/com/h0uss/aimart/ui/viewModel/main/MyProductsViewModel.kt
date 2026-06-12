@@ -47,16 +47,19 @@ class MyProductsViewModel : ViewModel() {
                     navigationEvents.send(MyProductsNavigationEvent.Product(event.value))
                 }
             }
+
             is MyProductsEvent.ActiveProductClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(MyProductsNavigationEvent.ActiveProduct(event.value))
                 }
             }
+
             is MyProductsEvent.EditProductClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(MyProductsNavigationEvent.EditProduct(event.value))
                 }
             }
+
             is MyProductsEvent.NewProductClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(MyProductsNavigationEvent.NewProduct)

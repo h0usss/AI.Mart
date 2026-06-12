@@ -48,7 +48,7 @@ fun SellerHint(
             )
             .padding(horizontal = 12.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         if (leftImageId != -1)
             Image(
                 modifier = Modifier.padding(end = 4.dp),

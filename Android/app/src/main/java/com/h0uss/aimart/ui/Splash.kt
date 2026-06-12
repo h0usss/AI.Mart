@@ -114,8 +114,7 @@ fun Splash(
                     modifier = Modifier
                         .graphicsLayer {
                             rotationY = firstRotation
-                        }
-                    ,
+                        },
                     painter = painterResource(R.drawable.icon_light),
                     contentDescription = null,
                 )
@@ -130,8 +129,7 @@ fun Splash(
                         .graphicsLayer {
                             rotationY = secondRotation
                             scaleX = -1f
-                        }
-                    ,
+                        },
                     painter = painterResource(R.drawable.icon_black),
                     contentDescription = null,
                 )

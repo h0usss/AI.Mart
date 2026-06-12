@@ -32,19 +32,23 @@ fun ChatUser(
 
     LaunchedEffect(key1 = Unit) {
         viewModel.navigationEvents.receiveAsFlow().collect { event ->
-            when(event) {
+            when (event) {
                 is ChatUserNavigationEvent.ChatList -> {
                     navToChatList()
                 }
+
                 is ChatUserNavigationEvent.Seller -> {
                     navToSeller(event.value)
                 }
+
                 is ChatUserNavigationEvent.User -> {
                     navToUser(event.value)
                 }
+
                 is ChatUserNavigationEvent.Product -> {
                     navToProduct(event.value)
                 }
+
                 is ChatUserNavigationEvent.TaskBar -> {
                     onTaskBarClick(event.value)
                 }

@@ -49,10 +49,9 @@ fun SignInScreen(
         modifier = modifier
             .fillMaxSize()
             .background(White)
-            .padding(start = 24.dp, top = 150.dp, end = 24.dp )
-        ,
+            .padding(start = 24.dp, top = 150.dp, end = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         Text(
             text = "AI Mart",
             color = Black100,
@@ -61,8 +60,7 @@ fun SignInScreen(
         )
         Text(
             modifier = Modifier
-                .padding(top = 25.dp)
-            ,
+                .padding(top = 25.dp),
             text = "Вход",
             color = Black100,
             fontSize = 18.sp,
@@ -71,8 +69,7 @@ fun SignInScreen(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 50.dp)
-            ,
+                .padding(top = 50.dp),
             text = "E-mail/username",
             color = Black80,
             fontSize = 14.sp,
@@ -80,8 +77,7 @@ fun SignInScreen(
         )
         TextField(
             modifier = Modifier
-                .padding(top = 4.dp)
-            ,
+                .padding(top = 4.dp),
             placeHolder = "example@gmail.com",
             state = state.emailState,
             inputTransformation = emailInputTransformation(),
@@ -89,8 +85,7 @@ fun SignInScreen(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
-            ,
+                .padding(top = 16.dp),
             text = "Пароль",
             color = Black80,
             fontSize = 14.sp,
@@ -98,8 +93,7 @@ fun SignInScreen(
         )
         TextField(
             modifier = Modifier
-                .padding(top = 4.dp)
-            ,
+                .padding(top = 4.dp),
             state = state.passwordState,
             placeHolder = "Введите пароль",
             inputTransformation = passwordInputTransformation(),
@@ -109,9 +103,9 @@ fun SignInScreen(
             Row(
                 modifier = Modifier.padding(top = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Image(
-                    painter = painterResource( R.drawable.error_status ),
+                    painter = painterResource(R.drawable.error_status),
                     contentDescription = "Error"
                 )
                 Text(
@@ -124,8 +118,7 @@ fun SignInScreen(
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
-            ,
+                .padding(top = 16.dp),
             text = "Войти",
             onClick = {
                 onEvent(SignInEvent.SignInClicked)
@@ -134,15 +127,13 @@ fun SignInScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 24.dp)
-            ,
+                .padding(top = 24.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
-        ){
+        ) {
             HorizontalDivider(
                 modifier = Modifier
-                    .width(80.dp)
-                ,
+                    .width(80.dp),
                 color = Black10
             )
             Text(
@@ -153,16 +144,14 @@ fun SignInScreen(
             )
             HorizontalDivider(
                 modifier = Modifier
-                    .width(80.dp)
-                ,
+                    .width(80.dp),
                 color = Black10
             )
         }
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 24.dp)
-            ,
+                .padding(top = 24.dp),
             text = "Войти",
             isGray = true,
             onClick = {
@@ -172,7 +161,7 @@ fun SignInScreen(
         )
         Text(
             modifier = Modifier.padding(top = 24.dp),
-            text =  buildAnnotatedString {
+            text = buildAnnotatedString {
                 agreementAnnotatedString(
                     isLogin = true,
                     onClickAgreement = {
@@ -187,7 +176,7 @@ fun SignInScreen(
         )
         Text(
             modifier = Modifier.padding(top = 24.dp),
-            text =  buildAnnotatedString {
+            text = buildAnnotatedString {
                 noAccountAnnotatedString(
                     onClickRegister = {
                         onEvent(SignInEvent.RegisterClicked)
@@ -203,7 +192,7 @@ fun SignInScreen(
 private fun Preview() {
     SignInScreen(
         state = SignInState(
-        authError = "Неверный логин или пароль"
+            authError = "Неверный логин или пароль"
         )
     )
 }

@@ -72,7 +72,7 @@ fun TaskBar(
                 modifier = Modifier
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-            ){
+            ) {
                 Text(
                     text = "Срок",
                     style = semiboldStyle,
@@ -80,7 +80,11 @@ fun TaskBar(
                     fontSize = 16.sp,
                 )
                 Text(
-                    text = if (orderData.deadline != null) "до ${orderData.deadline.format(customFormatter)}" else "",
+                    text = if (orderData.deadline != null) "до ${
+                        orderData.deadline.format(
+                            customFormatter
+                        )
+                    }" else "",
                     style = regularStyle,
                     color = Black80,
                     fontSize = 14.sp,
@@ -92,8 +96,7 @@ fun TaskBar(
         Image(
             modifier = Modifier
                 .padding(top = 24.dp)
-                .clickable { onExit() }
-            ,
+                .clickable { onExit() },
             painter = painterResource(R.drawable.close_portfolio),
             contentDescription = "Close order"
         )

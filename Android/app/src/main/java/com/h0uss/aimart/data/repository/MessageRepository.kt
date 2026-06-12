@@ -13,7 +13,12 @@ class MessageRepository(
 ) {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun addMessageToChat(chatId: Long, senderId: Long, text: String, isProtected: Boolean = false) {
+    suspend fun addMessageToChat(
+        chatId: Long,
+        senderId: Long,
+        text: String,
+        isProtected: Boolean = false
+    ) {
         val newMessage = MessageEntity(
             chatId = chatId,
             senderId = senderId,
@@ -25,7 +30,13 @@ class MessageRepository(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun addMessageToChat(chatId: Long, senderId: Long, text: String, attachments: List<String>, isProtected: Boolean = false) {
+    suspend fun addMessageToChat(
+        chatId: Long,
+        senderId: Long,
+        text: String,
+        attachments: List<String>,
+        isProtected: Boolean = false
+    ) {
         val newMessage = MessageEntity(
             chatId = chatId,
             senderId = senderId,

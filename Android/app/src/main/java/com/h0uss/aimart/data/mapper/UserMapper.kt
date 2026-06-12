@@ -12,7 +12,7 @@ import org.mindrot.jbcrypt.BCrypt
 import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun toUserEntity(user: UserRegistrationData): UserEntity{
+fun toUserEntity(user: UserRegistrationData): UserEntity {
 
     return UserEntity(
         avatar = "android.resource://com.h0uss.aimart/${R.drawable.base_avatar}",
@@ -30,7 +30,7 @@ fun toUserEntity(user: UserRegistrationData): UserEntity{
     )
 }
 
-fun UserEntity.toUserLoginData(): UserLoginData{
+fun UserEntity.toUserLoginData(): UserLoginData {
     return UserLoginData(
         id = this.id,
         email = this.email,
@@ -39,7 +39,7 @@ fun UserEntity.toUserLoginData(): UserLoginData{
     )
 }
 
-fun UserEntity.toUserHomeData(): UserHomeData{
+fun UserEntity.toUserHomeData(): UserHomeData {
     return UserHomeData(
         id = this.id,
         name = this.name,
@@ -48,7 +48,7 @@ fun UserEntity.toUserHomeData(): UserHomeData{
     )
 }
 
-fun UserEntity.toUserData(): UserData{
+fun UserEntity.toUserData(): UserData {
     return UserData(
         id = this.id,
         name = this.name,

@@ -48,23 +48,23 @@ fun SendMessageField(
     state: TextFieldState = remember { TextFieldState("") },
     onClickEnter: (String) -> Unit = {},
     onAttachmentClick: () -> Unit = {},
-){
+) {
 
     val focusManager = LocalFocusManager.current
     val keyboardActions = remember(onClickEnter) {
         KeyboardActionHandler({
-                if (!state.text.isEmpty()) {
-                    onClickEnter(state.text.toString())
-                    state.clearText()
-                }
-                focusManager.clearFocus()
+            if (!state.text.isEmpty()) {
+                onClickEnter(state.text.toString())
+                state.clearText()
             }
+            focusManager.clearFocus()
+        }
         )
     }
 
     Column(
         modifier = modifier
-    ){
+    ) {
         BasicTextField(
             modifier = Modifier,
             state = state,
@@ -104,11 +104,11 @@ fun SendMessageField(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
-                    ){
+                    ) {
                         Box(
                             modifier = Modifier
                                 .weight(1f)
-                        ){
+                        ) {
                             if (state.text.isEmpty())
                                 Text(
                                     text = placeHolder,
@@ -133,8 +133,7 @@ fun SendMessageField(
                                     .clickable {
                                         onClickEnter(state.text.toString())
                                         state.clearText()
-                                    }
-                                ,
+                                    },
                                 painter = painterResource(R.drawable.send),
                                 contentDescription = "RightImage"
                             )
@@ -148,11 +147,11 @@ fun SendMessageField(
 @Preview
 @Composable
 private fun PreviewNecessarily() {
-    Column(){
+    Column() {
         SendMessageField(
         )
         SendMessageField(
-            state = remember{ TextFieldState("dfasjhdlhas jd sj fdkjlshd flksdfs dsdh sdjk lasldk jhfaslkdjfhlskahj dhfk jsdhakjshdf slkjh fkjsd hlsdkjhf lskjdh fljksda hldjhf ljks dhahf ljkash fdasjhkl f") }
+            state = remember { TextFieldState("dfasjhdlhas jd sj fdkjlshd flksdfs dsdh sdjk lasldk jhfaslkdjfhlskahj dhfk jsdhakjshdf slkjh fkjsd hlsdkjhf lskjdh fljksda hldjhf ljks dhahf ljkash fdasjhkl f") }
         )
     }
 }

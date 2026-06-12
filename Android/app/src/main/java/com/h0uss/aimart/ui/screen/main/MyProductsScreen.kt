@@ -62,14 +62,15 @@ fun MyProductsScreen(
 ) {
     val tabs = listOf("Ожидание", "Активные", "Архив")
     val pagerState = rememberPagerState { tabs.size }
-    var selectedTabIndex by remember{ mutableIntStateOf(0) }
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
 
     val productsByStatus: Map<ProductStatus, List<UserProductCardData>> = remember(state.products) {
         state.products.groupBy { it.status }
     }
 
-    val waitingList = productsByStatus.getOrElse(ProductStatus.IN_MODERATING_PROCESS) { emptyList() } +
-            productsByStatus.getOrElse(ProductStatus.MODERATING_FAILED) { emptyList() }
+    val waitingList =
+        productsByStatus.getOrElse(ProductStatus.IN_MODERATING_PROCESS) { emptyList() } +
+                productsByStatus.getOrElse(ProductStatus.MODERATING_FAILED) { emptyList() }
     val activeList = productsByStatus.getOrElse(ProductStatus.ACTIVE) { emptyList() }
     val archiveList = productsByStatus.getOrElse(ProductStatus.ARCHIVE) { emptyList() }
 
@@ -99,7 +100,7 @@ fun MyProductsScreen(
             .background(White)
             .padding(start = 16.dp, top = 65.dp, end = 16.dp)
             .fillMaxSize()
-    ){
+    ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = "Объявления",
@@ -118,11 +119,10 @@ fun MyProductsScreen(
                     color = Black10,
                     shape = RoundedCornerShape(30)
                 )
-                .padding(16.dp)
-            ,
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
-        ){
+        ) {
             Text(
                 text = "Баланс",
                 style = semiboldStyle,
@@ -137,7 +137,7 @@ fun MyProductsScreen(
             )
         }
 
-        SecondaryTabRow (
+        SecondaryTabRow(
             modifier = Modifier.padding(top = 22.dp),
             selectedTabIndex = selectedTabIndex,
             indicator = {
@@ -148,7 +148,7 @@ fun MyProductsScreen(
                 )
             },
             containerColor = White,
-        ){
+        ) {
             tabs.forEachIndexed { index, item ->
                 Row(
                     modifier = Modifier
@@ -156,11 +156,10 @@ fun MyProductsScreen(
                         .padding(bottom = 5.dp)
                         .clickable {
                             selectedTabIndex = index
-                        }
-                    ,
+                        },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
-                ){
+                ) {
                     Text(
                         modifier = Modifier.padding(end = 8.dp),
                         text = item,
@@ -182,8 +181,7 @@ fun MyProductsScreen(
         HorizontalPager(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
-            ,
+                .weight(1f),
             state = pagerState,
 
             ) { index ->
@@ -191,7 +189,7 @@ fun MyProductsScreen(
                 modifier = Modifier.fillMaxSize(),
                 state = listStates[index]
             ) {
-                if (productsFiltered[index].isEmpty()){
+                if (productsFiltered[index].isEmpty()) {
                     item {
                         Column(
                             modifier = Modifier.padding(top = 60.dp),
@@ -213,10 +211,11 @@ fun MyProductsScreen(
                             )
                         }
                     }
-                }
-                else if (index == 0) {
-                    val failed = productsFiltered[index].filter { it.status == ProductStatus.MODERATING_FAILED }
-                    val inModeration = productsFiltered[index].filter { it.status == ProductStatus.IN_MODERATING_PROCESS }
+                } else if (index == 0) {
+                    val failed =
+                        productsFiltered[index].filter { it.status == ProductStatus.MODERATING_FAILED }
+                    val inModeration =
+                        productsFiltered[index].filter { it.status == ProductStatus.IN_MODERATING_PROCESS }
 
                     if (failed.isNotEmpty()) {
                         item {
@@ -257,8 +256,7 @@ fun MyProductsScreen(
                             )
                         }
                     }
-                }
-                else if (index == 1) {
+                } else if (index == 1) {
                     items(productsFiltered[index]) { item ->
                         MyProductCard(
                             modifier = Modifier.padding(top = 16.dp),
@@ -267,8 +265,7 @@ fun MyProductsScreen(
                             onEditClick = { id -> onEvent(MyProductsEvent.EditProductClick(id)) },
                         )
                     }
-                }
-                else {
+                } else {
                     items(productsFiltered[index]) { item ->
                         MyProductCard(
                             modifier = Modifier.padding(top = 16.dp),
@@ -294,8 +291,7 @@ fun MyProductsScreen(
             ) {
                 Button(
                     modifier = Modifier
-                        .fillMaxWidth()
-                    ,
+                        .fillMaxWidth(),
                     text = "Разместить объявление",
                     onClick = {
                         onEvent(MyProductsEvent.NewProductClick)

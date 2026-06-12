@@ -44,7 +44,8 @@ class OrderInfoViewModel(
                 if (product != null) {
                     state.update { it.copy(product = product) }
 
-                    val chats = chatRepository.getChatByOrderId(order.id, authUserIdLong).firstOrNull()
+                    val chats =
+                        chatRepository.getChatByOrderId(order.id, authUserIdLong).firstOrNull()
                     state.update { it.copy(chat = chats?.firstOrNull() ?: ChatData()) }
                 }
             }
@@ -70,7 +71,9 @@ class OrderInfoViewModel(
                 viewModelScope.launch {
                     val currentOrder = state.value.order
 
-                    val existingChats = chatRepository.getChatByOrderId(currentOrder.id, authUserIdLong).firstOrNull()
+                    val existingChats =
+                        chatRepository.getChatByOrderId(currentOrder.id, authUserIdLong)
+                            .firstOrNull()
                     var chat = existingChats?.firstOrNull()
 
                     if (chat == null) {
@@ -82,7 +85,9 @@ class OrderInfoViewModel(
                                 createdAt = LocalDateTime.now(),
                             )
                         )
-                        val newChats = chatRepository.getChatByOrderId(currentOrder.id, authUserIdLong).firstOrNull()
+                        val newChats =
+                            chatRepository.getChatByOrderId(currentOrder.id, authUserIdLong)
+                                .firstOrNull()
                         chat = newChats?.firstOrNull()
                     }
 

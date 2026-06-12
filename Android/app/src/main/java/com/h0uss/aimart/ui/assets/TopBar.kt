@@ -22,25 +22,22 @@ fun TopBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(White)
-        ,
+            .background(White),
         horizontalArrangement = Arrangement.SpaceBetween
-    ){
+    ) {
         Image(
             modifier = Modifier
-                .clickable{
+                .clickable {
                     onBackClick()
-                }
-            ,
+                },
             painter = painterResource(R.drawable.back),
             contentDescription = "Back"
         )
         Image(
             modifier = Modifier
-                .clickable{
+                .clickable {
                     onAdditionalClick()
-                }
-            ,
+                },
             painter = painterResource(R.drawable.additional),
             contentDescription = "Additional"
         )

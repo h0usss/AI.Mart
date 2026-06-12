@@ -90,9 +90,11 @@ class ProductSellerInfoViewModel(
                     navigationEvents.send(ProductSellerInfoNavigationEvent.User(event.value))
                 }
             }
+
             is ProductSellerInfoEvent.FeedbackTagClick -> {
                 handleFeedbackTagClick(event.index)
             }
+
             is ProductSellerInfoEvent.EditClick -> {
                 viewModelScope.launch {
                     navigationEvents.send(ProductSellerInfoNavigationEvent.EditProduct)
@@ -111,9 +113,11 @@ class ProductSellerInfoViewModel(
             1 -> currentState.originalFeedback
                 .filter { it.starCount >= 3 }
                 .sortedByDescending { it.starCount }
+
             2 -> currentState.originalFeedback
                 .filter { it.starCount < 3 }
                 .sortedBy { it.starCount }
+
             else -> currentState.originalFeedback.sortedBy { it.starCount }
         }
 

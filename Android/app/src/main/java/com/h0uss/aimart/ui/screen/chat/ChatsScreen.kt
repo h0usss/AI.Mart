@@ -59,16 +59,15 @@ fun ChatsScreen(
         ) {
 
             val chats = state.chats
-            items(count=chats.size) { i ->
-                if (i != 0){
+            items(count = chats.size) { i ->
+                if (i != 0) {
                     HorizontalDivider(
-                        modifier=Modifier
-                            .padding(top=14.dp)
-                        ,
+                        modifier = Modifier
+                            .padding(top = 14.dp),
                         color = Black10
                     )
                 }
-                
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

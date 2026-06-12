@@ -77,15 +77,14 @@ fun SellerProfileForUserScreen(
     onEvent: (SellerProfileForUserEvent) -> Unit = {},
 ) {
     val chunkedProducts = state.portfolio.chunked(2)
-    var countPortfolioRowItem by remember{ mutableIntStateOf(2) }
-    var countFeedbackItem by remember{ mutableIntStateOf(3) }
+    var countPortfolioRowItem by remember { mutableIntStateOf(2) }
+    var countFeedbackItem by remember { mutableIntStateOf(3) }
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(White)
-        ,
-    ){
+            .background(White),
+    ) {
         Dropdown(
             isAdditional = true,
             isVisible = state.isShowAdditional,
@@ -167,8 +166,7 @@ fun SellerProfileForUserScreen(
                         Button(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp)
-                            ,
+                                .padding(16.dp),
                             text = "Написать продавцу",
                             onClick = {
                                 onEvent(SellerProfileForUserEvent.WriteClick)
@@ -197,7 +195,7 @@ fun SellerProfileForUserScreen(
                         )
                 }
             }
-            item{
+            item {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -302,44 +300,43 @@ fun SellerProfileForUserScreen(
                         }
 
                         for (i in 0..min(countPortfolioRowItem - 1, chunkedProducts.size - 1)) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 32.dp, top = 8.dp, end = 32.dp, bottom = 8.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            chunkedProducts[i].forEach { portfolio ->
-                                PortfolioCard(
-                                    modifier = Modifier.clickable{
-                                        onEvent(
-                                            SellerProfileForUserEvent.ShowPortfolioItem(
-                                                portfolio.id
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 32.dp, top = 8.dp, end = 32.dp, bottom = 8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                chunkedProducts[i].forEach { portfolio ->
+                                    PortfolioCard(
+                                        modifier = Modifier.clickable {
+                                            onEvent(
+                                                SellerProfileForUserEvent.ShowPortfolioItem(
+                                                    portfolio.id
+                                                )
                                             )
-                                        )
-                                    },
-                                    portfolioData = portfolio,
-                                    isExistTrash = false
-                                )
-                            }
-                            if (chunkedProducts[i].size < 2) {
-                                Spacer(modifier = Modifier.weight(1f))
+                                        },
+                                        portfolioData = portfolio,
+                                        isExistTrash = false
+                                    )
+                                }
+                                if (chunkedProducts[i].size < 2) {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                }
                             }
                         }
+                        if (chunkedProducts.size > countPortfolioRowItem)
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 32.dp, top = 16.dp, end = 32.dp),
+                                text = "Показать еще",
+                                isGray = true,
+                                onClick = {
+                                    countPortfolioRowItem += 2
+                                }
+                            )
                     }
-                    if (chunkedProducts.size > countPortfolioRowItem)
-                        Button(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 32.dp, top = 16.dp, end = 32.dp)
-                            ,
-                            text = "Показать еще",
-                            isGray = true,
-                            onClick = {
-                                countPortfolioRowItem += 2
-                            }
-                        )
                 }
-            }
             }
             item {
                 val productList = state.products
@@ -370,7 +367,11 @@ fun SellerProfileForUserScreen(
                                             .clip(RoundedCornerShape(5))
                                             .background(White)
                                             .clickable {
-                                                onEvent(SellerProfileForUserEvent.ProductClick(product.id))
+                                                onEvent(
+                                                    SellerProfileForUserEvent.ProductClick(
+                                                        product.id
+                                                    )
+                                                )
                                             }
                                     ) {
                                         AsyncImage(
@@ -460,7 +461,10 @@ fun SellerProfileForUserScreen(
                         Column(
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            for (i in 0..min(countFeedbackItem - 1, state.filteredFeedback.size - 1))
+                            for (i in 0..min(
+                                countFeedbackItem - 1,
+                                state.filteredFeedback.size - 1
+                            ))
                                 Feedback(
                                     feedbackData = state.filteredFeedback[i]
                                 )
@@ -479,8 +483,8 @@ fun SellerProfileForUserScreen(
                     }
                 }
             }
-            item{
-                Spacer( modifier = Modifier.height(50.dp))
+            item {
+                Spacer(modifier = Modifier.height(50.dp))
             }
         }
     }
@@ -500,7 +504,7 @@ private fun Preview() {
                 rate = 5.0f,
                 profession = "Художник",
                 about = "Описание ",
-                skills = List(1) {item -> "Подсказка"},
+                skills = List(1) { item -> "Подсказка" },
             ),
             portfolio = List(11) {
                 PortfolioItemData(
@@ -513,7 +517,7 @@ private fun Preview() {
                     )
                 )
             },
-            filteredFeedback = List(10){ item ->
+            filteredFeedback = List(10) { item ->
                 FeedbackData(
                     user = UserData(
                         name = "Гена",
@@ -529,6 +533,6 @@ private fun Preview() {
             allPortfolioTags = listOf("Все", "Видео", "Не видео", "Фото", "Не фото", "Попа"),
             portfolioTagFilter = List(6) { index -> index == 0 },
 
-        )
+            )
     )
 }

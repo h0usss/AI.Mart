@@ -64,7 +64,7 @@ fun ProductInfoScreen(
     modifier: Modifier = Modifier,
     state: ProductInfoState = ProductInfoState(),
     onEvent: (ProductInfoEvent) -> Unit = {},
-    onBuy: (Long, Long) -> Unit = {sellerId, productId -> },
+    onBuy: (Long, Long) -> Unit = { sellerId, productId -> },
     onBackClick: () -> Unit = {},
 ) {
     var countFeedbackItem by remember { mutableIntStateOf(3) }
@@ -83,7 +83,7 @@ fun ProductInfoScreen(
         ) {
             Image(
                 modifier = Modifier
-                    .clickable{
+                    .clickable {
                         onBackClick()
                     },
                 painter = painterResource(R.drawable.back),
@@ -135,7 +135,7 @@ fun ProductInfoScreen(
                 Column(
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp, bottom = 14.dp)
-                ){
+                ) {
                     Text(
                         modifier = Modifier.padding(bottom = 10.dp),
                         text = "от ${state.product.price.formatPrice()}₽",
@@ -166,7 +166,7 @@ fun ProductInfoScreen(
                     )
                 }
             }
-            item{
+            item {
                 PlaceAnOrder(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
                     user = state.user,

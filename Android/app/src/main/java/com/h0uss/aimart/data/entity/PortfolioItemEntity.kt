@@ -13,15 +13,15 @@ import java.time.LocalDateTime
 )
 data class PortfolioItemEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")            val id: Long = 0L,
+    @ColumnInfo(name = "id") val id: Long = 0L,
 
-    @ColumnInfo(name = "price")         val price: Float,
-    @ColumnInfo(name = "media")         val media: List<Int>,
-    @ColumnInfo(name = "title")          val title: String,
-    @ColumnInfo(name = "description")   val description: String,
-    @ColumnInfo(name = "create_time")   val createTime: LocalDateTime,
+    @ColumnInfo(name = "price") val price: Float,
+    @ColumnInfo(name = "media") val media: List<Int>,
+    @ColumnInfo(name = "title") val title: String,
+    @ColumnInfo(name = "description") val description: String,
+    @ColumnInfo(name = "create_time") val createTime: LocalDateTime,
 
-    @ColumnInfo(name = "user_id")       val userId: Long
+    @ColumnInfo(name = "user_id") val userId: Long
 )
 
 data class PortfolioItemWithTags(

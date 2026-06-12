@@ -36,6 +36,7 @@ fun NewProduct(
                 is NewProductNavigationEvent.Exit -> {
                     onExit()
                 }
+
                 is NewProductNavigationEvent.BackClick -> {
                     navToBack()
                 }

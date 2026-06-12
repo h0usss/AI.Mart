@@ -45,13 +45,13 @@ fun Feedback(
             .fillMaxWidth()
             .background(White)
     ) {
-        Row{
+        Row {
             AsyncImage(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape),
                 model = feedbackData.user.imageUrl,
-                contentDescription =  feedbackData.user.name,
+                contentDescription = feedbackData.user.name,
             )
             Column(
                 modifier = Modifier.padding(start = 18.dp, top = 2.dp)
@@ -76,16 +76,19 @@ fun Feedback(
                     Row(
                         modifier = Modifier.padding(start = 8.dp),
                     ) {
-                        for (i in 1..feedbackData.starCount)
+                        (1..feedbackData.starCount).forEach { i ->
                             Image(
                                 painter = painterResource(R.drawable.star_yellow_feedback),
                                 contentDescription = "Star yellow"
                             )
-                        for (i in 1..5 - feedbackData.starCount)
-                            Image(
-                                painter = painterResource(R.drawable.star_black_feedback),
-                                contentDescription = "Star black"
-                            )
+                        }
+                        (1..5 - feedbackData.starCount)
+                            .forEach { i ->
+                                Image(
+                                    painter = painterResource(R.drawable.star_black_feedback),
+                                    contentDescription = "Star black"
+                                )
+                            }
                     }
                 }
                 Text(
@@ -97,7 +100,7 @@ fun Feedback(
             }
         }
         HorizontalDivider(
-            modifier = Modifier.padding( top = 12.dp ),
+            modifier = Modifier.padding(top = 12.dp),
             thickness = 1.dp,
             color = Black10
         )
@@ -108,9 +111,9 @@ fun Feedback(
 @Preview
 @Composable
 private fun Preview() {
-    Column (
+    Column(
         verticalArrangement = Arrangement.spacedBy(8.dp)
-    ){
+    ) {
         Feedback(
             feedbackData = FeedbackData(
                 user = UserData(

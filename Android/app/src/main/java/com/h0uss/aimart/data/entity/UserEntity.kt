@@ -10,15 +10,15 @@ import java.time.LocalDateTime
 )
 data class UserEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")            val id: Long = 0L,
+    @ColumnInfo(name = "id") val id: Long = 0L,
 
-    @ColumnInfo(name = "rate")          val rate: Float,
-    @ColumnInfo(name = "avatar")        val avatar: String,
-    @ColumnInfo(name = "name")          val name: String,
-    @ColumnInfo(name = "email")         val email: String,
-    @ColumnInfo(name = "balance")       val balance: Float,
-    @ColumnInfo(name = "nick_name")     val nickName: String,
-    @ColumnInfo(name = "is_seller")     val isSeller: Boolean,
+    @ColumnInfo(name = "rate") val rate: Float,
+    @ColumnInfo(name = "avatar") val avatar: String,
+    @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "email") val email: String,
+    @ColumnInfo(name = "balance") val balance: Float,
+    @ColumnInfo(name = "nick_name") val nickName: String,
+    @ColumnInfo(name = "is_seller") val isSeller: Boolean,
     @ColumnInfo(name = "password_hash") val passwordHash: String,
     @ColumnInfo(name = "register_date") val registerTime: LocalDateTime,
 )

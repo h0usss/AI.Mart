@@ -12,11 +12,11 @@ data class MessageEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") val id: Long = 0L,
 
-    @ColumnInfo( name = "chat_id" )     val chatId: Long,
-    @ColumnInfo( name = "sender_id" )     val senderId: Long,
+    @ColumnInfo(name = "chat_id") val chatId: Long,
+    @ColumnInfo(name = "sender_id") val senderId: Long,
 
-    @ColumnInfo( name = "message" )     val message: String,
-    @ColumnInfo( name = "attachments" ) val attachments: List<String> = emptyList(),
+    @ColumnInfo(name = "message") val message: String,
+    @ColumnInfo(name = "attachments") val attachments: List<String> = emptyList(),
 
     @ColumnInfo(name = "created_at") val createdAt: LocalDateTime,
     @ColumnInfo(name = "is_protected") val isProtected: Boolean = false,

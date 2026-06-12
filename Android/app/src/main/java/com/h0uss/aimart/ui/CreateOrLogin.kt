@@ -89,7 +89,7 @@ fun CreateOrLogin(
             modifier = Modifier
                 .fillMaxSize()
                 .zIndex(2f)
-        ){
+        ) {
             Image(
                 modifier = Modifier
                     .offset(y = offsetIcon)
@@ -110,16 +110,14 @@ fun CreateOrLogin(
             ) {
                 Button(
                     modifier = Modifier
-                        .fillMaxWidth()
-                    ,
+                        .fillMaxWidth(),
                     text = "Войти",
                     onClick = navToLogin,
                 )
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp)
-                    ,
+                        .padding(top = 8.dp),
                     text = "Зарегистрироваться",
                     isGray = true,
                     onClick = navToRegister,
