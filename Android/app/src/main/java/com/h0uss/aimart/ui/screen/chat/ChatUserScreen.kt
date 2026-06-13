@@ -13,12 +13,14 @@ import android.widget.VideoView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -58,9 +60,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
@@ -312,33 +315,28 @@ private fun ImagePreviewDialog(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp),
+                    .padding(horizontal = 24.dp)
+                    .fillMaxHeight(0.75f)
+                    .clipToBounds()
+                ,
                 contentAlignment = Alignment.Center,
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f),
-                ) {
-                    val model = if (isProtected) {
-                        ImageRequest.Builder(context)
-                            .data(url)
-                            .size(150)
-                            .build()
-                    } else {
-                        url
-                    }
-                    AsyncImage(
-                        model = model,
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Fit,
-                    )
-                    if (isProtected) {
-                        WatermarkOverlay(modifier = Modifier
-                            .matchParentSize()
-                            .clipToBounds())
-                    }
+                val model = if (isProtected) {
+                    ImageRequest.Builder(context)
+                        .data(url)
+                        .size(150)
+                        .build()
+                } else {
+                    url
+                }
+                AsyncImage(
+                    model = model,
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Fit,
+                )
+                if (isProtected) {
+                    WatermarkOverlay(modifier = Modifier.fillMaxSize())
                 }
             }
         }
@@ -366,6 +364,7 @@ private fun VideoPreviewDialog(
             }
         }
     }
+    var videoAspectRatio by remember { mutableStateOf(1f) }
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false),
@@ -380,20 +379,26 @@ private fun VideoPreviewDialog(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.6f),
+                    .aspectRatio(videoAspectRatio)
+                    .clipToBounds(),
             ) {
                 AndroidView(
                     factory = { ctx ->
                         VideoView(ctx).apply {
                             setVideoURI(url.toUri())
-                            setOnPreparedListener { it.isLooping = true }
+                            setOnPreparedListener { mp ->
+                                mp.isLooping = true
+                                if (mp.videoWidth > 0 && mp.videoHeight > 0) {
+                                    videoAspectRatio = mp.videoWidth.toFloat() / mp.videoHeight.toFloat()
+                                }
+                            }
                             start()
                         }
                     },
                     modifier = Modifier.fillMaxSize(),
                 )
                 if (isProtected) {
-                    WatermarkOverlay(modifier = Modifier.matchParentSize())
+                    WatermarkOverlay(modifier = Modifier.matchParentSize().clipToBounds())
                 }
             }
         }
@@ -402,27 +407,41 @@ private fun VideoPreviewDialog(
 
 @Composable
 private fun WatermarkOverlay(modifier: Modifier = Modifier) {
-    val color = listOf(Black100, Teal, White)
-    var c = 0
-    Column(
-        modifier = modifier.clipToBounds(),
-        verticalArrangement = Arrangement.spacedBy(30.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        repeat(20) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                repeat(5) {
-                    Text(
-                        text = "AI.MART",
-                        color = color[c % color.size].copy(alpha = 0.5f),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    c++
+    val colors = listOf(Black100, Teal, White)
+    val watermarkText = "AI.MART"
+
+    BoxWithConstraints(modifier = modifier.clipToBounds()) {
+        if (maxWidth <= 0.dp || maxHeight <= 0.dp) return@BoxWithConstraints
+
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            if (size.width < 1f || size.height < 1f) return@Canvas
+
+            val paint = android.graphics.Paint().apply {
+                isAntiAlias = true
+                textSize = 16.sp.toPx()
+                typeface = android.graphics.Typeface.DEFAULT_BOLD
+            }
+            val textWidth = paint.measureText(watermarkText)
+            val textHeight = paint.fontMetrics.run { descent - ascent }
+            val stepX = textWidth + 24.dp.toPx()
+            val stepY = textHeight + 28.dp.toPx()
+
+            var colorIndex = 0
+            var row = 0
+            var y = -paint.fontMetrics.ascent
+            while (y < size.height + stepY) {
+                val rowOffset = if (row % 2 == 0) 0f else stepX / 2f
+                var x = rowOffset
+                while (x < size.width + stepX) {
+                    paint.color = colors[colorIndex % colors.size]
+                        .copy(alpha = 0.5f)
+                        .toArgb()
+                    colorIndex++
+                    drawContext.canvas.nativeCanvas.drawText(watermarkText, x, y, paint)
+                    x += stepX
                 }
+                y += stepY
+                row++
             }
         }
     }
