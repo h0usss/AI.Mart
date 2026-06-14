@@ -28,6 +28,8 @@ object Graph {
         private set
     lateinit var session: SessionManager
         private set
+    lateinit var appContext: Context
+        private set
 
     var authUserIdFlow = MutableStateFlow(-1L)
         private set
@@ -72,6 +74,7 @@ object Graph {
     val messageRepository by lazy {
         MessageRepository(
             messageDao = db.messageDao(),
+            context = appContext,
         )
     }
     val productViewDao by lazy { db.productViewDao() }
@@ -104,6 +107,7 @@ object Graph {
     }
 
     fun provide(context: Context) {
+        appContext = context.applicationContext
         db = AppDataBase.getDataBase(
             context,
             applicationScope

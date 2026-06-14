@@ -48,6 +48,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -64,6 +65,7 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
@@ -96,6 +98,7 @@ import com.h0uss.aimart.ui.theme.regularStyle
 import com.h0uss.aimart.ui.theme.semiboldStyle
 import com.h0uss.aimart.ui.viewModel.chat.ChatUserEvent
 import com.h0uss.aimart.ui.viewModel.chat.ChatUserState
+import com.h0uss.aimart.util.MediaResizer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
@@ -317,8 +320,7 @@ private fun ImagePreviewDialog(
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
                     .fillMaxHeight(0.75f)
-                    .clipToBounds()
-                ,
+                    .clipToBounds(),
                 contentAlignment = Alignment.Center,
             ) {
                 val model = if (isProtected) {
@@ -339,10 +341,38 @@ private fun ImagePreviewDialog(
                     WatermarkOverlay(modifier = Modifier.fillMaxSize())
                 }
             }
+            if (!isProtected) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(16.dp)
+                        .size(44.dp)
+                        .background(
+                            Color.Black.copy(alpha = 0.5f),
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .clickable {
+                            val saved = MediaResizer.saveToDownloads(context, url)
+                            android.widget.Toast.makeText(
+                                context,
+                                if (saved) "Сохранено в галерею" else "Ошибка сохранения",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        },
+                    contentAlignment = Alignment.Center,
+                ) {
+
+                    Image(
+                        painter = painterResource(R.drawable.download),
+                        contentDescription = null,
+                    )
+                }
+            }
         }
     }
 }
 
+@SuppressLint("AutoboxingStateCreation")
 @Composable
 private fun VideoPreviewDialog(
     url: String,
@@ -364,7 +394,7 @@ private fun VideoPreviewDialog(
             }
         }
     }
-    var videoAspectRatio by remember { mutableStateOf(1f) }
+    var videoAspectRatio by remember { mutableFloatStateOf(1f) }
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false),
@@ -389,7 +419,8 @@ private fun VideoPreviewDialog(
                             setOnPreparedListener { mp ->
                                 mp.isLooping = true
                                 if (mp.videoWidth > 0 && mp.videoHeight > 0) {
-                                    videoAspectRatio = mp.videoWidth.toFloat() / mp.videoHeight.toFloat()
+                                    videoAspectRatio =
+                                        mp.videoWidth.toFloat() / mp.videoHeight.toFloat()
                                 }
                             }
                             start()
@@ -398,7 +429,35 @@ private fun VideoPreviewDialog(
                     modifier = Modifier.fillMaxSize(),
                 )
                 if (isProtected) {
-                    WatermarkOverlay(modifier = Modifier.matchParentSize().clipToBounds())
+                    WatermarkOverlay(modifier = Modifier
+                        .matchParentSize()
+                        .clipToBounds())
+                }
+            }
+            if (!isProtected) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(16.dp)
+                        .size(44.dp)
+                        .background(
+                            Color.Black.copy(alpha = 0.5f),
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .clickable {
+                            val saved = MediaResizer.saveToDownloads(context, url)
+                            android.widget.Toast.makeText(
+                                context,
+                                if (saved) "Сохранено в галерею" else "Ошибка сохранения",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.download),
+                        contentDescription = null,
+                    )
                 }
             }
         }
