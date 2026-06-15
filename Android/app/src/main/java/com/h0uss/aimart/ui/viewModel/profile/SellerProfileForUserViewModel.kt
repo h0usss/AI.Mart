@@ -10,7 +10,6 @@ import com.h0uss.aimart.Graph.feedbackRepository
 import com.h0uss.aimart.Graph.portfolioRepository
 import com.h0uss.aimart.Graph.productRepository
 import com.h0uss.aimart.Graph.userRepository
-import com.h0uss.aimart.data.entity.ChatEntity
 import com.h0uss.aimart.data.enum.ProductStatus
 import com.h0uss.aimart.data.model.FeedbackData
 import com.h0uss.aimart.data.model.PortfolioItemData
@@ -24,7 +23,6 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 class SellerProfileForUserViewModel(
@@ -99,15 +97,7 @@ class SellerProfileForUserViewModel(
                     if (chat != null) {
                         sendNavEvent(SellerProfileForUserNavigationEvent.WriteClick(chat.id))
                     } else {
-                        val newChatId = chatRepository.insert(
-                            ChatEntity(
-                                fUserId = authUserIdLong,
-                                sUserId = sellerId,
-                                orderId = null,
-                                createdAt = LocalDateTime.now(),
-                            )
-                        )
-                        sendNavEvent(SellerProfileForUserNavigationEvent.WriteClick(newChatId))
+                        sendNavEvent(SellerProfileForUserNavigationEvent.WriteClick(-sellerId))
                     }
                 }
             }

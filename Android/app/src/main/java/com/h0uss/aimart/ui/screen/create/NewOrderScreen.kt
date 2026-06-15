@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DatePicker
@@ -104,7 +105,7 @@ fun NewOrderScreen(
                 fontSize = 14.sp,
             )
             TextField(
-                modifier = Modifier.padding(bottom = 16.dp),
+                modifier = Modifier.padding(bottom = 16.dp).height(100.dp),
                 placeHolder = "Подробно опишите задачу, на что обратить внимание",
                 isBigTextField = true,
                 state = state.desc

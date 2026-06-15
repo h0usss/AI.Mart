@@ -9,6 +9,7 @@ import com.h0uss.aimart.Graph.chatRepository
 import com.h0uss.aimart.Graph.messageRepository
 import com.h0uss.aimart.Graph.orderRepository
 import com.h0uss.aimart.Graph.userRepository
+import com.h0uss.aimart.data.entity.ChatEntity
 import com.h0uss.aimart.data.model.ChatUserData
 import com.h0uss.aimart.data.model.MessageData
 import com.h0uss.aimart.data.model.OrderData
@@ -18,11 +19,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 class ChatUserViewModel(
     private val chatId: Long
 ) : ViewModel() {
+
+    private val isNewChat = chatId < 0
 
     var state = MutableStateFlow(ChatUserState())
         private set
@@ -31,28 +35,43 @@ class ChatUserViewModel(
         private set
 
     init {
-        viewModelScope.launch {
-            messageRepository.getMessagesByChatId(chatId).collect { messages ->
-                state.update { it.copy(messages = messages) }
+        if (isNewChat) {
+            viewModelScope.launch {
+                val sellerId = -chatId
+                userRepository.getUserByIdFlow(sellerId).collect { user ->
+                    state.update {
+                        it.copy(userData = ChatUserData(
+                            userId = sellerId,
+                            imagesUrl = listOf(user.imageUrl),
+                            userName = user.name
+                        ))
+                    }
+                }
             }
-        }
-
-        viewModelScope.launch {
-            userRepository.getOtherUserByChatId(chatId, authUserIdLong).collect { user ->
-                state.update { it.copy(userData = user) }
+        } else {
+            viewModelScope.launch {
+                messageRepository.getMessagesByChatId(chatId).collect { messages ->
+                    state.update { it.copy(messages = messages) }
+                }
             }
-        }
 
-        viewModelScope.launch {
-            val chat = chatRepository.getChatById(chatId).first()
+            viewModelScope.launch {
+                userRepository.getOtherUserByChatId(chatId, authUserIdLong).collect { user ->
+                    state.update { it.copy(userData = user) }
+                }
+            }
 
-            if (chat != null && chat.orderId != null) {
-                orderRepository.getOrderById(chat.orderId).collect { order ->
-                    state.update { it.copy(orderData = order) }
+            viewModelScope.launch {
+                val chat = chatRepository.getChatById(chatId).first()
 
-                    launch {
-                        userRepository.getUserByIdFlow(order.buyerId).collect { user ->
-                            state.update { it.copy(buyer = user) }
+                if (chat != null && chat.orderId != null) {
+                    orderRepository.getOrderById(chat.orderId).collect { order ->
+                        state.update { it.copy(orderData = order) }
+
+                        launch {
+                            userRepository.getUserByIdFlow(order.buyerId).collect { user ->
+                                state.update { it.copy(buyer = user) }
+                            }
                         }
                     }
                 }
@@ -60,6 +79,7 @@ class ChatUserViewModel(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     fun onEvent(event: ChatUserEvent) {
         when (event) {
             is ChatUserEvent.ToListClick -> {
@@ -86,7 +106,8 @@ class ChatUserViewModel(
 
             is ChatUserEvent.SendMessage -> {
                 viewModelScope.launch {
-                    messageRepository.addMessageToChat(chatId, authUserIdLong, event.value)
+                    val actualChatId = resolveChatId()
+                    messageRepository.addMessageToChat(actualChatId, authUserIdLong, event.value)
                 }
             }
 
@@ -141,11 +162,12 @@ class ChatUserViewModel(
 
             is ChatUserEvent.SendAttachments -> {
                 viewModelScope.launch {
+                    val actualChatId = resolveChatId()
                     val current = state.value.selectedAttachments
                     val isProtected = state.value.isProtectEnabled
                     if (current.isNotEmpty()) {
                         messageRepository.addMessageToChat(
-                            chatId,
+                            actualChatId,
                             authUserIdLong,
                             "",
                             current,
@@ -158,6 +180,47 @@ class ChatUserViewModel(
                             isAttachmentSheetVisible = false,
                             isProtectEnabled = false,
                         )
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun resolveChatId(): Long {
+        if (!isNewChat) return chatId
+        val sellerId = -chatId
+        val newId = chatRepository.insert(
+            ChatEntity(
+                fUserId = authUserIdLong,
+                sUserId = sellerId,
+                orderId = null,
+                createdAt = LocalDateTime.now(),
+            )
+        )
+        startCollectingForChat(newId)
+        return newId
+    }
+
+    private fun startCollectingForChat(actualChatId: Long) {
+        viewModelScope.launch {
+            messageRepository.getMessagesByChatId(actualChatId).collect { messages ->
+                state.update { it.copy(messages = messages) }
+            }
+        }
+        viewModelScope.launch {
+            userRepository.getOtherUserByChatId(actualChatId, authUserIdLong).collect { user ->
+                state.update { it.copy(userData = user) }
+            }
+        }
+        viewModelScope.launch {
+            val chat = chatRepository.getChatById(actualChatId).first()
+            if (chat != null && chat.orderId != null) {
+                orderRepository.getOrderById(chat.orderId).collect { order ->
+                    state.update { it.copy(orderData = order) }
+                    launch {
+                        userRepository.getUserByIdFlow(order.buyerId).collect { buyer ->
+                            state.update { it.copy(buyer = buyer) }
+                        }
                     }
                 }
             }
